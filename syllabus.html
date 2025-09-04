@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Syllabus — BlackICE Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07080a; --panel:#0e1116cc; --neon:#00fff7; --neon2:#72f5ff; --purple:#a020f0; --hot:#ff2e63; --lime:#9afc63; --amber:#ffcc66;
+    --glow-strong: 0 0 24px rgba(0,255,247,0.35), 0 0 48px rgba(0,255,247,0.15);
+    --glass-blur: blur(14px);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background: radial-gradient(1200px 800px at 70% -10%, #0b1220 0%, #07080a 50%, #050608 100%);
+    color:#e9f1ff; font-family: Inter, system-ui, sans-serif; overflow-x:hidden;
+  }
+  .container{ max-width:1200px; margin:0 auto; padding:40px 28px; }
+  .back{ color:var(--neon2); text-decoration:none; font-family:"JetBrains Mono", monospace; font-size:14px; }
+  .back:hover{ color:var(--neon); }
+  h1{ font-size:48px; margin:20px 0 10px; text-shadow:var(--glow-strong); }
+  .tag{ font-family:"JetBrains Mono", monospace; color:var(--neon2); font-size:12px; text-transform:uppercase; letter-spacing:.12em; }
+  
+  .map{ display:grid; grid-template-columns: repeat(4, 1fr); gap:20px; margin-top:40px; }
+  .module{
+    position:relative; border:1px solid #1d2736; border-radius:16px; padding:20px;
+    background: linear-gradient(180deg, var(--panel), #0a0f16cc); backdrop-filter: var(--glass-blur);
+    cursor:pointer; transition: all .3s ease;
+  }
+  .module:hover{ transform:translateY(-4px); border-color:#2a3b52; box-shadow: 0 8px 40px rgba(0,0,0,.45); }
+  .module-num{ font-family:"JetBrains Mono", monospace; color:var(--neon); font-size:12px; font-weight:600; }
+  .module-title{ font-size:18px; font-weight:800; margin:8px 0 6px; }
+  .module-desc{ color:#a9b9cf; font-size:14px; margin-bottom:12px; }
+  .difficulty{ display:flex; gap:4px; margin-bottom:12px; }
+  .dot{ width:8px; height:8px; border-radius:50%; background:#1d2736; }
+  .dot.active{ background:var(--neon); box-shadow:0 0 8px rgba(0,255,247,0.5); }
+  .topics{ display:flex; flex-wrap:wrap; gap:6px; }
+  .topic{ font-family:"JetBrains Mono", monospace; font-size:10px; padding:4px 8px; border-radius:6px; background:#0c141e; color:var(--neon2); border:1px solid #1d2736; }
+  
+  .tooltip{
+    position:absolute; top:-10px; left:50%; transform:translateX(-50%) translateY(-100%);
+    background:#0a0f17; border:1px solid var(--neon); border-radius:8px; padding:12px;
+    font-size:12px; width:280px; z-index:100; opacity:0; pointer-events:none;
+    transition: opacity .2s ease; box-shadow:var(--glow-strong);
+  }
+  .module:hover .tooltip{ opacity:1; }
+  .tooltip-title{ color:var(--neon); font-weight:600; margin-bottom:6px; }
+  .tooltip-desc{ color:#cfe8ff; line-height:1.4; }
+  
+  .prereq{ margin-top:20px; padding:16px; border:1px solid #243042; border-radius:12px; background:#0a0f16; }
+  .prereq-title{ font-family:"JetBrains Mono", monospace; color:var(--amber); font-size:12px; margin-bottom:8px; }
+  .prereq-list{ color:#a9b9cf; font-size:13px; }
+  
+  @media (max-width:1000px){ .map{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width:640px){ .map{ grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a href="index.html" class="back">← Back to Academy</a>
+  
+  <div class="tag">// curriculum map</div>
+  <h1>Ethical Hacking Syllabus</h1>
+  <p style="color:#c9d6ea; max-width:60ch;">Master cybersecurity through hands-on missions. Each module builds critical skills with real-world scenarios and live lab environments.</p>
+  
+  <div class="map">
+    <div class="module">
+      <div class="module-num">MODULE 01</div>
+      <div class="module-title">Network Recon</div>
+      <div class="module-desc">Information gathering and network mapping fundamentals</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">nmap</span><span class="topic">wireshark</span><span class="topic">osint</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Network Reconnaissance</div>
+        <div class="tooltip-desc">Learn passive and active information gathering techniques. Master port scanning, service enumeration, and network topology mapping using industry-standard tools.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 02</div>
+      <div class="module-title">Web Exploitation</div>
+      <div class="module-desc">OWASP Top 10 vulnerabilities and web application security</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">sqli</span><span class="topic">xss</span><span class="topic">csrf</span><span class="topic">ssrf</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Web Application Security</div>
+        <div class="tooltip-desc">Exploit common web vulnerabilities including injection attacks, broken authentication, and insecure direct object references. Practice on live vulnerable applications.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 03</div>
+      <div class="module-title">System Exploitation</div>
+      <div class="module-desc">Buffer overflows, privilege escalation, and post-exploitation</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">buffer-overflow</span><span class="topic">privesc</span><span class="topic">shells</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">System-Level Exploitation</div>
+        <div class="tooltip-desc">Advanced exploitation techniques including memory corruption, return-oriented programming, and maintaining persistent access on compromised systems.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 04</div>
+      <div class="module-title">Wireless Security</div>
+      <div class="module-desc">WiFi attacks, Bluetooth exploitation, and radio frequency analysis</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">wifi</span><span class="topic">bluetooth</span><span class="topic">rfid</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Wireless Network Security</div>
+        <div class="tooltip-desc">Attack wireless protocols and devices. Learn WPA/WPA2 cracking, evil twin attacks, and Bluetooth exploitation techniques using specialized hardware.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 05</div>
+      <div class="module-title">Cryptography</div>
+      <div class="module-desc">Encryption algorithms, hash functions, and cryptographic attacks</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">aes</span><span class="topic">rsa</span><span class="topic">hashing</span><span class="topic">pki</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Applied Cryptography</div>
+        <div class="tooltip-desc">Understand modern encryption standards and their weaknesses. Practice cryptanalysis, side-channel attacks, and implementation flaws in real-world systems.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 06</div>
+      <div class="module-title">Social Engineering</div>
+      <div class="module-desc">Human psychology, phishing campaigns, and physical security</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">phishing</span><span class="topic">pretexting</span><span class="topic">osint</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Human Factor Exploitation</div>
+        <div class="tooltip-desc">Master the art of social manipulation. Design convincing phishing campaigns, practice pretexting scenarios, and understand psychological triggers in security contexts.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 07</div>
+      <div class="module-title">Mobile Security</div>
+      <div class="module-desc">iOS and Android application security testing</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">android</span><span class="topic">ios</span><span class="topic">frida</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Mobile Application Security</div>
+        <div class="tooltip-desc">Reverse engineer mobile applications, bypass security controls, and exploit platform-specific vulnerabilities using dynamic instrumentation frameworks.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 08</div>
+      <div class="module-title">Cloud Security</div>
+      <div class="module-desc">AWS, Azure, and GCP security misconfigurations</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">aws</span><span class="topic">azure</span><span class="topic">k8s</span><span class="topic">docker</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Cloud Infrastructure Security</div>
+        <div class="tooltip-desc">Advanced cloud penetration testing. Exploit IAM misconfigurations, container escapes, and serverless vulnerabilities across major cloud platforms.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 09</div>
+      <div class="module-title">Malware Analysis</div>
+      <div class="module-desc">Reverse engineering and dynamic analysis techniques</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">ida-pro</span><span class="topic">ghidra</span><span class="topic">sandbox</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Malware Reverse Engineering</div>
+        <div class="tooltip-desc">Dissect malicious software using static and dynamic analysis. Learn unpacking techniques, anti-analysis evasion, and behavioral analysis in isolated environments.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 10</div>
+      <div class="module-title">Digital Forensics</div>
+      <div class="module-desc">Incident response and evidence collection procedures</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">volatility</span><span class="topic">autopsy</span><span class="topic">timeline</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Digital Forensics & Incident Response</div>
+        <div class="tooltip-desc">Investigate security incidents using forensic tools. Master memory analysis, disk imaging, and timeline reconstruction for legal and security purposes.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 11</div>
+      <div class="module-title">Red Team Operations</div>
+      <div class="module-desc">Advanced persistent threats and stealth techniques</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">c2</span><span class="topic">evasion</span><span class="topic">persistence</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Advanced Red Team Tactics</div>
+        <div class="tooltip-desc">Simulate sophisticated adversaries. Master command and control frameworks, detection evasion, and long-term persistence in enterprise environments.</div>
+      </div>
+    </div>
+    
+    <div class="module">
+      <div class="module-num">MODULE 12</div>
+      <div class="module-title">Blue Team Defense</div>
+      <div class="module-desc">Detection engineering and security monitoring</div>
+      <div class="difficulty">
+        <div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+      <div class="topics">
+        <span class="topic">siem</span><span class="topic">sigma</span><span class="topic">yara</span><span class="topic">threat-hunting</span>
+      </div>
+      <div class="tooltip">
+        <div class="tooltip-title">Defensive Security Operations</div>
+        <div class="tooltip-desc">Build robust detection capabilities. Create custom rules, analyze security logs, and develop threat hunting methodologies to identify advanced attacks.</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="prereq">
+    <div class="prereq-title">Prerequisites & Recommendations</div>
+    <div class="prereq-list">
+      • Basic Linux command line proficiency<br>
+      • Understanding of TCP/IP networking fundamentals<br>
+      • Programming experience (Python, C, or JavaScript preferred)<br>
+      • Virtual machine setup capability (VMware/VirtualBox)
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
