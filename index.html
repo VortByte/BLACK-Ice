@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BlackICE Academy — Ethical Hacking Learning Portal</title>
+<meta name="description" content="Learn ethical hacking through cinematic, mission-based labs. Break the code. Build the shield." />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Core palette */
+    --bg:#07080a;
+    --panel:#0e1116cc; /* glass base */
+    --glass:#0e1116a6;
+    --stroke: #20242e;
+    --neon:#00fff7;
+    --neon2:#72f5ff;
+    --purple:#a020f0;
+    --hot:#ff2e63;
+    --lime:#9afc63;
+    --amber:#ffcc66;
+    --muted:#96a2b4;
+
+    /* Glow and effects */
+    --glow-strong: 0 0 24px rgba(0,255,247,0.35), 0 0 48px rgba(0,255,247,0.15);
+    --glow-purple: 0 0 18px rgba(160,32,240,0.35), 0 0 36px rgba(160,32,240,0.18);
+    --glass-blur: blur(14px);
+
+    /* Sizes */
+    --radius: 16px;
+    --pad: 16px;
+    --pad-lg: 28px;
+    --card-w: 300px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background: radial-gradient(1200px 800px at 70% -10%, #0b1220 0%, #07080a 50%, #050608 100%);
+    color:#e9f1ff;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    overflow-x:hidden;
+  }
+
+  /* Scene layers */
+  .layer{
+    position:fixed; inset:0; pointer-events:none;
+  }
+  #gridLayer{ opacity:0.15; }
+  #rainLayer{ opacity:0.25; }
+  #starsLayer{ opacity:0.25; }
+
+  /* Custom cursor crosshair */
+  .cursor{
+    position:fixed; left:0; top:0; width:24px; height:24px; pointer-events:none; transform:translate(-50%, -50%);
+    z-index:5000; mix-blend-mode:screen;
+  }
+  .cursor::before,.cursor::after{
+    content:""; position:absolute; inset:0; border:1px solid var(--neon);
+    border-radius:50%; box-shadow:var(--glow-strong);
+    animation:pulse 1.8s ease-in-out infinite;
+  }
+  .cursor::after{ inset:8px; opacity:0.6; animation-delay:.3s }
+  @keyframes pulse{ 0%,100%{opacity:.6} 50%{opacity:1} }
+
+  /* Top chrome */
+  header{
+    position:sticky; top:0; z-index:20; backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, #0a0f17cc, #0a0f1700);
+    border-bottom:1px solid #1a2230;
+  }
+  .nav{
+    max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:18px;
+    padding:14px var(--pad-lg);
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px; text-decoration:none; color:#e9f1ff; font-weight:800; letter-spacing:.6px;
+  }
+  .logo .sig{
+    font-family:"JetBrains Mono", monospace; color:var(--neon); text-shadow:var(--glow-strong);
+  }
+  .nav .spacer{flex:1}
+  .btn{
+    position:relative; display:inline-flex; align-items:center; gap:10px;
+    padding:12px 16px; color:#061016; background:var(--neon); border:none; border-radius:12px;
+    box-shadow:var(--glow-strong); cursor:pointer; text-decoration:none; font-weight:700;
+    transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn:hover{ transform:translateY(-2px); box-shadow:0 0 0 2px rgba(0,255,247,.15), var(--glow-strong) }
+  .btn.secondary{
+    background:transparent; color:#cfe8ff; border:1px solid #243042; box-shadow:none;
+  }
+  .btn.secondary:hover{ border-color:#3a4b64; color:#fff }
+
+  /* Hero */
+  .hero{
+    position:relative; z-index:10; padding:80px var(--pad-lg) 40px;
+    max-width:1200px; margin:0 auto;
+  }
+  .hero-wrap{
+    display:grid; grid-template-columns: 1.2fr 1fr; gap:30px; align-items:center;
+  }
+  .tag{
+    font-family:"JetBrains Mono", monospace; color:var(--neon2); letter-spacing:.12em; font-size:12px;
+    text-transform:uppercase; opacity:.9; margin-bottom:12px;
+  }
+  h1{
+    font-size: clamp(28px, 5vw, 56px);
+    line-height:1.04; margin:10px 0 14px;
+    text-shadow: 0 0 18px #001d1b, var(--glow-strong);
+  }
+  .sub{
+    color:#c9d6ea; max-width:58ch;
+  }
+  .cta{ display:flex; gap:12px; margin-top:22px; flex-wrap:wrap }
+  .terminal{
+    position:relative; background:linear-gradient(180deg, #0b1018, #0b1018aa);
+    border:1px solid #1d2736; border-radius:16px; padding:16px; overflow:hidden;
+    box-shadow: inset 0 0 0 1px #0d1420, 0 10px 40px rgba(0,0,0,.5);
+  }
+  .terminal .lights{ display:flex; gap:8px; margin-bottom:10px }
+  .dot{ width:10px; height:10px; border-radius:50% }
+  .dot.red{ background:#ff5f57 } .dot.amber{ background:#febc2e } .dot.green{ background:#28c840 }
+  .screen{ font-family:"JetBrains Mono", monospace; font-size:13px; color:#9fd; min-height:220px; white-space:pre-wrap; }
+  .caret{ display:inline-block; width:8px; background:var(--neon); height:1.1em; vertical-align:-2px; animation:blink 1s steps(1) infinite }
+  @keyframes blink{ 50%{opacity:0} }
+
+  /* Three.js mini-globe panel */
+  .globe{
+    aspect-ratio: 1.2 / 1; min-height:280px; border-radius:16px; overflow:hidden;
+    border:1px solid #1d2736; background: radial-gradient(600px 300px at 80% -20%, #142034 0%, #0b1018 50%, #0b1018 100%);
+    position:relative;
+  }
+  .globe:after{
+    content:"// live threat map"; position:absolute; right:12px; bottom:8px; font-family:"JetBrains Mono", monospace;
+    font-size:11px; color:#7fb; opacity:.7
+  }
+  #globeCanvas{ width:100%; height:100%; display:block }
+
+  /* Sections */
+  section{ position:relative; z-index:10; padding:40px var(--pad-lg); }
+  .grid{
+    max-width:1200px; margin:0 auto; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:18px;
+  }
+  .card{
+    border:1px solid #1d2736; border-radius:16px; overflow:hidden; position:relative;
+    background: linear-gradient(180deg, var(--panel), #0a0f16cc);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    cursor:pointer;
+  }
+  .card:hover{ transform: translateY(-4px); border-color:#2a3b52; box-shadow: 0 8px 40px rgba(0,0,0,.45), var(--glow-purple) }
+  .card .inner{ padding:18px }
+  .label{ font-family:"JetBrains Mono", monospace; color:#9fd; font-size:12px; letter-spacing:.1em; text-transform:uppercase; opacity:.9 }
+  .title{ font-size:18px; font-weight:800; margin:8px 0 6px }
+  .desc{ color:#a9b9cf }
+  .meter{
+    margin-top:12px; height:6px; background:#111621; border:1px solid #1d2736; border-radius:8px; overflow:hidden;
+  }
+  .meter > span{ display:block; height:100%; background:linear-gradient(90deg, var(--purple), var(--neon)); width:60% }
+
+  /* Live lab preview */
+  .lab{
+    max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1.3fr 1fr; gap:18px;
+  }
+  .lab .panel{
+    border:1px solid #1d2736; border-radius:16px; background:linear-gradient(180deg, var(--panel), #0a0f16cc);
+    padding:18px; backdrop-filter: var(--glass-blur);
+  }
+  .kbd{ font-family:"JetBrains Mono", monospace; padding:2px 6px; border:1px solid #2a3b52; border-radius:6px; background:#0c141e; color:#cfe; }
+
+  /* Timeline */
+  .timeline{ max-width:1200px; margin:0 auto; }
+  .steps{ display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:16px; }
+  .step{
+    border:1px solid #1d2736; border-radius:16px; padding:16px;
+    background:linear-gradient(180deg, #0b1119, #0a0f16);
+  }
+  .badge{
+    font-family:"JetBrains Mono", monospace; color:#fff; display:inline-block; padding:6px 10px; border-radius:10px;
+    background: linear-gradient(90deg, #111, #172233); border:1px solid #263148; box-shadow:var(--glow-purple)
+  }
+  .step h4{ margin:8px 0 6px }
+  .step p{ color:#a9b9cf; margin:0 }
+
+  /* Leaderboard / community */
+  .flex2{ max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1.2fr 1fr; gap:18px; }
+  .table{
+    width:100%; border-collapse:separate; border-spacing:0 10px; font-variant-numeric: tabular-nums;
+  }
+  .table tr{ background: linear-gradient(180deg, #0b1018, #0b1018aa); }
+  .table td{
+    padding:12px 12px; border-top:1px solid #1d2736; border-bottom:1px solid #1d2736;
+  }
+  .table tr td:first-child{ border-left:1px solid #1d2736; border-top-left-radius:10px; border-bottom-left-radius:10px }
+  .table tr td:last-child{ border-right:1px solid #1d2736; border-top-right-radius:10px; border-bottom-right-radius:10px }
+
+  /* Footer */
+  footer{
+    position:relative; z-index:10; margin-top:40px; border-top:1px dashed #1a2230;
+    padding:24px var(--pad-lg) 60px; color:#94a7c1;
+  }
+  .ascii{
+    font-family:"JetBrains Mono", monospace; color:#6fe; text-shadow:var(--glow-strong); white-space:pre; font-size:12px; line-height:1.15; opacity:.9;
+  }
+  .foot-wrap{ max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr auto; gap:18px; align-items:end }
+
+  /* Glitch hover for CTAs and cards */
+  .glitch{ position:relative; isolation:isolate }
+  .glitch::after{
+    content:attr(data-text);
+    position:absolute; inset:0; color:var(--neon2); clip-path: polygon(0 0,100% 0,100% 45%,0 60%);
+    mix-blend-mode:screen; filter:blur(.5px); opacity:0; transition:opacity .15s ease, transform .15s ease;
+    transform: translateY(0);
+  }
+  .glitch:hover::after{ opacity:1; transform: translateY(-1px) }
+
+  /* Responsive */
+  @media (max-width:1000px){
+    .hero-wrap{ grid-template-columns:1fr; }
+    .grid{ grid-template-columns:1fr 1fr; }
+    .lab{ grid-template-columns:1fr; }
+    .flex2{ grid-template-columns:1fr; }
+    .steps{ grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width:640px){
+    .grid{ grid-template-columns:1fr; }
+    .steps{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Visual ambience layers -->
+<canvas id="gridLayer" class="layer"></canvas>
+<canvas id="rainLayer" class="layer"></canvas>
+<canvas id="starsLayer" class="layer"></canvas>
+<div class="cursor" id="cursor"></div>
+
+<header>
+  <nav class="nav">
+    <a class="logo" href="#">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" stroke="url(#g1)" stroke-width="2"/>
+        <path d="M5 12h14M12 5v14" stroke="url(#g1)" stroke-width="2"/>
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="24" y2="24">
+            <stop stop-color="#00fff7"/><stop offset="1" stop-color="#a020f0"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="sig">BLACKICE</span> Academy
+    </a>
+    <div class="spacer"></div>
+    <a class="btn secondary glitch" data-text="Curriculum" href="#courses">Curriculum</a>
+    <a class="btn glitch" data-text="Start free mission" href="#live">Start free mission</a>
+  </nav>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-wrap">
+      <div>
+        <div class="tag">// ethical hacking . missions . labs</div>
+        <h1>Learn to hack. Then learn to protect.</h1>
+        <p class="sub">BlackICE Academy turns security into a cinematic craft. Solve live CTFs, break vulnerable apps, and build defenses, step by step — with neon clarity and hands-on precision.</p>
+        <div class="cta">
+          <a class="btn glitch" data-text="Start free mission" href="#live">Start free mission</a>
+          <a class="btn secondary glitch" data-text="View syllabus" href="#courses">View syllabus</a>
+        </div>
+        <div class="terminal" style="margin-top:18px">
+          <div class="lights"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div>
+          <div id="terminal" class="screen" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="globe">
+        <canvas id="globeCanvas" aria-label="3D rotating globe with live pings"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- COURSE HIGHLIGHTS -->
+  <section id="courses">
+    <div class="grid">
+      <article class="card">
+        <div class="inner">
+          <div class="label">Module 01</div>
+          <div class="title">Network Penetration</div>
+          <p class="desc">Recon, scanning, enumeration, privilege escalation. Tooling you’ll master: Nmap, Wireshark, Responder, BloodHound.</p>
+          <div class="meter" aria-label="difficulty"><span style="width:62%"></span></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="inner">
+          <div class="label">Module 02</div>
+          <div class="title">Web Exploitation</div>
+          <p class="desc">OWASP Top 10, auth bypass, injections, deserialization, SSRF chains, and patching strategies in the real world.</p>
+          <div class="meter"><span style="width:78%"></span></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="inner">
+          <div class="label">Module 03</div>
+          <div class="title">Forensics & Blue Team</div>
+          <p class="desc">Log carving, memory forensics, SIEM logic, and writing detections that actually light up when it matters.</p>
+          <div class="meter"><span style="width:54%"></span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- LIVE CYBER LAB PREVIEW -->
+  <section id="live">
+    <div class="lab">
+      <div class="panel">
+        <div class="label">Live lab preview</div>
+        <h3 style="margin:4px 0 8px">CTF: Crack the login (mock sandbox)</h3>
+        <p class="desc">Try a tiny sandboxed challenge. Inject, observe responses, iterate. The full course runs this as real labs with isolated targets.</p>
+        <div style="display:grid; grid-template-columns:1fr auto; gap:12px; margin-top:12px">
+          <input id="payload" placeholder="Enter payload (try ' OR '1'='1 )" style="background:#0c141e;border:1px solid #243042;border-radius:10px;padding:12px;color:#cfe;outline:none">
+          <button id="runPayload" class="btn secondary glitch" data-text="Run payload">Run payload</button>
+        </div>
+        <div id="labOut" class="terminal" style="margin-top:12px">
+          <div class="lights"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div>
+          <div class="screen" id="labScreen">status: waiting for input<span class="caret"></span></div>
+        </div>
+        <p style="margin-top:10px; color:#9bb4cf; font-size:14px">Tip: You can also try <span class="kbd">admin'--</span> or <span class="kbd">admin' #</span> to bypass simplistic checks.</p>
+      </div>
+      <div class="panel">
+        <div class="label">What you’ll unlock</div>
+        <ul style="margin:10px 0 0; padding-left:18px; color:#cfe">
+          <li><b>Hands-on missions:</b> Realistic targets with graded hints and writeups.</li>
+          <li><b>Telemetry:</b> Visual traces of requests, responses, and patch diffs.</li>
+          <li><b>Defender view:</b> Flip to blue-team mode to build detections.</li>
+          <li><b>Leaderboards:</b> Earn points, ranks, and rare badges.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- GAMIFIED PATH -->
+  <section>
+    <div class="timeline">
+      <div class="label">Learning path</div>
+      <h3 style="margin:6px 0 12px">From curious to capable — and beyond</h3>
+      <div class="steps">
+        <div class="step">
+          <span class="badge">Script Kiddie</span>
+          <h4>Orientation & Recon</h4>
+          <p>Command fluency, environment setup, and mindset calibration.</p>
+        </div>
+        <div class="step">
+          <span class="badge">Analyst</span>
+          <h4>Scanning & Enumeration</h4>
+          <p>Service mapping, creds hunting, and attack surface modeling.</p>
+        </div>
+        <div class="step">
+          <span class="badge">Pen Tester</span>
+          <h4>Exploitation & Lateral</h4>
+          <p>Chaining bugs and escalating with minimal noise.</p>
+        </div>
+        <div class="step">
+          <span class="badge">Red Team Lead</span>
+          <h4>OPSEC & Blue Evasion</h4>
+          <p>Detection engineering and resilient defense patterns.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY + LEADERBOARD -->
+  <section>
+    <div class="flex2">
+      <div class="panel" style="border:1px solid #1d2736; border-radius:16px; background:linear-gradient(180deg, var(--panel), #0a0f16cc); padding:18px;">
+        <div class="label">Top hackers (weekly)</div>
+        <table class="table" aria-label="Top hackers leaderboard">
+          <tbody id="leaders">
+            <tr><td>#1</td><td>0xNEON</td><td>8,420 pts</td><td><span class="badge">Web</span></td></tr>
+            <tr><td>#2</td><td>cyan_ghost</td><td>7,990 pts</td><td><span class="badge">Infra</span></td></tr>
+            <tr><td>#3</td><td>gl1tch</td><td>7,550 pts</td><td><span class="badge">Forensics</span></td></tr>
+            <tr><td>#4</td><td>NullPointer</td><td>6,880 pts</td><td><span class="badge">Cloud</span></td></tr>
+            <tr><td>#5</td><td>pr1sm</td><td>6,500 pts</td><td><span class="badge">Mobile</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel" style="border:1px solid #1d2736; border-radius:16px; background:linear-gradient(180deg, var(--panel), #0a0f16cc); padding:18px;">
+        <div class="label">Community chat</div>
+        <div id="chat" class="terminal">
+          <div class="lights"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div>
+          <div class="screen" id="chatStream">
+            [12:01] cyan_ghost: anyone chained SSRF -> metadata on lab-07?<br>
+            [12:02] 0xNEON: yes, watch the redirect filter — craft via DNS rebinding<br>
+            [12:03] gl1tch: dropping a sanitized POC in #lab-writeups<br>
+            <span class="caret"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-wrap">
+    <div class="ascii">
+ _____ _            _     _   _____   _____  ______ 
+| __  | |___ ___   |_|___| |_| __  | |  _  ||__    |
+| __ -| | -_| . |  | | -_|  _| __ -| |     |__| |  |
+|_____|_|___|  _|  |_|___|_| |_____| |__|__|  |____|
+            |_|         break the code . build the shield
+    </div>
+    <div>
+      <div>System status: <span style="color:var(--lime)">All systems operational</span></div>
+      <div style="font-size:13px; color:#9bb4cf">© BlackICE Academy</div>
+    </div>
+  </div>
+</footer>
+
+<!-- Three.js (CDN) -->
+<script src="https://unpkg.com/three@0.161.0/build/three.min.js"></script>
+<script>
+/* ========== Ambient layers ========== */
+(function matrixRain(){
+  const c = document.getElementById('rainLayer'), ctx = c.getContext('2d');
+  const resize = ()=>{ c.width = innerWidth; c.height = innerHeight; cols = Math.floor(c.width/14); drops = Array(cols).fill(0) };
+  let cols=0, drops=[];
+  const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*+-/~".split("");
+  resize(); addEventListener('resize', resize);
+  function draw(){
+    ctx.fillStyle="rgba(7,8,10,0.08)"; ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle="#0ff";
+    ctx.shadowColor="#0ff"; ctx.shadowBlur=8;
+    drops.forEach((y, i)=>{
+      const text = chars[(Math.random()*chars.length)|0];
+      const x = i*14;
+      ctx.fillText(text, x, y*14);
+      if(y*14 > c.height && Math.random() > 0.975) drops[i]=0;
+      drops[i] = y + 1;
+    });
+    requestAnimationFrame(draw);
+  }
+  ctx.font="12px JetBrains Mono, monospace";
+  draw();
+})();
+
+(function starfield(){
+  const c = document.getElementById('starsLayer'), ctx = c.getContext('2d');
+  const stars = []; let w=0,h=0;
+  function resize(){ w=c.width=innerWidth; h=c.height=innerHeight; stars.length=0; for(let i=0;i<120;i++){ stars.push({x:Math.random()*w,y:Math.random()*h,z:Math.random(),r:Math.random()*1.2}) } }
+  addEventListener('resize', resize); resize();
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){
+      s.x += (0.2+ s.z)*0.2;
+      if(s.x>w) { s.x=0; s.y=Math.random()*h; s.z=Math.random() }
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(114,245,255,${0.35+s.z*0.6})`;
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+(function neonGrid(){
+  const c = document.getElementById('gridLayer'), ctx=c.getContext('2d');
+  function resize(){ c.width=innerWidth; c.height=innerHeight }
+  addEventListener('resize', resize); resize();
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.strokeStyle="rgba(0,255,247,0.08)";
+    ctx.lineWidth=1;
+    const step = 40, off = (performance.now()/1000)%step;
+    for(let x=0;x<c.width;x+=step){
+      ctx.beginPath(); ctx.moveTo(x+off,0); ctx.lineTo(x+off,c.height); ctx.stroke();
+    }
+    for(let y=0;y<c.height;y+=step){
+      ctx.beginPath(); ctx.moveTo(0,y+off); ctx.lineTo(c.width,y+off); ctx.stroke();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ========== Custom cursor ========== */
+(function cursor(){
+  const cur = document.getElementById('cursor');
+  let x=0,y=0, tx=0, ty=0;
+  addEventListener('mousemove', e=>{ tx=e.clientX; ty=e.clientY; });
+  function tick(){
+    x += (tx - x)*0.2; y += (ty - y)*0.2;
+    cur.style.transform = `translate(${x}px, ${y}px)`;
+    requestAnimationFrame(tick);
+  }
+  tick();
+  addEventListener('mousedown', ()=>{ cur.style.scale='0.8'; setTimeout(()=>cur.style.scale='1',120) });
+})();
+
+/* ========== Terminal typing ========== */
+(function terminal(){
+  const el = document.getElementById('terminal');
+  const lines = [
+    "> initializing BlackICE Academy...",
+    "> loading modules: recon, web, forensics, cloud",
+    "> connecting to lab cluster: OK",
+    "> tip: type help to list missions",
+    "user@blackice:~$ help",
+    "missions:",
+    " - web-01: login-bypass (difficulty: 2/5)",
+    " - web-07: ssrf-metadata (difficulty: 4/5)",
+    " - net-03: smb-ghost (difficulty: 3/5)",
+    " - blue-02: write-detection-sigma (difficulty: 3/5)",
+    "user@blackice:~$ start web-01"
+  ];
+  let i=0;
+  function typeLine(){
+    if(i>=lines.length){ el.innerHTML += "\n" + "ready." ; return; }
+    let j=0, line = lines[i];
+    const row = document.createElement('div');
+    el.appendChild(row);
+    const t = setInterval(()=>{
+      row.textContent = line.slice(0, j++);
+      if(j>line.length){ clearInterval(t); i++; setTimeout(typeLine, 250); }
+      el.scrollTop = el.scrollHeight;
+    }, 18);
+  }
+  typeLine();
+})();
+
+/* ========== Mini 3D Globe with pings ========== */
+(function globe(){
+  const canvas = document.getElementById('globeCanvas');
+  try{
+    const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
+    const resize = ()=>{
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width, h = rect.height;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    };
+    const light = new THREE.AmbientLight(0x88ccff, 1.2); scene.add(light);
+    const dlight = new THREE.DirectionalLight(0x72f5ff, 0.9); dlight.position.set(2,2,3); scene.add(dlight);
+
+    const geo = new THREE.SphereGeometry(1, 64, 64);
+    const mat = new THREE.MeshStandardMaterial({
+      color: 0x0c1830,
+      roughness: 0.65,
+      metalness: 0.2,
+      emissive: 0x072a28,
+      emissiveIntensity: 0.35
+    });
+    const globe = new THREE.Mesh(geo, mat); scene.add(globe);
+
+    // Longitudes/latitudes line glow
+    const latLong = new THREE.GridHelper(2.02, 18, 0x00fff7, 0x00fff7);
+    latLong.material.opacity=0.15; latLong.material.transparent=true;
+    scene.add(latLong);
+
+    // Pings
+    const pingGeo = new THREE.SphereGeometry(0.01, 8, 8);
+    const pings = [];
+    const pingMat = new THREE.MeshBasicMaterial({color:0x00fff7});
+    function addPing(lat, lon){
+      const phi = (90 - lat) * (Math.PI/180);
+      const theta = (lon + 180) * (Math.PI/180);
+      const r = 1.01;
+      const x = -r * Math.sin(phi) * Math.cos(theta);
+      const z =  r * Math.sin(phi) * Math.sin(theta);
+      const y =  r * Math.cos(phi);
+      const m = new THREE.Mesh(pingGeo, pingMat.clone());
+      m.position.set(x,y,z);
+      m.material.transparent = true; m.material.opacity = 1;
+      pings.push({m, life:1});
+      scene.add(m);
+    }
+    // random pings
+    setInterval(()=> addPing((Math.random()*180)-90, (Math.random()*360)-180), 900);
+
+    camera.position.z = 3;
+    const clock = new THREE.Clock();
+    function tick(){
+      const t = clock.getElapsedTime();
+      globe.rotation.y = t*0.15;
+      latLong.rotation.y = t*0.15;
+
+      // decay pings
+      for(let i=pings.length-1;i>=0;i--){
+        const p = pings[i];
+        p.m.scale.setScalar(1 + (1-p.life)*2.5);
+        p.life -= 0.01;
+        p.m.material.opacity = Math.max(0, p.life);
+        if(p.life<=0){ scene.remove(p.m); pings.splice(i,1); }
+      }
+
+      renderer.setClearColor(0x000000, 0);
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+    new ResizeObserver(resize).observe(canvas); resize(); tick();
+  }catch(e){
+    canvas.insertAdjacentHTML('beforebegin','<div style="color:#f88;padding:10px">WebGL not available.</div>');
+  }
+})();
+
+/* ========== Mock lab challenge ========== */
+(function lab(){
+  const input = document.getElementById('payload');
+  const btn = document.getElementById('runPayload');
+  const screen = document.getElementById('labScreen');
+
+  const responses = [
+    { pattern: /('|")\s*or\s*\1?1\1?\s*=\s*\1?1/i, msg: "bypass detected -> login success (flag stub: FLAG{demo_only})" },
+    { pattern: /--|#/, msg: "comment truncation accepted -> auth bypass (flag stub: FLAG{demo_only})" },
+    { pattern: /admin/i, msg: "username exists, applying weak filter... try adding a comment" }
+  ];
+
+  btn.addEventListener('click', ()=>{
+    const val = (input.value || '').trim();
+    if(!val){ screen.innerHTML = "status: provide a payload<span class='caret'></span>"; return; }
+    const hit = responses.find(r => r.pattern.test(val));
+    if(hit){
+      screen.innerHTML = "[sandbox] " + hit.msg + "<br>next: patch with parameterized queries<span class='caret'></span>";
+    }else{
+      screen.innerHTML = "[sandbox] no effect — server returned generic error<br>hint: try a tautology or comment<span class='caret'></span>";
+    }
+  });
+})();
+
+/* ========== Small leaderboard wobble ========== */
+(function wobble(){
+  const rows = Array.from(document.querySelectorAll('#leaders tr'));
+  let i = 0;
+  setInterval(()=>{
+    rows.forEach(r=> r.style.filter='');
+    rows[i%rows.length].style.filter='drop-shadow(0 0 8px rgba(0,255,247,0.35))';
+    i++;
+  }, 1600);
+})();
+</script>
+</body>
+</html>
