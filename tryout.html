@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Try Out Labs — BlackICE Academy</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzBhMGEwYSIvPgo8cGF0aCBkPSJNOCA4SDE2VjE2SDhWOFoiIGZpbGw9IiMwMGZmODgiLz4KPHN0eWxlPi5heyBhbmltYXRpb246IGJsaW5rIDJzIGluZmluaXRlOyB9IEBrZXlmcmFtZXMgYmxpbms7IHsgNTAlIHsgb3BhY2l0eTogMC4zOyB9IH08L3N0eWxlPgo8cGF0aCBkPSJNMjQgOEgyNFYxNkgxNlY4SDI0WiIgZmlsbD0iIzAwZmY4OCIgY2xhc3M9ImEiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMDBmZjg4IiBvcGFjaXR5PSIwLjciLz4KPC9zdmc+Cjwvc3ZnPg==" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07080a; --panel:#0e1116cc; --neon:#00fff7; --neon2:#72f5ff; --purple:#a020f0; --hot:#ff2e63; --lime:#9afc63; --amber:#ffcc66;
+    --glow-strong: 0 0 24px rgba(0,255,247,0.35), 0 0 48px rgba(0,255,247,0.15);
+    --glass-blur: blur(14px);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background: radial-gradient(1200px 800px at 70% -10%, #0b1220 0%, #07080a 50%, #050608 100%);
+    color:#e9f1ff; font-family: Inter, system-ui, sans-serif; overflow-x:hidden;
+  }
+  .container{ max-width:1400px; margin:0 auto; padding:20px; }
+  .header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
+  .back{ color:var(--neon2); text-decoration:none; font-family:"JetBrains Mono", monospace; font-size:14px; }
+  .back:hover{ color:var(--neon); }
+  .tag{ font-family:"JetBrains Mono", monospace; color:var(--neon2); font-size:12px; text-transform:uppercase; letter-spacing:.12em; }
+  h1{ font-size:36px; margin:10px 0; text-shadow:var(--glow-strong); }
+  
+  .lab-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap:20px; }
+  .lab-card{
+    border:1px solid #1d2736; border-radius:16px; background: linear-gradient(180deg, var(--panel), #0a0f16cc);
+    backdrop-filter: var(--glass-blur); padding:20px; transition: all .3s ease; cursor:pointer;
+  }
+  .lab-card:hover{ transform:translateY(-4px); border-color:#2a3b52; box-shadow: 0 8px 40px rgba(0,0,0,.45); }
+  .lab-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
+  .lab-title{ font-size:18px; font-weight:800; color:var(--neon); }
+  .lab-status{ font-family:"JetBrains Mono", monospace; font-size:10px; padding:4px 8px; border-radius:6px; text-transform:uppercase; }
+  .status-live{ background:var(--lime); color:#000; }
+  .status-beta{ background:var(--amber); color:#000; }
+  .status-coming{ background:#333; color:#999; }
+  
+  .lab-desc{ color:#a9b9cf; margin-bottom:15px; font-size:14px; }
+  .lab-tech{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:15px; }
+  .tech-tag{ font-family:"JetBrains Mono", monospace; font-size:10px; padding:3px 6px; border-radius:4px; background:#0c141e; color:var(--neon2); border:1px solid #1d2736; }
+  
+  .lab-terminal{
+    background:#0b1018; border:1px solid #1d2736; border-radius:8px; padding:12px; margin:15px 0;
+    font-family:"JetBrains Mono", monospace; font-size:12px; color:#9fd; min-height:120px;
+  }
+  .terminal-header{ display:flex; gap:6px; margin-bottom:8px; }
+  .term-dot{ width:8px; height:8px; border-radius:50%; }
+  .term-dot.red{ background:#ff5f57; } .term-dot.amber{ background:#febc2e; } .term-dot.green{ background:#28c840; }
+  
+  .lab-actions{ display:flex; gap:10px; }
+  .btn{
+    padding:10px 16px; border:none; border-radius:8px; font-family:"JetBrains Mono", monospace; font-size:12px;
+    cursor:pointer; text-decoration:none; display:inline-block; transition: all .2s ease; text-transform:uppercase;
+  }
+  .btn-primary{ background:var(--neon); color:#000; font-weight:700; }
+  .btn-primary:hover{ background:var(--neon2); transform:translateY(-1px); }
+  .btn-secondary{ background:transparent; color:var(--neon2); border:1px solid #243042; }
+  .btn-secondary:hover{ border-color:var(--neon2); color:var(--neon); }
+  
+  .difficulty{ display:flex; gap:4px; margin:10px 0; }
+  .diff-dot{ width:6px; height:6px; border-radius:50%; background:#1d2736; }
+  .diff-dot.active{ background:var(--hot); box-shadow:0 0 6px rgba(255,46,99,0.5); }
+  
+  @media (max-width:800px){ .lab-grid{ grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <a href="index.html" class="back">← Back to Academy</a>
+      <div class="tag">// live simulation labs</div>
+      <h1>Try Out Missions</h1>
+    </div>
+  </div>
+  
+  <div class="lab-grid">
+    <!-- SQL Injection Lab -->
+    <div class="lab-card" onclick="startLab('sqli')">
+      <div class="lab-header">
+        <div class="lab-title">SQL Injection Bypass</div>
+        <div class="lab-status status-live">LIVE</div>
+      </div>
+      <div class="lab-desc">Exploit vulnerable login forms using SQL injection techniques. Learn to bypass authentication and extract sensitive data.</div>
+      <div class="lab-tech">
+        <span class="tech-tag">mysql</span><span class="tech-tag">php</span><span class="tech-tag">burp-suite</span>
+      </div>
+      <div class="difficulty">
+        <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+      </div>
+      <div class="lab-terminal">
+        <div class="terminal-header">
+          <div class="term-dot red"></div><div class="term-dot amber"></div><div class="term-dot green"></div>
+        </div>
+        <div id="sqli-output">
+          > SELECT * FROM users WHERE username='admin'<br>
+          > AND password='[PAYLOAD]'<br>
+          <span style="color:var(--amber)">Waiting for input...</span>
+        </div>
+      </div>
+      <div class="lab-actions">
+        <a href="#" class="btn btn-primary">Start Lab</a>
+        <a href="#" class="btn btn-secondary">View Hints</a>
+      </div>
+    </div>
+
+    <!-- XSS Lab -->
+    <div class="lab-card" onclick="startLab('xss')">
+      <div class="lab-header">
+        <div class="lab-title">Cross-Site Scripting</div>
+        <div class="lab-status status-live">LIVE</div>
+      </div>
+      <div class="lab-desc">Inject malicious scripts into web applications. Practice reflected, stored, and DOM-based XSS attacks.</div>
+      <div class="lab-tech">
+        <span class="tech-tag">javascript</span><span class="tech-tag">html</span><span class="tech-tag">dom</span>
+      </div>
+      <div class="difficulty">
+        <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+      </div>
+      <div class="lab-terminal">
+        <div class="terminal-header">
+          <div class="term-dot red"></div><div class="term-dot amber"></div><div class="term-dot green"></div>
+        </div>
+        <div id="xss-output">
+          > &lt;script&gt;alert('XSS')&lt;/script&gt;<br>
+          > Payload injected into comment field<br>
+          <span style="color:var(--lime)">Ready for exploitation...</span>
+        </div>
+      </div>
+      <div class="lab-actions">
+        <a href="#" class="btn btn-primary">Start Lab</a>
+        <a href="#" class="btn btn-secondary">View Hints</a>
+      </div>
+    </div>
+
+    <!-- Network Scan Lab -->
+    <div class="lab-card" onclick="startLab('nmap')">
+      <div class="lab-header">
+        <div class="lab-title">Network Reconnaissance</div>
+        <div class="lab-status status-live">LIVE</div>
+      </div>
+      <div class="lab-desc">Discover live hosts and open ports on target networks. Master Nmap scanning techniques and service enumeration.</div>
+      <div class="lab-tech">
+        <span class="tech-tag">nmap</span><span class="tech-tag">netcat</span><span class="tech-tag">wireshark</span>
+      </div>
+      <div class="difficulty">
+        <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+      </div>
+      <div class="lab-terminal">
+        <div class="terminal-header">
+          <div class="term-dot red"></div><div class="term-dot amber"></div><div class="term-dot green"></div>
+        </div>
+        <div id="nmap-output">
+          > nmap -sS -sV 192.168.1.0/24<br>
+          > Scanning 254 hosts...<br>
+          <span style="color:var(--neon)">3 hosts discovered</span>
+        </div>
+      </div>
+      <div class="lab-actions">
+        <a href="#" class="btn btn-primary">Start Lab</a>
+        <a href="#" class="btn btn-secondary">View Hints</a>
+      </div>
+    </div>
+
+    <!-- Buffer Overflow Lab -->
+    <div class="lab-card" onclick="startLab('bof')">
+      <div class="lab-header">
+        <div class="lab-title">Buffer Overflow</div>
+        <div class="lab-status status-beta">BETA</div>
+      </div>
+      <div class="lab-desc">Exploit memory corruption vulnerabilities. Learn stack-based buffer overflows and shellcode injection techniques.</div>
+      <div class="lab-tech">
+        <span class="tech-tag">gdb</span><span class="tech-tag">assembly</span><span class="tech-tag">shellcode</span>
+      </div>
+      <div class="difficulty">
+        <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div>
+      </div>
+      <div class="lab-terminal">
+        <div class="terminal-header">
+          <div class="term-dot red"></div><div class="term-dot amber"></div><div class="term-dot green"></div>
+        </div>
+        <div id="bof-output">
+          > gdb ./vulnerable_app<br>
+          > (gdb) run AAAA...[payload]<br>
+          <span style="color:var(--hot)">Segmentation fault detected</span>
+        </div>
+      </div>
+      <div class="lab-actions">
+        <a href="#" class="btn btn-primary">Start Lab</a>
+        <a href="#" class="btn btn-secondary">View Hints</a>
+      </div>
+    </div>
+
+    <!-- Cryptography Lab -->
+    <div class="lab-card" onclick="startLab('crypto')">
+      <div class="lab-header">
+        <div class="lab-title">Cryptographic Attacks</div>
+        <div class="lab-status status-live">LIVE</div>
+      </div>
+      <div class="lab-desc">Break weak encryption implementations. Practice frequency analysis, padding oracle attacks, and key recovery.</div>
+      <div class="lab-tech">
+        <span class="tech-tag">openssl</span><span class="tech-tag">python</span><span class="tech-tag">hashcat</span>
+      </div>
+      <div class="difficulty">
+        <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div>
+      </div>
+      <div class="lab-terminal">
+        <div class="terminal-header">
+          <div class="term-dot red"></div><div class="term-dot amber"></div><div class="term-dot green"></div>
+        </div>
+        <div id="crypto-output">
+          > hashcat -m 0 hash.txt wordlist.txt<br>
+          > Cracking MD5 hashes...<br>
+          <span style="color:var(--purple)">2/5 hashes recovered</span>
+        </div>
+      </div>
+      <div class="lab-actions">
+        <a href="#" class="btn btn-primary">Start Lab</a>
+        <a href="#" class="btn btn-secondary">View Hints</a>
+      </div>
+    </div>
+
+    <!-- Forensics Lab -->
+    <div class="lab-card" onclick="startLab('forensics')">
+      <div class="lab-header">
+        <div class="lab-title">Digital Forensics</div>
+        <div class="lab-status status-coming">COMING SOON</div>
+      </div>
+      <div class="lab-desc">Investigate security incidents and recover digital evidence. Analyze memory dumps, network traffic, and file systems.</div>
+      <div class="lab-tech">
+        <span class="tech-tag">volatility</span><span class="tech-tag">autopsy</span><span class="tech-tag">sleuthkit</span>
+      </div>
+      <div class="difficulty">
+        <div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot active"></div><div class="diff-dot"></div><div class="diff-dot"></div>
+      </div>
+      <div class="lab-terminal">
+        <div class="terminal-header">
+          <div class="term-dot red"></div><div class="term-dot amber"></div><div class="term-dot green"></div>
+        </div>
+        <div id="forensics-output">
+          > volatility -f memory.dmp imageinfo<br>
+          > Analyzing Windows 10 memory dump<br>
+          <span style="color:#666">Lab under development...</span>
+        </div>
+      </div>
+      <div class="lab-actions">
+        <a href="#" class="btn btn-secondary">Notify Me</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function startLab(labType) {
+  const outputs = {
+    sqli: "Connecting to vulnerable web app...\n> Target: http://lab.blackice/login.php\n> Status: Ready for SQL injection",
+    xss: "Loading XSS playground...\n> Target: http://lab.blackice/comments.php\n> Status: DOM manipulation ready",
+    nmap: "Initializing network scanner...\n> Target range: 10.0.0.0/24\n> Status: Scanning in progress...",
+    bof: "Loading vulnerable binary...\n> Target: /opt/labs/buffer_overflow\n> Status: GDB attached, ready for exploitation",
+    crypto: "Loading cryptographic challenges...\n> Target: encrypted_messages.zip\n> Status: Hash analysis tools loaded"
+  };
+  
+  const element = document.getElementById(labType + '-output');
+  if (element && outputs[labType]) {
+    element.innerHTML = outputs[labType] + '<br><span style="color:var(--lime)">Lab session active</span>';
+  }
+}
+
+// Simulate terminal activity
+setInterval(() => {
+  const terminals = ['sqli-output', 'xss-output', 'nmap-output'];
+  const randomTerminal = terminals[Math.floor(Math.random() * terminals.length)];
+  const element = document.getElementById(randomTerminal);
+  if (element) {
+    const originalContent = element.innerHTML;
+    element.innerHTML = originalContent + '<br><span style="color:var(--neon2)">.</span>';
+    setTimeout(() => {
+      element.innerHTML = originalContent;
+    }, 1000);
+  }
+}, 3000);
+</script>
+
+</body>
+</html>

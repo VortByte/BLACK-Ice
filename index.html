@@ -517,7 +517,7 @@
     </a>
     <div class="spacer"></div>
     <a class="btn secondary" href="#courses">Curriculum</a>
-    <a class="btn" href="#live">Start free mission</a>
+    <a class="btn" href="tryout.html">Try Out Labs</a>
   </nav>
 </header>
 
@@ -530,12 +530,16 @@
         <h1>Learn to hack. Then learn to protect.</h1>
         <p class="sub">BlackICE Academy turns security into a cinematic craft. Solve live CTFs, break vulnerable apps, and build defenses, step by step — with neon clarity and hands-on precision.</p>
         <div class="cta">
-          <a class="btn" href="syllabus.html">Start free mission</a>
+          <a class="btn" href="tryout.html">Start free mission</a>
           <a class="btn secondary" href="syllabus.html">View syllabus</a>
         </div>
         <div class="terminal" style="margin-top:18px">
           <div class="lights"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div>
           <div id="terminal" class="screen" aria-live="polite"></div>
+        </div>
+        <div class="terminal" style="margin-top:12px">
+          <div class="lights"><span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span></div>
+          <div id="deviceInfo" class="screen" style="min-height:140px;"></div>
         </div>
       </div>
       <div class="globe">
@@ -817,6 +821,76 @@
     }, 18);
   }
   typeLine();
+})();
+
+/* ========== Device Info Display ========== */
+(function deviceInfo(){
+  const el = document.getElementById('deviceInfo');
+  const nav = navigator;
+  const screen = window.screen;
+  
+  const getOS = () => {
+    const ua = nav.userAgent;
+    if(ua.includes('Windows')) return 'Windows';
+    if(ua.includes('Mac')) return 'macOS';
+    if(ua.includes('Linux')) return 'Linux';
+    if(ua.includes('Android')) return 'Android';
+    if(ua.includes('iPhone')) return 'iOS';
+    return 'Unknown';
+  };
+  
+  const getBrowser = () => {
+    const ua = nav.userAgent;
+    if(ua.includes('Chrome') && !ua.includes('Edge')) return 'Chrome';
+    if(ua.includes('Firefox')) return 'Firefox';
+    if(ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
+    if(ua.includes('Edge')) return 'Edge';
+    return 'Unknown';
+  };
+  
+  const lines = [
+    "> scanning client environment...",
+    "> OS: " + getOS(),
+    "> Browser: " + getBrowser(),
+    "> Screen: " + screen.width + "x" + screen.height,
+    "> IP: <span style='color:var(--neon)' id='userIP'>Detecting...</span>",
+    "> Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone,
+    "> Language: " + nav.language,
+    "> Cores: " + nav.hardwareConcurrency,
+    "> Memory: " + (nav.deviceMemory || 'Unknown') + "GB",
+    "> Connection: " + (nav.connection?.effectiveType || 'Unknown'),
+    "> Status: <span style='color:var(--lime)'>AUTHENTICATED</span>"
+  ];
+  
+  // Get IP address
+  fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+      const ipEl = document.getElementById('userIP');
+      if(ipEl) ipEl.textContent = data.ip;
+    })
+    .catch(() => {
+      const ipEl = document.getElementById('userIP');
+      if(ipEl) ipEl.textContent = 'Hidden';
+    });
+  
+  let i=0;
+  function typeLine(){
+    if(i>=lines.length) return;
+    let j=0, line = lines[i];
+    const row = document.createElement('div');
+    el.appendChild(row);
+    const t = setInterval(()=>{
+      if(j <= line.length){
+        row.innerHTML = line.slice(0, j++);
+      } else {
+        clearInterval(t); i++; setTimeout(typeLine, 200);
+      }
+      el.scrollTop = el.scrollHeight;
+    }, 25);
+  }
+  
+  setTimeout(typeLine, 2000);
 })();
 
 /* ========== Mini 3D Globe with pings ========== */
