@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blog — BlackICE Academy</title>
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzBhMGEwYSIvPgo8cGF0aCBkPSJNOCA4SDE2VjE2SDhWOFoiIGZpbGw9IiMwMGZmODgiLz4KPHN0eWxlPi5heyBhbmltYXRpb246IGJsaW5rIDJzIGluZmluaXRlOyB9IEBrZXlmcmFtZXMgYmxpbms7IHsgNTAlIHsgb3BhY2l0eTogMC4zOyB9IH08L3N0eWxlPgo8cGF0aCBkPSJNMjQgOEgyNFYxNkgxNlY4SDI0WiIgZmlsbD0iIzAwZmY4OCIgY2xhc3M9ImEiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMDBmZjg4IiBvcGFjaXR5PSIwLjciLz4KPC9zdmc+Cjwvc3ZnPg==" type="image/svg+xml">
+<style>
+  :root{
+    --bg:#07080a; --neon:#00fff7; --neon2:#72f5ff; --purple:#a020f0; --hot:#ff2e63; --lime:#9afc63; --amber:#ffcc66;
+    --glow-strong: 0 0 24px rgba(0,255,247,0.35), 0 0 48px rgba(0,255,247,0.15);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background: radial-gradient(1200px 800px at 70% -10%, #0b1220 0%, #07080a 50%, #050608 100%);
+    color:#e9f1ff; font-family:"JetBrains Mono", monospace;
+  }
+  .back-btn{
+    position:fixed; top:30px; left:30px; z-index:100;
+    padding:15px 25px; background:linear-gradient(135deg, #0a0f17, #1a2332);
+    color:var(--neon); text-decoration:none; font-size:14px; font-weight:600;
+    clip-path:polygon(20px 0%, 100% 0%, calc(100% - 20px) 100%, 0% 100%);
+    border:1px solid var(--neon); position:relative; overflow:hidden;
+    transform:translateX(-200px); opacity:0;
+    animation:slideIn 1s ease 0.5s forwards;
+    transition:all 0.3s ease;
+  }
+  .back-btn::before{
+    content:''; position:absolute; top:0; left:-100%;
+    width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(0,255,247,0.2), transparent);
+    transition:left 0.5s ease;
+  }
+  .back-btn::after{
+    content:'◄◄◄'; position:absolute; right:8px; top:50%;
+    transform:translateY(-50%); font-size:10px; opacity:0.6;
+    transition:all 0.3s ease;
+  }
+  .back-btn:hover{
+    background:linear-gradient(135deg, #0f1a2a, #2a3f5a);
+    box-shadow:0 0 25px rgba(0,255,247,0.5), inset 0 0 15px rgba(0,255,247,0.1);
+    transform:translateX(0) translateY(-2px);
+  }
+  .back-btn:hover::before{ left:100%; }
+  .back-btn:hover::after{ opacity:1; transform:translateY(-50%) translateX(-3px); }
+  @keyframes slideIn{
+    to{ transform:translateX(0); opacity:1; }
+  }
+  .container{ max-width:800px; margin:0 auto; padding:60px 20px; }
+  .header{ text-align:center; margin-bottom:40px; }
+  .title{ font-size:36px; color:var(--neon); text-shadow:var(--glow-strong); margin:0 0 10px; }
+  .subtitle{ color:#a9b9cf; font-size:16px; margin:0; }
+  .post{
+    background:linear-gradient(180deg, #0e1116cc, #0a0f16cc); border:1px solid #1d2736; border-radius:16px;
+    padding:30px; margin-bottom:30px; backdrop-filter:blur(14px);
+  }
+  .post-title{ font-size:24px; color:var(--neon2); margin:0 0 15px; }
+  .post-meta{ color:#9ab0c7; font-size:12px; margin-bottom:20px; }
+  .post-content{ line-height:1.6; color:#dce7f8; }
+  .post-content h3{ color:var(--lime); margin:20px 0 10px; }
+  .post-content code{ background:#0c141e; padding:2px 6px; border-radius:4px; color:var(--amber); }
+  .post-content pre{ background:#0c141e; padding:15px; border-radius:8px; overflow-x:auto; border:1px solid #243042; }
+  .tag{ display:inline-block; background:#0c141e; color:var(--neon2); padding:4px 8px; border-radius:6px; font-size:11px; margin-right:8px; }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-btn">← Back to Academy</a>
+
+<div class="container">
+  <div class="header">
+    <h1 class="title">BlackICE Blog</h1>
+    <p class="subtitle">Insights from the cybersecurity frontlines</p>
+  </div>
+  
+  <article class="post">
+    <h2 class="post-title">Welcome to My Blog</h2>
+    <div class="post-meta">
+      Published on December 15, 2024
+    </div>
+    <div class="post-content">
+      <p>Welcome to my personal blog! This is a space where I share thoughts, experiences, and insights about various topics that interest me.</p>
+      
+      <h3>About This Blog</h3>
+      <p>I created this blog as a way to document my journey and share knowledge with others. You'll find posts about technology, learning experiences, and personal reflections.</p>
+      
+      <h3>What You Can Expect</h3>
+      <p>Here are some of the topics I plan to cover:</p>
+      <ul>
+        <li><strong>Technology:</strong> Latest trends and tools I'm exploring</li>
+        <li><strong>Learning:</strong> Educational resources and study tips</li>
+        <li><strong>Projects:</strong> Things I'm working on and building</li>
+        <li><strong>Thoughts:</strong> Personal reflections and observations</li>
+      </ul>
+      
+      <h3>Getting Started</h3>
+      <p>This blog is just getting started, so there's much more content to come. I'm excited to share this journey with you and hope you find something valuable here.</p>
+      
+      <p>Feel free to explore the site and check back regularly for new posts. Thanks for visiting!</p>
+    </div>
+  </article>
+</div>
+
+</body>
+</html>

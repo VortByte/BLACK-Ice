@@ -127,17 +127,33 @@
   .caret{ display:inline-block; width:8px; background:var(--neon); height:1.1em; vertical-align:-2px; animation:blink 1s steps(1) infinite }
   @keyframes blink{ 50%{opacity:0} }
 
-  /* Three.js mini-globe panel */
+  /* CheckPoint Threat Map Panel */
   .globe{
     aspect-ratio: 1.2 / 1; min-height:280px; border-radius:16px; overflow:hidden;
     border:1px solid #1d2736; background: radial-gradient(600px 300px at 80% -20%, #142034 0%, #0b1018 50%, #0b1018 100%);
     position:relative;
   }
   .globe:after{
-    content:"// live threat map"; position:absolute; right:12px; bottom:8px; font-family:"JetBrains Mono", monospace;
-    font-size:11px; color:#7fb; opacity:.7
+    content:"// powered by ThreatsEye"; position:absolute; right:12px; bottom:8px; font-family:"JetBrains Mono", monospace;
+    font-size:11px; color:#7fb; opacity:.7; z-index:10;
   }
-  #globeCanvas{ width:100%; height:100%; display:block }
+  #threatMapFrame{ width:100%; height:100%; border:none; display:none; border-radius:16px; }
+  
+  /* Loader Animation */
+  .loader{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background: radial-gradient(600px 300px at 80% -20%, #142034 0%, #0b1018 50%, #0b1018 100%);
+    border-radius:16px;
+  }
+  .spinner{
+    width:40px; height:40px; border:3px solid #1d2736; border-top:3px solid var(--neon);
+    border-radius:50%; animation:spin 1s linear infinite; margin-bottom:16px;
+  }
+  .loader-text{
+    font-family:"JetBrains Mono", monospace; color:var(--neon2); font-size:12px;
+    text-align:center; line-height:1.4; opacity:0.9;
+  }
+  @keyframes spin{ 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 
   /* Sections */
   section{ position:relative; z-index:10; padding:40px var(--pad-lg); }
@@ -551,7 +567,7 @@
     <div class="hero-wrap">
       <div>
         <div class="tag">// ethical hacking . missions . labs</div>
-        <h1>Learn to hack. Then learn to protect.</h1>
+        <h1><span id="secretText" style="cursor:pointer;">Learn to hack</span>. Then learn to protect.</h1>
         <p class="sub">BlackICE Academy turns security into a cinematic craft. Solve live CTFs, break vulnerable apps, and build defenses, step by step — with neon clarity and hands-on precision.</p>
         <div class="cta">
           <a class="btn" href="tryout.html">Start free mission</a>
@@ -567,7 +583,16 @@
         </div>
       </div>
       <div class="globe">
-        <canvas id="globeCanvas" aria-label="3D rotating globe with live pings"></canvas>
+        <div id="mapLoader" class="loader">
+          <div class="spinner"></div>
+          <div class="loader-text" id="loaderText">
+            > connecting to threat intelligence...
+          </div>
+        </div>
+        <iframe id="threatMapFrame" src="https://threatseye.io/threats-map" 
+                title="ThreatsEye Live Cyber Threat Map" 
+                aria-label="Real-time global cyber threat visualization">
+        </iframe>
       </div>
     </div>
   </section>
@@ -922,82 +947,7 @@
   setTimeout(typeLine, 2000);
 })();
 
-/* ========== Mini 3D Globe with pings ========== */
-(function globe(){
-  const canvas = document.getElementById('globeCanvas');
-  try{
-    const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-    const resize = ()=>{
-      const rect = canvas.getBoundingClientRect();
-      const w = rect.width, h = rect.height;
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h; camera.updateProjectionMatrix();
-    };
-    const light = new THREE.AmbientLight(0x88ccff, 1.2); scene.add(light);
-    const dlight = new THREE.DirectionalLight(0x72f5ff, 0.9); dlight.position.set(2,2,3); scene.add(dlight);
 
-    const geo = new THREE.SphereGeometry(1, 64, 64);
-    const mat = new THREE.MeshStandardMaterial({
-      color: 0x0c1830,
-      roughness: 0.65,
-      metalness: 0.2,
-      emissive: 0x072a28,
-      emissiveIntensity: 0.35
-    });
-    const globe = new THREE.Mesh(geo, mat); scene.add(globe);
-
-    // Longitudes/latitudes line glow
-    const latLong = new THREE.GridHelper(2.02, 18, 0x00fff7, 0x00fff7);
-    latLong.material.opacity=0.15; latLong.material.transparent=true;
-    scene.add(latLong);
-
-    // Pings
-    const pingGeo = new THREE.SphereGeometry(0.01, 8, 8);
-    const pings = [];
-    const pingMat = new THREE.MeshBasicMaterial({color:0x00fff7});
-    function addPing(lat, lon){
-      const phi = (90 - lat) * (Math.PI/180);
-      const theta = (lon + 180) * (Math.PI/180);
-      const r = 1.01;
-      const x = -r * Math.sin(phi) * Math.cos(theta);
-      const z =  r * Math.sin(phi) * Math.sin(theta);
-      const y =  r * Math.cos(phi);
-      const m = new THREE.Mesh(pingGeo, pingMat.clone());
-      m.position.set(x,y,z);
-      m.material.transparent = true; m.material.opacity = 1;
-      pings.push({m, life:1});
-      scene.add(m);
-    }
-    // random pings
-    setInterval(()=> addPing((Math.random()*180)-90, (Math.random()*360)-180), 900);
-
-    camera.position.z = 3;
-    const clock = new THREE.Clock();
-    function tick(){
-      const t = clock.getElapsedTime();
-      globe.rotation.y = t*0.15;
-      latLong.rotation.y = t*0.15;
-
-      // decay pings
-      for(let i=pings.length-1;i>=0;i--){
-        const p = pings[i];
-        p.m.scale.setScalar(1 + (1-p.life)*2.5);
-        p.life -= 0.01;
-        p.m.material.opacity = Math.max(0, p.life);
-        if(p.life<=0){ scene.remove(p.m); pings.splice(i,1); }
-      }
-
-      renderer.setClearColor(0x000000, 0);
-      renderer.render(scene, camera);
-      requestAnimationFrame(tick);
-    }
-    new ResizeObserver(resize).observe(canvas); resize(); tick();
-  }catch(e){
-    canvas.insertAdjacentHTML('beforebegin','<div style="color:#f88;padding:10px">WebGL not available.</div>');
-  }
-})();
 
 /* ========== Mock lab challenge ========== */
 (function lab(){
@@ -1032,6 +982,51 @@
     rows[i%rows.length].style.filter='drop-shadow(0 0 8px rgba(0,255,247,0.35))';
     i++;
   }, 1600);
+})();
+
+/* ========== Threat Map Loader ========== */
+(function threatMapLoader(){
+  const iframe = document.getElementById('threatMapFrame');
+  const loader = document.getElementById('mapLoader');
+  const loaderText = document.getElementById('loaderText');
+  let loadTime = 0;
+  
+  const messages = [
+    '> connecting to threat intelligence...',
+    '> establishing secure connection...',
+    '> your internet seems slow...',
+    '> still loading threat data...',
+    '> connection taking longer than expected...'
+  ];
+  
+  const messageTimer = setInterval(() => {
+    loadTime++;
+    if(loadTime < messages.length) {
+      loaderText.textContent = messages[loadTime];
+    }
+  }, 3000);
+  
+  iframe.onload = () => {
+    clearInterval(messageTimer);
+    loader.style.display = 'none';
+    iframe.style.display = 'block';
+  };
+  
+  setTimeout(() => {
+    if(loader.style.display !== 'none') {
+      loaderText.textContent = '> network timeout - refresh to retry';
+    }
+  }, 20000);
+})();
+
+/* ========== Secret Random Text Access ========== */
+(function secretAccess(){
+  const secretText = document.getElementById('secretText');
+  if(secretText){
+    secretText.addEventListener('click', ()=>{
+      window.open('random-text.html', '_blank');
+    });
+  }
 })();
 </script>
 </body>
