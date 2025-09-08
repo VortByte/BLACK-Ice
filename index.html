@@ -907,7 +907,7 @@
     "> OS: " + getOS(),
     "> Browser: " + getBrowser(),
     "> Screen: " + screen.width + "x" + screen.height,
-    "> IP: <span style='color:var(--neon)' id='userIP'>Detecting...</span>",
+
     "> Timezone: " + Intl.DateTimeFormat().resolvedOptions().timeZone,
     "> Language: " + nav.language,
     "> Cores: " + nav.hardwareConcurrency,
@@ -916,17 +916,6 @@
     "> Status: <span style='color:var(--lime)'>AUTHENTICATED</span>"
   ];
   
-  // Get IP address
-  fetch('https://api.ipify.org?format=json')
-    .then(response => response.json())
-    .then(data => {
-      const ipEl = document.getElementById('userIP');
-      if(ipEl) ipEl.textContent = data.ip;
-    })
-    .catch(() => {
-      const ipEl = document.getElementById('userIP');
-      if(ipEl) ipEl.textContent = 'Hidden';
-    });
   
   let i=0;
   function typeLine(){
