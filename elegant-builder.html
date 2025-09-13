@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Elegant Site Builder</title>
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHJ4PSI4IiBmaWxsPSIjMWYyOTM3Ii8+CiAgPHBhdGggZD0iTTggOGgxNnY0SDh6IiBmaWxsPSIjZmJiZjI0Ii8+CiAgPHBhdGggZD0iTTggMTRoMTJ2NEg4eiIgZmlsbD0iIzk0YTNiOCIvPgogIDxwYXRoIGQ9Ik04IDIwaDh2NEg4eiIgZmlsbD0iIzY0NzQ4YiIvPgogIDxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjMiIGZpbGw9IiNmYmJmMjQiLz4KPC9zdmc+" type="image/svg+xml">
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://js.puter.com/v2/"></script>
+
+  <style>
+    .serif { font-family: 'Playfair Display', serif; }
+    .sans { font-family: 'Inter', sans-serif; }
+    .elegant-shadow { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05); }
+    .elegant-border { border: 1px solid rgba(229, 231, 235, 0.2); }
+    .elegant-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .elegant-hover:hover { transform: translateY(-2px); box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.35); }
+    
+    /* BlackICE Academy color scheme integration */
+    :root {
+      --neon: #00fff7;
+      --neon2: #72f5ff;
+      --purple: #a020f0;
+      --bg-dark: #0b0f14;
+      --panel: #0e1116cc;
+    }
+    
+    .back-btn {
+      position: fixed; top: 120px; left: 30px; z-index: 100;
+      padding: 16px 28px; background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px); border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 12px; color: #f1f5f9; text-decoration: none;
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    .back-btn::before {
+      content: ''; position: absolute; inset: 0; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(241, 245, 249, 0.1), rgba(203, 213, 225, 0.05));
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .back-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(241, 245, 249, 0.1);
+      border-color: rgba(203, 213, 225, 0.5);
+    }
+    .back-btn:hover::before {
+      opacity: 1;
+    }
+    
+    /* Elite Elegant Buttons */
+    .elite-btn {
+      position: relative; padding: 14px 24px; text-decoration: none;
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 10px; color: #f8fafc;
+      font-family: 'Inter', sans-serif; font-weight: 500; font-size: 14px;
+      backdrop-filter: blur(8px); overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    .elite-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(241, 245, 249, 0.1), rgba(148, 163, 184, 0.05));
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .elite-btn:hover {
+      transform: translateY(-1px); border-color: rgba(203, 213, 225, 0.4);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    .elite-btn:hover::before { opacity: 1; }
+    
+    .elite-btn-secondary {
+      position: relative; padding: 12px 20px; background: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 8px;
+      color: #64748b; font-family: 'Inter', sans-serif; font-weight: 500;
+      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer;
+    }
+    .elite-btn-secondary:hover {
+      color: #334155; border-color: rgba(100, 116, 139, 0.5);
+      background: rgba(241, 245, 249, 0.5);
+    }
+    
+    /* Creative Title Design */
+    .creative-title-container {
+      position: relative; display: flex; flex-direction: column; align-items: flex-start;
+    }
+    .sparkle-accent {
+      font-size: 2rem; color: #fbbf24; margin-bottom: -8px;
+      animation: sparkleRotate 4s ease-in-out infinite;
+    }
+    .creative-title {
+      display: flex; flex-direction: column; line-height: 0.85;
+    }
+    .elegant-word {
+      font-family: 'Playfair Display', serif; font-size: 4rem; font-weight: 600;
+      color: #1f2937; letter-spacing: -0.02em;
+    }
+    .builder-word {
+      font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 300;
+      color: #6b7280; margin-left: 2rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .title-underline {
+      width: 120px; height: 3px; margin-top: 12px; margin-left: 8px;
+      background: linear-gradient(90deg, #fbbf24, #f59e0b, transparent);
+      border-radius: 2px;
+    }
+    @keyframes sparkleRotate {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(10deg) scale(1.1); }
+      75% { transform: rotate(-10deg) scale(0.9); }
+    }
+    
+    /* Elegant Intro */
+    .intro-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: radial-gradient(circle at center, #0f172a 0%, #1e293b 50%, #334155 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      animation: slideUp 1s ease 4s forwards;
+    }
+    .intro-container {
+      text-align: center; position: relative;
+    }
+    .intro-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem; font-weight: 600; color: #f8fafc;
+      margin-bottom: 1rem; opacity: 0;
+      animation: titleReveal 1.5s ease 0.5s forwards;
+    }
+    .intro-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.2rem; color: #cbd5e1; opacity: 0;
+      animation: subtitleSlide 1s ease 2s forwards;
+    }
+    .intro-particles {
+      position: absolute; inset: 0; overflow: hidden;
+    }
+    .particle {
+      position: absolute; width: 4px; height: 4px;
+      background: linear-gradient(45deg, #f1f5f9, #e2e8f0);
+      border-radius: 50%; opacity: 0;
+      animation: particleFloat 3s ease-in-out infinite;
+    }
+    .intro-line {
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #64748b, transparent);
+      margin: 2rem auto; animation: lineExpand 1.2s ease 2.8s forwards;
+    }
+    @keyframes titleReveal {
+      0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes subtitleSlide {
+      0% { opacity: 0; transform: translateX(-20px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes lineExpand {
+      0% { width: 0; }
+      100% { width: 200px; }
+    }
+    @keyframes particleFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+    }
+    @keyframes slideUp {
+      to { transform: translateY(-100%); }
+    }
+    
+    /* Instructions Overlay */
+    .instructions-overlay {
+      position: fixed; inset: 0; z-index: 8888;
+      background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: all 0.5s ease;
+    }
+    .instructions-overlay.show {
+      opacity: 1; pointer-events: all;
+    }
+    .instructions-card {
+      background: white; border-radius: 20px; padding: 40px;
+      max-width: 500px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    }
+    .step-indicator {
+      display: flex; justify-content: center; gap: 8px; margin-bottom: 30px;
+    }
+    .step-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: #e5e7eb; transition: all 0.3s ease;
+    }
+    .step-dot.active { background: #3b82f6; }
+    .step-content {
+      min-height: 120px; margin-bottom: 30px;
+    }
+    .step-title {
+      font-family: 'Playfair Display', serif; font-size: 1.5rem;
+      color: #1f2937; margin-bottom: 15px;
+    }
+    .step-desc {
+      color: #6b7280; line-height: 1.6;
+    }
+    .tutorial-screenshot {
+      width: 100%; max-width: 400px; border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15); margin: 20px 0;
+    }
+    
+
+  </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-100 sans">
+  
+  <!-- Elegant Intro -->
+  <div class="intro-overlay">
+    <div class="intro-particles"></div>
+    <div class="intro-container">
+      <h1 class="intro-title">✨ Elegant Builder</h1>
+      <div class="intro-line"></div>
+      <p class="intro-subtitle">Where creativity meets sophistication</p>
+    </div>
+  </div>
+  
+
+  
+  <script>
+    // Generate floating particles
+    const particles = document.querySelector('.intro-particles');
+    for(let i = 0; i < 20; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 3 + 's';
+      particles.appendChild(particle);
+    }
+  </script>
+  
+  <!-- Instructions Overlay -->
+  <div class="instructions-overlay" id="instructions">
+    <div class="instructions-card">
+      <div class="step-indicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+      <div class="step-content" id="step-content">
+        <h3 class="step-title">Welcome to Elegant Builder!</h3>
+        <p class="step-desc">Let's learn how to create and publish your website in 4 simple steps.</p>
+      </div>
+      <div class="flex gap-4 justify-center">
+        <button id="skip-tutorial" class="elite-btn-secondary">Skip Tutorial</button>
+        <button id="next-step" class="elite-btn">Get Started</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="min-h-screen p-8">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Header -->
+      <header class="mb-12">
+        <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl p-8 elegant-shadow">
+          <div class="relative">
+            <div class="creative-title-container">
+              <div class="sparkle-accent">✨</div>
+              <h1 class="creative-title">
+                <span class="elegant-word">Elegant</span>
+                <span class="builder-word">Builder</span>
+              </h1>
+              <div class="title-underline"></div>
+            </div>
+            <div class="flex gap-4 mt-6 justify-end">
+              <a href="projects.html" class="elite-btn">
+                ← Back to Projects
+              </a>
+              <button id="toggle-chat" class="elite-btn-secondary md:hidden">
+                Chat
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-12">
+        
+        <!-- Editor -->
+        <div class="lg:col-span-3">
+          <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl p-8 elegant-shadow">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-2xl serif font-medium text-gray-900">Code Editor</h2>
+              <div class="flex gap-2">
+                <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+              </div>
+            </div>
+            <textarea id="editor"
+              class="w-full h-96 p-6 bg-gray-50/50 border border-gray-200/50 rounded-xl
+                     font-mono text-sm text-gray-800 resize-none focus:outline-none
+                     focus:ring-2 focus:ring-gray-300 focus:border-transparent
+                     transition-all" spellcheck="false"
+              placeholder="Write your elegant code here..."><!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Elegant Design</title>
+    <style>
+      body { 
+        font-family: 'Playfair Display', serif; 
+        margin: 0; 
+        padding: 3rem; 
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        color: #2d3748;
+      }
+      .container { 
+        max-width: 800px; 
+        margin: 0 auto; 
+        text-align: center; 
+        background: white;
+        padding: 4rem;
+        border-radius: 1rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      }
+      h1 { 
+        font-size: 3rem; 
+        font-weight: 500; 
+        margin-bottom: 2rem; 
+        color: #1a202c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Elegant Simplicity</h1>
+      <p>Where form meets function in perfect harmony.</p>
+    </div>
+  </body>
+</html></textarea>
+          </div>
+        </div>
+
+        <!-- Chat Panel -->
+        <aside id="chat-aside" class="hidden lg:block lg:col-span-2">
+          <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl elegant-shadow h-full flex flex-col">
+            <div class="p-6 border-b border-gray-200/50">
+              <h3 class="text-xl serif font-medium text-gray-900">AI Assistant</h3>
+            </div>
+            <div id="messages" class="flex-1 p-6 space-y-4 overflow-y-auto text-sm min-h-0">
+              <div class="text-gray-500 text-center py-12 serif">
+                How may I assist you today?
+              </div>
+            </div>
+            <div class="p-6 border-t border-gray-200/50">
+              <div class="flex gap-3">
+                <textarea id="chat-textarea"
+                  class="flex-1 p-4 bg-gray-50/50 border border-gray-200/50 rounded-xl
+                         text-gray-800 resize-none focus:outline-none focus:ring-2
+                         focus:ring-gray-300 focus:border-transparent placeholder-gray-500
+                         transition-all"
+                  placeholder="Ask me anything..." rows="1"></textarea>
+                <button id="chat-send"
+                  class="px-6 py-4 bg-gray-900 text-white rounded-xl font-medium
+                         hover:bg-gray-800 transition-colors">
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <!-- Controls -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl p-8 elegant-shadow">
+          <h3 class="text-xl serif font-medium text-gray-900 mb-6">Deployment Settings</h3>
+          <label class="block mb-4">
+            <span class="text-gray-700 font-medium mb-3 block">Subdomain</span>
+            <input id="sub"
+              class="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/50 rounded-xl
+                     text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300
+                     focus:border-transparent placeholder-gray-500 transition-all"
+              placeholder="Leave blank for random name">
+          </label>
+          <p class="text-sm text-gray-600">
+            Use letters, numbers, and hyphens only. Cannot start or end with hyphen.
+          </p>
+        </div>
+
+        <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl p-8 elegant-shadow">
+          <h3 class="text-xl serif font-medium text-gray-900 mb-6">Actions</h3>
+          <div class="flex gap-4 mb-6">
+            <button id="publish" class="elite-btn flex-1 flex items-center justify-center gap-3">
+              <span>Publish</span>
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </button>
+            <button id="clear-log" class="elite-btn-secondary">
+              Clear
+            </button>
+          </div>
+          <div id="qr-section" class="hidden mb-6 text-center">
+            <img id="qr-image" class="mx-auto mb-4 border rounded-lg" alt="QR Code">
+            <div class="flex gap-3 justify-center">
+              <button id="goto-site" class="elite-btn">
+                🔗 Go to Website
+              </button>
+              <button id="download-qr" class="elite-btn-secondary">
+                📱 Download QR
+              </button>
+            </div>
+          </div>
+          <pre id="log" class="text-sm text-gray-600 bg-gray-50/50 rounded-xl p-4 h-24 overflow-y-auto border border-gray-200/50">Ready to publish your elegant site...</pre>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const $ = s => document.querySelector(s);
+    const log = t => {
+      const logEl = $('#log');
+      logEl.textContent += new Date().toLocaleTimeString() + ' - ' + t + '\n';
+      logEl.scrollTop = logEl.scrollHeight;
+    };
+
+    // Remove broken version-toggle reference
+    $('#toggle-chat').onclick = () => {
+      $('#chat-aside').classList.toggle('hidden');
+      $('#chat-aside').classList.toggle('block');
+    };
+    $('#clear-log').onclick = () => $('#log').textContent = 'Ready to publish your elegant site...';
+
+    $('#publish').onclick = async () => {
+      try {
+        log('✨ Preparing elegant deployment...');
+        const dir = puter.randName();
+        await puter.fs.mkdir(dir);
+        await puter.fs.write(`${dir}/index.html`, $('#editor').value);
+        const sub = ($('#sub').value || puter.randName()).toLowerCase();
+        log('🎨 Crafting beautiful experience...');
+        const site = await puter.hosting.create(sub, dir);
+        const url = `https://${site.subdomain}.puter.site`;
+        log('🌟 Elegantly published!');
+        log(`🔗 ${url}`);
+        
+        // Generate QR Code
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+        const qrImg = $('#qr-image');
+        qrImg.src = qrUrl;
+        $('#goto-site').onclick = () => window.open(url, '_blank');
+        $('#qr-section').classList.remove('hidden');
+        log('📱 QR code generated!');
+      } catch (e) {
+        log('❌ Publishing failed: ' + (e?.message || 'Unknown error'));
+      }
+    };
+
+    const chatTA = $('#chat-textarea');
+    const appendMsg = (role, txt) => {
+      const div = document.createElement('div');
+      div.className = role === 'user'
+        ? 'bg-gray-100 border border-gray-200 rounded-xl p-4 text-gray-800'
+        : 'bg-white border border-gray-200 rounded-xl p-4 text-gray-700';
+      
+      const label = document.createElement('div');
+      label.className = 'text-xs font-medium mb-2 ' + 
+        (role === 'user' ? 'text-gray-600' : 'text-gray-500');
+      label.textContent = role === 'user' ? 'You' : 'Assistant';
+      
+      const content = document.createElement('div');
+      content.textContent = txt;
+      
+      div.appendChild(label);
+      div.appendChild(content);
+      
+      const messages = $('#messages');
+      if (messages.children.length === 1 && messages.children[0].textContent.includes('How may I assist')) {
+        messages.innerHTML = '';
+      }
+      
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    };
+
+    chatTA.addEventListener('input', () => {
+      chatTA.style.height = 'auto';
+      chatTA.style.height = Math.min(chatTA.scrollHeight, 120) + 'px';
+    });
+
+    async function sendChat() {
+      const txt = chatTA.value.trim();
+      if (!txt) return;
+      appendMsg('user', txt);
+      chatTA.value = '';
+      chatTA.style.height = 'auto';
+      const sendBtn = $('#chat-send');
+      sendBtn.disabled = true;
+      sendBtn.textContent = '...';
+      try {
+        const res = await puter.ai.chat(txt);
+        const answer = res?.message?.content ?? res?.choices?.[0]?.message?.content ?? res?.text ?? res;
+        appendMsg('assistant', answer.toString().trim());
+      } catch (e) {
+        appendMsg('assistant', 'I apologize, but I encountered an error: ' + (e?.message || 'Unknown error'));
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send';
+      }
+    }
+
+    $('#chat-send').onclick = sendChat;
+    chatTA.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChat();
+      }
+    });
+
+    // QR Code Download
+    $('#download-qr').onclick = () => {
+      const qrImg = $('#qr-image');
+      if (qrImg.src) {
+        const link = document.createElement('a');
+        link.href = qrImg.src;
+        link.download = 'site-qr-code.png';
+        link.click();
+        log('💾 QR code downloaded!');
+      }
+    };
+
+
+
+    // Instructions Tutorial
+    const steps = [
+      { title: 'Welcome to Elegant Builder!', desc: "Let's learn how to create and publish your website in 4 simple steps.", screenshot: true },
+      { title: 'Step 1: Write Your Code', desc: 'Use the code editor to write your HTML, CSS, and JavaScript. A sample template is already provided to get you started.' },
+      { title: 'Step 2: Choose Subdomain', desc: 'Enter a custom subdomain name or leave it blank for a random one. Use only letters, numbers, and hyphens.' },
+      { title: 'Step 3: Publish Your Site', desc: 'Click the Publish button to deploy your website. A QR code will be generated for easy sharing.' }
+    ];
+    
+    let currentStep = 0;
+    const instructionsEl = $('#instructions');
+    const stepContent = $('#step-content');
+    const stepDots = document.querySelectorAll('.step-dot');
+    
+    function showStep(index) {
+      const step = steps[index];
+      const screenshotHtml = step.screenshot ? 
+        `<canvas class="tutorial-screenshot" id="page-screenshot"></canvas>` : '';
+      stepContent.innerHTML = `
+        <h3 class="step-title">${step.title}</h3>
+        <p class="step-desc">${step.desc}</p>
+        ${screenshotHtml}
+      `;
+      stepDots.forEach((dot, i) => {
+        dot.classList.toggle('active', i <= index);
+      });
+      $('#next-step').textContent = index === steps.length - 1 ? 'Start Building!' : 'Next';
+      
+      if (step.screenshot) {
+        setTimeout(() => capturePageScreenshot(), 100);
+      }
+    }
+    
+    function capturePageScreenshot() {
+      const canvas = document.getElementById('page-screenshot');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 400;
+      canvas.height = 300;
+      
+      // Create a simplified representation of the page
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillRect(0, 0, 400, 300);
+      
+      // Header
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(20, 20, 360, 60);
+      ctx.fillStyle = '#1f2937';
+      ctx.font = '14px Inter';
+      ctx.fillText('✨ Elegant Builder', 30, 50);
+      
+      // Editor section
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(20, 90, 240, 120);
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '10px monospace';
+      ctx.fillText('Code Editor', 30, 110);
+      ctx.fillStyle = '#f3f4f6';
+      ctx.fillRect(30, 115, 220, 85);
+      
+      // Chat section
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(270, 90, 110, 120);
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '10px Inter';
+      ctx.fillText('AI Assistant', 280, 110);
+      
+      // Controls
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(20, 220, 170, 60);
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText('Deployment', 30, 240);
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(200, 220, 180, 60);
+      ctx.fillStyle = '#6b7280';
+      ctx.fillText('Actions', 210, 240);
+      
+      // Publish button
+      ctx.fillStyle = '#1f2937';
+      ctx.fillRect(210, 250, 60, 20);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '8px Inter';
+      ctx.fillText('Publish', 220, 262);
+    }
+    
+    $('#next-step').onclick = () => {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        showStep(currentStep);
+      } else {
+        instructionsEl.classList.remove('show');
+      }
+    };
+    
+    $('#skip-tutorial').onclick = () => {
+      instructionsEl.classList.remove('show');
+    };
+    
+    // Show instructions after main intro
+    setTimeout(() => {
+      instructionsEl.classList.add('show');
+    }, 5000);
+
+    log('✨ Elegant Builder initialized');
+  </script>
+</body>
+</html>
