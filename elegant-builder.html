@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Elegant Site Builder</title>
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHJ4PSI4IiBmaWxsPSIjMWYyOTM3Ii8+CiAgPHBhdGggZD0iTTggOGgxNnY0SDh6IiBmaWxsPSIjZmJiZjI0Ii8+CiAgPHBhdGggZD0iTTggMTRoMTJ2NEg4eiIgZmlsbD0iIzk0YTNiOCIvPgogIDxwYXRoIGQ9Ik04IDIwaDh2NEg4eiIgZmlsbD0iIzY0NzQ4YiIvPgogIDxjaXJjbGUgY3g9IjI0IiBjeT0iMjQiIHI9IjMiIGZpbGw9IiNmYmJmMjQiLz4KPC9zdmc+" type="image/svg+xml">
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij4KICA8dGl0bGU+RWxlZ2FudCBTaXRlIEJ1aWxkZXI8L3RpdGxlPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM0ZjQ2ZTUiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjOTMzM2VhIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxMiIgZmlsbD0idXJsKCNncmFkKSIvPgogIDxwYXRoIGQ9Ik0xOCAyMiBMMTAgMzAgTDE4IDM4IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTQ2IDIyIEw1NCAzMCBMNDYgMzgiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSI0IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMzIgMjAgTDM0IDI4IEw0MiAzMCBMMzQgMzIgTDMyIDQwIEwzMCAzMiBMMjIgMzAgTDMwIDI4IFoiIGZpbGw9IiNmYWNjMTUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIyIi8+Cjwvc3ZnPg==" type="image/svg+xml">
 
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -169,6 +169,23 @@
       to { transform: translateY(-100%); }
     }
     
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .min-h-screen { padding: 1rem; }
+      .creative-title-container { align-items: center; text-align: center; }
+      .elegant-word { font-size: 2.5rem; }
+      .builder-word { font-size: 1.8rem; margin-left: 0; }
+      .title-underline { margin-left: auto; margin-right: auto; }
+      .flex { flex-direction: column; gap: 0.75rem; }
+      .justify-end { justify-content: center; }
+      .grid { grid-template-columns: 1fr; }
+      .elite-btn, .elite-btn-secondary { width: 100%; text-align: center; }
+      #editor { height: 250px; font-size: 12px; }
+      .instructions-card { margin: 1rem; padding: 1.5rem; max-width: calc(100vw - 2rem); }
+      .step-title { font-size: 1.2rem; }
+      .tutorial-screenshot { max-width: 100%; }
+    }
+    
     /* Instructions Overlay */
     .instructions-overlay {
       position: fixed; inset: 0; z-index: 8888;
@@ -258,7 +275,7 @@
     </div>
   </div>
 
-  <div class="min-h-screen p-8">
+  <div class="min-h-screen p-4 md:p-8">
     <div class="max-w-7xl mx-auto">
       
       <!-- Header -->
@@ -277,34 +294,30 @@
               <a href="projects.html" class="elite-btn">
                 ← Back to Projects
               </a>
-              <button id="toggle-chat" class="elite-btn-secondary md:hidden">
-                Chat
-              </button>
             </div>
           </div>
         </div>
       </header>
 
       <!-- Main Content -->
-      <main class="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-12">
+      <main class="mb-12">
         
         <!-- Editor -->
-        <div class="lg:col-span-3">
-          <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl p-8 elegant-shadow">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-2xl serif font-medium text-gray-900">Code Editor</h2>
-              <div class="flex gap-2">
-                <div class="w-3 h-3 bg-red-400 rounded-full"></div>
-                <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
-                <div class="w-3 h-3 bg-green-400 rounded-full"></div>
-              </div>
+        <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl p-8 elegant-shadow">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl serif font-medium text-gray-900">Code Editor</h2>
+            <div class="flex gap-2">
+              <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+              <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+              <div class="w-3 h-3 bg-green-400 rounded-full"></div>
             </div>
-            <textarea id="editor"
-              class="w-full h-96 p-6 bg-gray-50/50 border border-gray-200/50 rounded-xl
-                     font-mono text-sm text-gray-800 resize-none focus:outline-none
-                     focus:ring-2 focus:ring-gray-300 focus:border-transparent
-                     transition-all" spellcheck="false"
-              placeholder="Write your elegant code here..."><!DOCTYPE html>
+          </div>
+          <textarea id="editor"
+            class="w-full h-96 p-6 bg-gray-50/50 border border-gray-200/50 rounded-xl
+                   font-mono text-sm text-gray-800 resize-none focus:outline-none
+                   focus:ring-2 focus:ring-gray-300 focus:border-transparent
+                   transition-all" spellcheck="false"
+            placeholder="Write your elegant code here..."><!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -341,37 +354,7 @@
     </div>
   </body>
 </html></textarea>
-          </div>
         </div>
-
-        <!-- Chat Panel -->
-        <aside id="chat-aside" class="hidden lg:block lg:col-span-2">
-          <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl elegant-shadow h-full flex flex-col">
-            <div class="p-6 border-b border-gray-200/50">
-              <h3 class="text-xl serif font-medium text-gray-900">AI Assistant</h3>
-            </div>
-            <div id="messages" class="flex-1 p-6 space-y-4 overflow-y-auto text-sm min-h-0">
-              <div class="text-gray-500 text-center py-12 serif">
-                How may I assist you today?
-              </div>
-            </div>
-            <div class="p-6 border-t border-gray-200/50">
-              <div class="flex gap-3">
-                <textarea id="chat-textarea"
-                  class="flex-1 p-4 bg-gray-50/50 border border-gray-200/50 rounded-xl
-                         text-gray-800 resize-none focus:outline-none focus:ring-2
-                         focus:ring-gray-300 focus:border-transparent placeholder-gray-500
-                         transition-all"
-                  placeholder="Ask me anything..." rows="1"></textarea>
-                <button id="chat-send"
-                  class="px-6 py-4 bg-gray-900 text-white rounded-xl font-medium
-                         hover:bg-gray-800 transition-colors">
-                  Send
-                </button>
-              </div>
-            </div>
-          </div>
-        </aside>
       </main>
 
       <!-- Controls -->
@@ -429,11 +412,6 @@
       logEl.scrollTop = logEl.scrollHeight;
     };
 
-    // Remove broken version-toggle reference
-    $('#toggle-chat').onclick = () => {
-      $('#chat-aside').classList.toggle('hidden');
-      $('#chat-aside').classList.toggle('block');
-    };
     $('#clear-log').onclick = () => $('#log').textContent = 'Ready to publish your elegant site...';
 
     $('#publish').onclick = async () => {
@@ -460,67 +438,6 @@
         log('❌ Publishing failed: ' + (e?.message || 'Unknown error'));
       }
     };
-
-    const chatTA = $('#chat-textarea');
-    const appendMsg = (role, txt) => {
-      const div = document.createElement('div');
-      div.className = role === 'user'
-        ? 'bg-gray-100 border border-gray-200 rounded-xl p-4 text-gray-800'
-        : 'bg-white border border-gray-200 rounded-xl p-4 text-gray-700';
-      
-      const label = document.createElement('div');
-      label.className = 'text-xs font-medium mb-2 ' + 
-        (role === 'user' ? 'text-gray-600' : 'text-gray-500');
-      label.textContent = role === 'user' ? 'You' : 'Assistant';
-      
-      const content = document.createElement('div');
-      content.textContent = txt;
-      
-      div.appendChild(label);
-      div.appendChild(content);
-      
-      const messages = $('#messages');
-      if (messages.children.length === 1 && messages.children[0].textContent.includes('How may I assist')) {
-        messages.innerHTML = '';
-      }
-      
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    };
-
-    chatTA.addEventListener('input', () => {
-      chatTA.style.height = 'auto';
-      chatTA.style.height = Math.min(chatTA.scrollHeight, 120) + 'px';
-    });
-
-    async function sendChat() {
-      const txt = chatTA.value.trim();
-      if (!txt) return;
-      appendMsg('user', txt);
-      chatTA.value = '';
-      chatTA.style.height = 'auto';
-      const sendBtn = $('#chat-send');
-      sendBtn.disabled = true;
-      sendBtn.textContent = '...';
-      try {
-        const res = await puter.ai.chat(txt);
-        const answer = res?.message?.content ?? res?.choices?.[0]?.message?.content ?? res?.text ?? res;
-        appendMsg('assistant', answer.toString().trim());
-      } catch (e) {
-        appendMsg('assistant', 'I apologize, but I encountered an error: ' + (e?.message || 'Unknown error'));
-      } finally {
-        sendBtn.disabled = false;
-        sendBtn.textContent = 'Send';
-      }
-    }
-
-    $('#chat-send').onclick = sendChat;
-    chatTA.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendChat();
-      }
-    });
 
     // QR Code Download
     $('#download-qr').onclick = () => {
@@ -594,12 +511,7 @@
       ctx.fillStyle = '#f3f4f6';
       ctx.fillRect(30, 115, 220, 85);
       
-      // Chat section
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(270, 90, 110, 120);
-      ctx.fillStyle = '#6b7280';
-      ctx.font = '10px Inter';
-      ctx.fillText('AI Assistant', 280, 110);
+
       
       // Controls
       ctx.fillStyle = '#ffffff';
