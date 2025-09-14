@@ -431,7 +431,7 @@
         const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
         const qrImg = $('#qr-image');
         qrImg.src = qrUrl;
-        $('#goto-site').onclick = () => window.open(url, '_blank');
+        $('#goto-site').onclick = () => window.location.href = url;
         $('#qr-section').classList.remove('hidden');
         log('📱 QR code generated!');
       } catch (e) {
