@@ -13,6 +13,18 @@ Think of it as a fusion of *CTF labs*, *guided missions*, and a *Defender’s da
 
 ---
 
+## 📑 Table of Contents
+- [Features](#-features)
+- [Getting Started](#-getting-started)
+- [Usage](#-usage)
+- [Contributing](#-contributing)
+- [Ethics & Legal](#-ethics--legal)
+- [Roadmap](#-roadmap)
+- [Screenshots](#-screenshots)
+- [Credits](#-credits)
+
+---
+
 ## ✨ Features
 
 - 🎯 **Missions & Writeups** – progressive challenges with graded hints and solutions.  
