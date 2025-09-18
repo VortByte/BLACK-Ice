@@ -1,26 +1,54 @@
-<!-- Save as banner.svg -->
 <svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
   <defs>
+    <!-- Gradient for main title -->
     <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#0ff;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#0077ff;stop-opacity:1" />
     </linearGradient>
+
+    <!-- Grid pattern -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#0ff" stroke-opacity="0.15" stroke-width="1"/>
+    </pattern>
   </defs>
 
   <!-- Background -->
   <rect width="1200" height="300" fill="black"/>
+  <rect width="1200" height="300" fill="url(#grid)"/>
 
-  <!-- Main Title -->
-  <text x="50%" y="45%" dominant-baseline="middle" text-anchor="middle"
+  <!-- Matrix-style random code -->
+  <text x="10%" y="20%" font-family="monospace" font-size="18" fill="#0ff" opacity="0.12">
+    1010 0101 0011 1110 1100 0110
+  </text>
+  <text x="80%" y="70%" font-family="monospace" font-size="18" fill="#0ff" opacity="0.12">
+    A3 9F 7C 4D B2 10
+  </text>
+  <text x="30%" y="90%" font-family="monospace" font-size="18" fill="#0ff" opacity="0.12">
+    C0D3 H4CK 5ECUR17Y
+  </text>
+
+  <!-- Title: main glow -->
+  <text x="50%" y="45%" text-anchor="middle" dominant-baseline="middle"
         font-family="monospace" font-size="80" fill="url(#grad)"
         style="filter: drop-shadow(0px 0px 10px #0ff); letter-spacing: 6px;">
+    BLACKICE ACADEMY
+    <animate attributeName="fill" values="#0ff;#0077ff;#0ff" dur="4s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- Glitch Layers -->
+  <text x="50%" y="45%" text-anchor="middle" dominant-baseline="middle"
+        font-family="monospace" font-size="80" fill="red" opacity="0.25" dx="3">
+    BLACKICE ACADEMY
+  </text>
+  <text x="50%" y="45%" text-anchor="middle" dominant-baseline="middle"
+        font-family="monospace" font-size="80" fill="blue" opacity="0.25" dx="-3">
     BLACKICE ACADEMY
   </text>
 
   <!-- Subtitle -->
-  <text x="50%" y="70%" dominant-baseline="middle" text-anchor="middle"
-        font-family="monospace" font-size="28" fill="#0ff"
-        style="opacity:0.7; letter-spacing: 3px;">
+  <text x="50%" y="75%" text-anchor="middle" dominant-baseline="middle"
+        font-family="monospace" font-size="26" fill="#0ff" opacity="0.75"
+        style="letter-spacing: 3px;">
     Hack It · Defend It · Learn Both Sides
   </text>
 </svg>
