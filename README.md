@@ -37,6 +37,11 @@ Think of it as a fusion of *CTF labs*, *guided missions*, and a *Defender’s da
 └─ docs/               # Extra docs, syllabus
 
 ````
+## 🛠️ Tech Stack
+- HTML5 + CSS3 + JavaScript (Vanilla)
+- GitHub Pages (deployment)
+- Optional: Docker (for isolated labs)
+- Optional: Node.js Live Server (for dev)
 
 ---
 
