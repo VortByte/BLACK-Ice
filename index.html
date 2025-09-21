@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -590,10 +591,19 @@
             > connecting to threat intelligence...
           </div>
         </div>
-        <iframe id="threatMapFrame" src="https://threatseye.io/threats-map" 
-                title="ThreatsEye Live Cyber Threat Map" 
-                aria-label="Real-time global cyber threat visualization"style="pointer-events: none; border: 1px solid #000;">
-        </iframe>
+        <div style="position: relative; width: 600px; height: 400px;">
+  <!-- The iframe -->
+ <iframe id="threatMapFrame" src="https://threatseye.io/threats-map"
+title="ThreatsEye Live Cyber Threat Map"
+aria-label="Real-time global cyber threat visualization"style="pointer-events: none; border: 1px solid #000;">
+</iframe>
+  
+  <!-- The image overlay -->
+  <img src="https://static.vecteezy.com/system/resources/thumbnails/048/238/569/small_2x/blue-gradient-abstract-geometric-triangle-pattern-background-suitable-for-car-wrap-stickers-and-sports-jersey-fabric-free-vector.jpg" 
+       alt="Overlay Image"
+       style="position: absolute; top: 0; left: 0; width: 100%; height: 15%; pointer-events: none;">
+</div>
+
       </div>
     </div>
   </section>
