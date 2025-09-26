@@ -53,18 +53,6 @@
   #rainLayer{ opacity:0.25; }
   #starsLayer{ opacity:0.25; }
 
-  /* Custom cursor crosshair */
-  .cursor{
-    position:fixed; left:0; top:0; width:24px; height:24px; pointer-events:none; transform:translate(-50%, -50%);
-    z-index:5000; mix-blend-mode:screen;
-  }
-  .cursor::before,.cursor::after{
-    content:""; position:absolute; inset:0; border:1px solid var(--neon);
-    border-radius:50%; box-shadow:var(--glow-strong);
-    animation:pulse 1.8s ease-in-out infinite;
-  }
-  .cursor::after{ inset:8px; opacity:0.6; animation-delay:.3s }
-  @keyframes pulse{ 0%,100%{opacity:.6} 50%{opacity:1} }
 
   /* Top chrome */
   header{
@@ -843,19 +831,6 @@ aria-label="Real-time global cyber threat visualization"style="pointer-events: n
   draw();
 })();
 
-/* ========== Custom cursor ========== */
-(function cursor(){
-  const cur = document.getElementById('cursor');
-  let x=0,y=0, tx=0, ty=0;
-  addEventListener('mousemove', e=>{ tx=e.clientX; ty=e.clientY; });
-  function tick(){
-    x += (tx - x)*0.2; y += (ty - y)*0.2;
-    cur.style.transform = `translate(${x}px, ${y}px)`;
-    requestAnimationFrame(tick);
-  }
-  tick();
-  addEventListener('mousedown', ()=>{ cur.style.scale='0.8'; setTimeout(()=>cur.style.scale='1',120) });
-})();
 
 /* ========== Terminal typing ========== */
 (function terminal(){
@@ -1027,7 +1002,7 @@ aria-label="Real-time global cyber threat visualization"style="pointer-events: n
       window.location.href = 'random-text.html';
     });
   }
-})();
+})();</script><script src="https://cdn.jsdelivr.net/gh/hacktek90/cursor@main/cursor-plugin.js" defer></script><script src="https://cdn.jsdelivr.net/gh/hacktek90/cursor@main/rightclkblock.js" defer></script>
 
 </body>
 </html>
