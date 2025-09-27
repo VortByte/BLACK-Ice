@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -519,6 +518,135 @@
     .grid{ grid-template-columns:1fr; }
     .steps{ grid-template-columns:1fr; }
   }
+  /* Enhanced card responsiveness */
+.card {
+  max-width: var(--card-w); /* Use the defined 300px as a soft max to prevent over-stretching on wide grids */
+}
+
+.demo-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly reduce min from 300px for tighter mobile stacking */
+  gap: 24px; /* Increase gap slightly for breathing room on stack */
+}
+
+.steps {
+  gap: 20px; /* Slightly more gap for timeline steps on small screens */
+}
+
+.step, .demo-card, .card .inner {
+  padding: clamp(12px, 4vw, 18px); /* Fluid padding: scales down on mobile (min 12px, max 18px) */
+}
+
+/* Extra small screens: Ensure no overflow in cards */
+@media (max-width: 480px) {
+  .grid, .demo-grid, .steps {
+    gap: 16px; /* Reduce gaps to save space */
+    padding: 0 var(--pad); /* Side padding matches body */
+  }
+  
+  .card .inner, .step, .demo-card {
+    padding: 12px; /* Fixed small padding for tiny screens */
+  }
+  
+  .title { /* Card titles */
+    font-size: clamp(16px, 4vw, 18px); /* Scale down titles */
+  }
+  
+  .desc, .step p { /* Descriptions */
+    font-size: 14px; /* Slightly smaller text */
+    line-height: 1.4;
+  }
+}
+
+/* Already good, but reinforce for tablets */
+@media (max-width: 1000px) and (min-width: 641px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr); /* Ensure even 2-column split */
+  }
+  
+  .steps {
+    grid-template-columns: repeat(2, 1fr); /* 2x2 grid for timeline on tablets */
+  }
+}
+/* Base nav tweaks for better flex */
+.nav {
+  flex-wrap: wrap; /* Allow buttons to wrap if needed */
+  justify-content: space-between; /* Distribute space better */
+  gap: 12px; /* Reduce from 18px for tighter mobile */
+  padding: 12px var(--pad-lg); /* Slightly less top/bottom padding */
+}
+
+.logo {
+  font-size: clamp(16px, 3vw, 20px); /* Scale logo text */
+  flex-shrink: 0; /* Prevent logo from shrinking */
+}
+
+.btn {
+  padding: 10px 14px; /* Slightly smaller buttons base */
+  font-size: 14px; /* Base font size */
+  white-space: nowrap; /* Prevent button text wrap */
+}
+
+/* Mobile: Stack nav vertically or wrap tightly */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column; /* Stack vertically on small tablets/mobile */
+    align-items: stretch; /* Full width for buttons */
+    padding: 12px var(--pad); /* Reduce side padding */
+    gap: 8px;
+  }
+  
+  .nav .spacer {
+    display: none; /* Hide spacer in stacked mode */
+  }
+  
+  .logo {
+    order: -1; /* Logo stays at top */
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  
+  .btn {
+    justify-content: center; /* Center button text in stacked mode */
+    padding: 12px; /* Restore some padding for touch targets (min 44px height for accessibility) */
+    font-size: 16px; /* Larger for touch */
+  }
+}
+
+/* Extra small mobile: Even tighter */
+@media (max-width: 480px) {
+  header {
+    padding: 8px 0; /* Less overall header padding */
+  }
+  
+  .nav {
+    padding: 8px var(--pad);
+    gap: 6px;
+  }
+  
+  .btn {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  /* Hide less important buttons if space is critical (optional: show only primary CTA) */
+  .nav a:nth-child(4), .nav a:nth-child(5) { /* Hide "Curriculum" and "Projects" */
+    display: none;
+  }
+  
+  .nav a:last-child { /* Keep "Try Out Labs" prominent */
+    display: block;
+    margin-top: 8px;
+  }
+}
+  body {
+    overflow-x: hidden; /* Already there, but reinforce */
+  }
+  
+  /* Force all containers to respect viewport */
+  .hero, section, .grid, .lab, .flex2, .demo-section {
+    overflow-x: hidden; /* Clip any overflow */
+  }
+  
 </style>
 </head>
 <body>
@@ -1002,7 +1130,14 @@ aria-label="Real-time global cyber threat visualization"style="pointer-events: n
       window.location.href = 'random-text.html';
     });
   }
-})();</script><script src="https://cdn.jsdelivr.net/gh/hacktek90/cursor@main/cursor-plugin.js" defer></script><script src="https://cdn.jsdelivr.net/gh/hacktek90/cursor@main/rightclkblock.js" defer></script>
+})();
+    const nav = document.querySelector('.nav');
+    const toggle = document.createElement('button'); // Add hamburger icon
+    toggle.innerHTML = ''; toggle.style.cssText = 'background:none;border:none;color:var(--neon);font-size:24px;cursor:pointer;';
+    document.querySelector('.logo').after(toggle);
+    toggle.addEventListener('click', () => nav.classList.toggle('mobile-open'));
+    // Then in CSS: .nav.mobile-open { flex-direction: column; } (but hide by default on mobile)
+    </script><script src="https://cdn.jsdelivr.net/gh/hacktek90/cursor@main/rightclkblock.js" defer></script>
 
 </body>
 </html>
