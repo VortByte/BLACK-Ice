@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Try Out Labs — BlackICE Academy</title>
+<title>Coming Soon — BlackICE Academy</title>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzBhMGEwYSIvPgo8cGF0aCBkPSJNOCA4SDE2VjE2SDhWOFoiIGZpbGw9IiMwMGZmODgiLz4KPHN0eWxlPi5heyBhbmltYXRpb246IGJsaW5rIDJzIGluZmluaXRlOyB9IEBrZXlmcmFtZXMgYmxpbms7IHsgNTAlIHsgb3BhY2l0eTogMC4zOyB9IH08L3N0eWxlPgo8cGF0aCBkPSJNMjQgOEgyNFYxNkgxNlY4SDI0WiIgZmlsbD0iIzAwZmY4OCIgY2xhc3M9ImEiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMDBmZjg4IiBvcGFjaXR5PSIwLjciLz4KPC9zdmc+Cjwvc3ZnPg==" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -11,626 +11,102 @@
   
   body {
     font-family: 'Outfit', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    overflow-x: hidden;
+    background: #f8f9fa;
+    color: #1a1a2e;
     min-height: 100vh;
-  }
-
-  .back-btn {
-    position: fixed;
-    top: 30px;
-    left: 30px;
-    z-index: 100;
-    padding: 12px 24px;
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.3);
-    transition: all 0.3s ease;
-  }
-  .back-btn:hover {
-    background: rgba(255,255,255,0.3);
-    transform: translateY(-2px);
-  }
-
-  .header {
-    text-align: center;
-    padding: 100px 20px 40px;
-  }
-  .header h1 {
-    font-size: clamp(40px, 7vw, 72px);
-    font-weight: 800;
-    margin-bottom: 16px;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  }
-  .header p {
-    font-size: clamp(16px, 2vw, 20px);
-    opacity: 0.95;
-  }
-
-  .carousel-container {
-    position: relative;
-    max-width: 1200px;
-    margin: 60px auto;
-    padding: 0 80px;
-  }
-
-  .carousel {
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
   }
 
-  .carousel-track {
-    display: flex;
-    transition: transform 0.5s ease;
+  .container {
+    text-align: center;
+    padding: 40px;
+    max-width: 700px;
   }
 
-  .lab-slide {
-    min-width: 100%;
-    padding: 0 20px;
+  .icon {
+    font-size: 120px;
+    margin-bottom: 30px;
+    animation: float 3s ease-in-out infinite;
   }
 
-  .lab-content {
-    background: white;
-    border-radius: 32px;
-    padding: 60px;
-    color: #1a1a2e;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    display: flex;
-    gap: 60px;
-    align-items: center;
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
   }
 
-  .lab-left {
-    flex: 1;
-  }
-
-  .lab-status {
-    display: inline-block;
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-  .status-live {
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    color: white;
-  }
-  .status-beta {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
-    color: white;
-  }
-  .status-coming {
-    background: #e0e0e0;
-    color: #666;
-  }
-
-  .lab-title {
-    font-size: clamp(32px, 4vw, 48px);
+  h1 {
+    font-size: clamp(48px, 8vw, 80px);
     font-weight: 800;
     margin-bottom: 20px;
     color: #1a1a2e;
   }
 
-  .lab-desc {
-    font-size: 18px;
+  p {
+    font-size: clamp(18px, 3vw, 24px);
     color: #666;
-    line-height: 1.8;
-    margin-bottom: 30px;
+    margin-bottom: 50px;
+    line-height: 1.6;
   }
 
-  .lab-meta {
-    display: flex;
-    gap: 30px;
-    margin-bottom: 30px;
-  }
-
-  .meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .meta-label {
-    font-size: 12px;
-    color: #999;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  .meta-value {
-    font-size: 16px;
-    font-weight: 700;
-    color: #667eea;
-  }
-
-  .difficulty-bar {
-    display: flex;
-    gap: 6px;
-  }
-  .diff-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #e0e0e0;
-  }
-  .diff-dot.active {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
-  }
-
-  .lab-tech {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .tech-tag {
-    padding: 8px 16px;
-    background: #f0f0f0;
-    border-radius: 12px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #666;
-  }
-
-  .lab-actions {
-    display: flex;
-    gap: 16px;
-    margin-top: 40px;
-  }
   .btn {
-    padding: 16px 32px;
-    border: none;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
+    display: inline-block;
+    padding: 22px 50px;
+    background: #667eea;
+    color: white;
     text-decoration: none;
+    font-size: 20px;
+    font-weight: 800;
+    border-radius: 12px;
     transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+    animation: pulse 2s infinite;
+    position: relative;
   }
-  .btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 8px 25px rgba(102,126,234,0.4); }
+    50% { box-shadow: 0 8px 35px rgba(102,126,234,0.6), 0 0 0 8px rgba(102,126,234,0.1); }
   }
-  .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+
+  .btn:hover {
+    background: #764ba2;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(102,126,234,0.5);
+    animation: none;
   }
-  .btn-secondary {
-    background: white;
+
+  .back-link {
+    display: inline-block;
+    margin-top: 30px;
     color: #667eea;
-    border: 2px solid #e0e0e0;
-  }
-  .btn-secondary:hover {
-    border-color: #667eea;
-  }
-
-  .lab-right {
-    flex: 1;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
   }
 
-  .lab-terminal {
-    background: linear-gradient(135deg, #1a1a2e, #2d2d44);
-    border-radius: 20px;
-    padding: 30px;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    color: #00f2fe;
-    min-height: 300px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-  }
-  .terminal-line {
-    margin-bottom: 10px;
-  }
-  .terminal-prompt {
-    color: #38ef7d;
-  }
-  .terminal-output {
-    color: #f5576c;
-  }
-
-  .carousel-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background: rgba(255,255,255,0.3);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255,255,255,0.5);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 24px;
-    color: white;
-  }
-  .carousel-nav:hover {
-    background: rgba(255,255,255,0.5);
-    transform: translateY(-50%) scale(1.1);
-  }
-  .nav-prev { left: 10px; }
-  .nav-next { right: 10px; }
-
-  .carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 40px;
-  }
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.3);
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  .dot.active {
-    background: white;
-    width: 40px;
-    border-radius: 6px;
-  }
-
-  @media (max-width: 1024px) {
-    .lab-content {
-      flex-direction: column;
-      padding: 40px;
-      gap: 40px;
-    }
-    .carousel-container {
-      padding: 0 60px;
-    }
+  .back-link:hover {
+    color: #764ba2;
   }
 
   @media (max-width: 768px) {
-    .back-btn {
-      top: 20px;
-      left: 20px;
-      padding: 10px 20px;
-      font-size: 13px;
-    }
-    .header {
-      padding: 80px 20px 30px;
-    }
-    .carousel-container {
-      padding: 0 50px;
-    }
-    .lab-content {
-      padding: 30px;
-    }
-    .lab-meta {
-      flex-direction: column;
-      gap: 20px;
-    }
-    .lab-actions {
-      flex-direction: column;
-    }
-    .carousel-nav {
-      width: 40px;
-      height: 40px;
-      font-size: 20px;
-    }
+    .icon { font-size: 80px; }
+    .container { padding: 20px; }
   }
 </style>
 </head>
 <body>
 
-<a href="index.html" class="back-btn">← Back</a>
-
-<div class="header">
-  <h1>🧪 Live Labs</h1>
-  <p>Hands-on cybersecurity challenges in safe environments</p>
+<div class="container">
+  <div class="icon">🧪</div>
+  <h1>Coming Soon!</h1>
+  <p>Our interactive lab simulations are currently under development. Check out our other amazing projects in the meantime.</p>
+  <a href="projects.html" class="btn">Checkout Projects →</a>
+  <br>
+  <a href="index.html" class="back-link">← Back to Home</a>
 </div>
-
-<div class="carousel-container">
-  <div class="carousel">
-    <div class="carousel-track">
-
-      <div class="lab-slide">
-        <div class="lab-content">
-          <div class="lab-left">
-            <span class="lab-status status-live">Live</span>
-            <h2 class="lab-title">SQL Injection Bypass</h2>
-            <p class="lab-desc">Exploit vulnerable login forms using SQL injection techniques. Learn to bypass authentication and extract sensitive data from databases.</p>
-            <div class="lab-meta">
-              <div class="meta-item">
-                <span class="meta-label">Difficulty</span>
-                <div class="difficulty-bar">
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot"></div>
-                  <div class="diff-dot"></div>
-                  <div class="diff-dot"></div>
-                </div>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">Duration</span>
-                <span class="meta-value">45 min</span>
-              </div>
-            </div>
-            <div class="lab-tech">
-              <span class="tech-tag">MySQL</span>
-              <span class="tech-tag">PHP</span>
-              <span class="tech-tag">Burp Suite</span>
-            </div>
-            <div class="lab-actions">
-              <a href="#" class="btn btn-primary">Start Lab</a>
-              <a href="#" class="btn btn-secondary">View Hints</a>
-            </div>
-          </div>
-          <div class="lab-right">
-            <div class="lab-terminal">
-              <div class="terminal-line"><span class="terminal-prompt">$</span> SELECT * FROM users</div>
-              <div class="terminal-line"><span class="terminal-prompt">$</span> WHERE username='admin'</div>
-              <div class="terminal-line"><span class="terminal-prompt">$</span> AND password='<span class="terminal-output">[PAYLOAD]</span>'</div>
-              <div class="terminal-line" style="color:#38ef7d; margin-top:20px">Ready for exploitation...</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lab-slide">
-        <div class="lab-content">
-          <div class="lab-left">
-            <span class="lab-status status-live">Live</span>
-            <h2 class="lab-title">Cross-Site Scripting</h2>
-            <p class="lab-desc">Inject malicious scripts into web applications. Practice reflected, stored, and DOM-based XSS attacks in a controlled environment.</p>
-            <div class="lab-meta">
-              <div class="meta-item">
-                <span class="meta-label">Difficulty</span>
-                <div class="difficulty-bar">
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot"></div>
-                  <div class="diff-dot"></div>
-                </div>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">Duration</span>
-                <span class="meta-value">60 min</span>
-              </div>
-            </div>
-            <div class="lab-tech">
-              <span class="tech-tag">JavaScript</span>
-              <span class="tech-tag">HTML</span>
-              <span class="tech-tag">DOM</span>
-            </div>
-            <div class="lab-actions">
-              <a href="#" class="btn btn-primary">Start Lab</a>
-              <a href="#" class="btn btn-secondary">View Hints</a>
-            </div>
-          </div>
-          <div class="lab-right">
-            <div class="lab-terminal">
-              <div class="terminal-line"><span class="terminal-prompt">$</span> &lt;script&gt;alert('XSS')&lt;/script&gt;</div>
-              <div class="terminal-line"><span class="terminal-prompt">$</span> Payload injected into comment field</div>
-              <div class="terminal-line" style="color:#38ef7d; margin-top:20px">Injection successful</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lab-slide">
-        <div class="lab-content">
-          <div class="lab-left">
-            <span class="lab-status status-live">Live</span>
-            <h2 class="lab-title">Network Reconnaissance</h2>
-            <p class="lab-desc">Discover live hosts and open ports on target networks. Master Nmap scanning techniques and service enumeration strategies.</p>
-            <div class="lab-meta">
-              <div class="meta-item">
-                <span class="meta-label">Difficulty</span>
-                <div class="difficulty-bar">
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot"></div>
-                  <div class="diff-dot"></div>
-                  <div class="diff-dot"></div>
-                </div>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">Duration</span>
-                <span class="meta-value">30 min</span>
-              </div>
-            </div>
-            <div class="lab-tech">
-              <span class="tech-tag">Nmap</span>
-              <span class="tech-tag">Netcat</span>
-              <span class="tech-tag">Wireshark</span>
-            </div>
-            <div class="lab-actions">
-              <a href="#" class="btn btn-primary">Start Lab</a>
-              <a href="#" class="btn btn-secondary">View Hints</a>
-            </div>
-          </div>
-          <div class="lab-right">
-            <div class="lab-terminal">
-              <div class="terminal-line"><span class="terminal-prompt">$</span> nmap -sS -sV 192.168.1.0/24</div>
-              <div class="terminal-line"><span class="terminal-prompt">$</span> Scanning 254 hosts...</div>
-              <div class="terminal-line" style="color:#38ef7d; margin-top:20px">3 hosts discovered</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lab-slide">
-        <div class="lab-content">
-          <div class="lab-left">
-            <span class="lab-status status-beta">Beta</span>
-            <h2 class="lab-title">Buffer Overflow</h2>
-            <p class="lab-desc">Exploit memory corruption vulnerabilities. Learn stack-based buffer overflows and shellcode injection techniques.</p>
-            <div class="lab-meta">
-              <div class="meta-item">
-                <span class="meta-label">Difficulty</span>
-                <div class="difficulty-bar">
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                </div>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">Duration</span>
-                <span class="meta-value">90 min</span>
-              </div>
-            </div>
-            <div class="lab-tech">
-              <span class="tech-tag">GDB</span>
-              <span class="tech-tag">Assembly</span>
-              <span class="tech-tag">Shellcode</span>
-            </div>
-            <div class="lab-actions">
-              <a href="#" class="btn btn-primary">Start Lab</a>
-              <a href="#" class="btn btn-secondary">View Hints</a>
-            </div>
-          </div>
-          <div class="lab-right">
-            <div class="lab-terminal">
-              <div class="terminal-line"><span class="terminal-prompt">$</span> gdb ./vulnerable_app</div>
-              <div class="terminal-line"><span class="terminal-prompt">$</span> (gdb) run AAAA...[payload]</div>
-              <div class="terminal-line" style="color:#f5576c; margin-top:20px">Segmentation fault detected</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lab-slide">
-        <div class="lab-content">
-          <div class="lab-left">
-            <span class="lab-status status-live">Live</span>
-            <h2 class="lab-title">Cryptographic Attacks</h2>
-            <p class="lab-desc">Break weak encryption implementations. Practice frequency analysis, padding oracle attacks, and key recovery techniques.</p>
-            <div class="lab-meta">
-              <div class="meta-item">
-                <span class="meta-label">Difficulty</span>
-                <div class="difficulty-bar">
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot"></div>
-                </div>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">Duration</span>
-                <span class="meta-value">75 min</span>
-              </div>
-            </div>
-            <div class="lab-tech">
-              <span class="tech-tag">OpenSSL</span>
-              <span class="tech-tag">Python</span>
-              <span class="tech-tag">Hashcat</span>
-            </div>
-            <div class="lab-actions">
-              <a href="#" class="btn btn-primary">Start Lab</a>
-              <a href="#" class="btn btn-secondary">View Hints</a>
-            </div>
-          </div>
-          <div class="lab-right">
-            <div class="lab-terminal">
-              <div class="terminal-line"><span class="terminal-prompt">$</span> hashcat -m 0 hash.txt wordlist.txt</div>
-              <div class="terminal-line"><span class="terminal-prompt">$</span> Cracking MD5 hashes...</div>
-              <div class="terminal-line" style="color:#38ef7d; margin-top:20px">2/5 hashes recovered</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lab-slide">
-        <div class="lab-content">
-          <div class="lab-left">
-            <span class="lab-status status-coming">Coming Soon</span>
-            <h2 class="lab-title">Digital Forensics</h2>
-            <p class="lab-desc">Investigate security incidents and recover digital evidence. Analyze memory dumps, network traffic, and file systems.</p>
-            <div class="lab-meta">
-              <div class="meta-item">
-                <span class="meta-label">Difficulty</span>
-                <div class="difficulty-bar">
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot active"></div>
-                  <div class="diff-dot"></div>
-                  <div class="diff-dot"></div>
-                </div>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">Duration</span>
-                <span class="meta-value">60 min</span>
-              </div>
-            </div>
-            <div class="lab-tech">
-              <span class="tech-tag">Volatility</span>
-              <span class="tech-tag">Autopsy</span>
-              <span class="tech-tag">Sleuthkit</span>
-            </div>
-            <div class="lab-actions">
-              <a href="#" class="btn btn-secondary">Notify Me</a>
-            </div>
-          </div>
-          <div class="lab-right">
-            <div class="lab-terminal">
-              <div class="terminal-line"><span class="terminal-prompt">$</span> volatility -f memory.dmp imageinfo</div>
-              <div class="terminal-line"><span class="terminal-prompt">$</span> Analyzing Windows 10 memory dump</div>
-              <div class="terminal-line" style="color:#999; margin-top:20px">Lab under development...</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="carousel-nav nav-prev" onclick="moveSlide(-1)">‹</div>
-  <div class="carousel-nav nav-next" onclick="moveSlide(1)">›</div>
-
-  <div class="carousel-dots">
-    <div class="dot active" onclick="goToSlide(0)"></div>
-    <div class="dot" onclick="goToSlide(1)"></div>
-    <div class="dot" onclick="goToSlide(2)"></div>
-    <div class="dot" onclick="goToSlide(3)"></div>
-    <div class="dot" onclick="goToSlide(4)"></div>
-    <div class="dot" onclick="goToSlide(5)"></div>
-  </div>
-</div>
-
-<script>
-let currentSlide = 0;
-const track = document.querySelector('.carousel-track');
-const slides = document.querySelectorAll('.lab-slide');
-const dots = document.querySelectorAll('.dot');
-
-function updateCarousel() {
-  track.style.transform = `translateX(-${currentSlide * 100}%)`;
-  dots.forEach((dot, index) => {
-    dot.classList.toggle('active', index === currentSlide);
-  });
-}
-
-function moveSlide(direction) {
-  currentSlide += direction;
-  if (currentSlide < 0) currentSlide = slides.length - 1;
-  if (currentSlide >= slides.length) currentSlide = 0;
-  updateCarousel();
-}
-
-function goToSlide(index) {
-  currentSlide = index;
-  updateCarousel();
-}
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowLeft') moveSlide(-1);
-  if (e.key === 'ArrowRight') moveSlide(1);
-});
-</script>
 
 </body>
 </html>
