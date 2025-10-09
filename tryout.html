@@ -18,18 +18,75 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
+  }
+
+  .zip-overlay {
+    position: fixed;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1616FD 100%);
+    z-index: 9999;
+    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+    box-shadow: 0 0 50px rgba(22, 22, 253, 0.5);
+  }
+
+  .zip-left {
+    left: 0;
+    transform: translateX(0);
+  }
+
+  .zip-right {
+    right: 0;
+    transform: translateX(0);
+  }
+
+  body.loaded .zip-left {
+    transform: translateX(-100%);
+  }
+
+  body.loaded .zip-right {
+    transform: translateX(100%);
+  }
+
+  .particle {
+    position: absolute;
+    color: #667eea;
+    font-size: 14px;
+    font-family: monospace;
+    opacity: 0.3;
+    pointer-events: none;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-100px); opacity: 0; }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(100vh); opacity: 0; }
   }
 
   .container {
     text-align: center;
     padding: 40px;
     max-width: 700px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.6s forwards;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
   }
 
   .icon {
-    font-size: 120px;
-    margin-bottom: 30px;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 30px;
     animation: float 3s ease-in-out infinite;
+    transition: transform 0.3s ease-out;
   }
 
   @keyframes float {
@@ -37,11 +94,24 @@
     50% { transform: translateY(-20px); }
   }
 
+  .data-flow {
+    animation: dataFlow 2s infinite;
+  }
+
+  @keyframes dataFlow {
+    0% { stroke-dashoffset: 100; opacity: 0; }
+    20% { opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+
   h1 {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: clamp(48px, 8vw, 80px);
-    font-weight: 800;
+    font-weight: 300;
     margin-bottom: 20px;
-    color: #1a1a2e;
+    color: #2a2a2a;
+    letter-spacing: 0;
+    transition: transform 0.3s ease-out;
   }
 
   p {
@@ -49,32 +119,86 @@
     color: #666;
     margin-bottom: 50px;
     line-height: 1.6;
+    transition: transform 0.3s ease-out;
+  }
+
+  .countdown {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 40px;
+    font-family: monospace;
+  }
+
+  .countdown-item {
+    text-align: center;
+  }
+
+  .countdown-value {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700;
+    color: #667eea;
+    display: block;
+  }
+
+  .countdown-label {
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .countdown {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 40px;
+    font-family: monospace;
+  }
+
+  .countdown-item {
+    text-align: center;
+  }
+
+  .countdown-value {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 700;
+    color: #667eea;
+    display: block;
+  }
+
+  .countdown-label {
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
   .btn {
     display: inline-block;
     padding: 22px 50px;
-    background: #667eea;
+    background: linear-gradient(135deg, #667eea 0%, #1616FD 100%);
     color: white;
     text-decoration: none;
     font-size: 20px;
     font-weight: 800;
     border-radius: 12px;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+    box-shadow: 0 8px 25px rgba(22,22,253,0.4);
     animation: pulse 2s infinite;
     position: relative;
+    cursor: pointer;
   }
 
   @keyframes pulse {
-    0%, 100% { box-shadow: 0 8px 25px rgba(102,126,234,0.4); }
-    50% { box-shadow: 0 8px 35px rgba(102,126,234,0.6), 0 0 0 8px rgba(102,126,234,0.1); }
+    0%, 100% { box-shadow: 0 8px 25px rgba(22,22,253,0.4); }
+    50% { box-shadow: 0 8px 35px rgba(22,22,253,0.6), 0 0 0 8px rgba(22,22,253,0.1); }
   }
 
   .btn:hover {
-    background: #764ba2;
+    background: linear-gradient(135deg, #1616FD 0%, #667eea 100%);
     transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 15px 40px rgba(102,126,234,0.5);
+    box-shadow: 0 15px 40px rgba(22,22,253,0.5);
     animation: none;
   }
 
@@ -85,10 +209,149 @@
     text-decoration: none;
     font-size: 16px;
     transition: color 0.3s ease;
+    cursor: pointer;
   }
 
   .back-link:hover {
     color: #764ba2;
+  }
+
+  .play-menu {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+  }
+
+  .play-btn {
+    width: 60px;
+    height: 60px;
+    background: #000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .play-btn svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .play-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  .menu-dropdown {
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    border-radius: 8px;
+    padding: 10px;
+    display: none;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .menu-dropdown.show {
+    display: block;
+  }
+
+  .menu-item {
+    padding: 12px 20px;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .blackhole {
+    position: fixed;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #000 0%, #1a1a2e 50%, transparent 100%);
+    box-shadow: 0 0 40px 20px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.9);
+    pointer-events: none;
+    z-index: 5;
+    display: none;
+    animation: blackholePulse 2s infinite;
+  }
+
+  .blackhole.active {
+    display: block;
+  }
+
+  @keyframes blackholePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  .black-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: opacity 0.5s;
+  }
+
+  .reload-btn {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: #000;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    transition: all 0.3s ease;
+  }
+
+  .reload-btn.show {
+    display: flex;
+  }
+
+  .reload-btn:hover {
+    transform: translateX(-50%) scale(1.1) rotate(180deg);
+    background: #333;
+  }
+
+  .reload-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .physics-active {
+    cursor: grab !important;
+    transition: transform 0.05s linear;
+  }
+
+  .physics-active:active {
+    cursor: grabbing !important;
   }
 
   @media (max-width: 768px) {
@@ -99,14 +362,266 @@
 </head>
 <body>
 
-<div class="container">
-  <div class="icon">🧪</div>
-  <h1>Coming Soon!</h1>
-  <p>Our interactive lab simulations are currently under development. Check out our other amazing projects in the meantime.</p>
-  <a href="projects.html" class="btn">Checkout Projects →</a>
-  <br>
-  <a href="index.html" class="back-link">← Back to Home</a>
+<div class="zip-overlay zip-left"></div>
+<div class="zip-overlay zip-right"></div>
+
+<div class="play-menu">
+  <button class="play-btn" onclick="toggleMenu()">
+    <svg viewBox="0 0 24 24" fill="white">
+      <path d="M6 9h2v6H6zm10 0h2v6h-2zm-5-7c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10S16.52 2 11 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+    </svg>
+  </button>
+  <div class="menu-dropdown" id="playMenu">
+    <div class="menu-item" onclick="toggleGravity(); toggleMenu();">Toggle Gravity</div>
+    <div class="menu-item" onclick="toggleBlackhole(); toggleMenu();">Toggle Blackhole</div>
+  </div>
 </div>
 
+<button class="reload-btn" id="reloadBtn" onclick="location.reload()">
+  <svg viewBox="0 0 24 24" fill="white">
+    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+  </svg>
+</button>
+
+<div class="blackhole" id="blackhole"></div>
+<div class="black-overlay" id="blackOverlay"></div>
+
+<div class="container">
+  <div class="icon">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="35" stroke="#667eea" stroke-width="2" stroke-dasharray="4 4"/>
+      <circle cx="50" cy="20" r="8" stroke="#667eea" stroke-width="2.5" fill="#f8f9fa"/>
+      <circle cx="20" cy="50" r="8" stroke="#667eea" stroke-width="2.5" fill="#f8f9fa"/>
+      <circle cx="80" cy="50" r="8" stroke="#667eea" stroke-width="2.5" fill="#f8f9fa"/>
+      <circle cx="35" cy="75" r="8" stroke="#667eea" stroke-width="2.5" fill="#f8f9fa"/>
+      <circle cx="65" cy="75" r="8" stroke="#667eea" stroke-width="2.5" fill="#f8f9fa"/>
+      <circle cx="50" cy="50" r="10" stroke="#667eea" stroke-width="3" fill="#667eea"/>
+      <line x1="50" y1="28" x2="50" y2="40" stroke="#667eea" stroke-width="2"/>
+      <line x1="28" y1="50" x2="40" y2="50" stroke="#667eea" stroke-width="2"/>
+      <line x1="60" y1="50" x2="72" y2="50" stroke="#667eea" stroke-width="2"/>
+      <line x1="43" y1="57" x2="38" y2="67" stroke="#667eea" stroke-width="2"/>
+      <line x1="57" y1="57" x2="62" y2="67" stroke="#667eea" stroke-width="2"/>
+      <line x1="50" y1="28" x2="50" y2="40" stroke="#764ba2" stroke-width="3" stroke-dasharray="12" class="data-flow" style="animation-delay: 0s"/>
+      <line x1="28" y1="50" x2="40" y2="50" stroke="#764ba2" stroke-width="3" stroke-dasharray="12" class="data-flow" style="animation-delay: 0.4s"/>
+      <line x1="60" y1="50" x2="72" y2="50" stroke="#764ba2" stroke-width="3" stroke-dasharray="12" class="data-flow" style="animation-delay: 0.8s"/>
+      <line x1="43" y1="57" x2="38" y2="67" stroke="#764ba2" stroke-width="3" stroke-dasharray="12" class="data-flow" style="animation-delay: 1.2s"/>
+      <line x1="57" y1="57" x2="62" y2="67" stroke="#764ba2" stroke-width="3" stroke-dasharray="12" class="data-flow" style="animation-delay: 1.6s"/>
+      <path d="M48 18 L50 22 L52 18" stroke="#667eea" stroke-width="1.5" fill="none"/>
+      <path d="M18 50 L22 48 L22 52 Z" fill="#667eea"/>
+      <path d="M82 50 L78 48 L78 52 Z" fill="#667eea"/>
+    </svg>
+  </div>
+  <h1>Coming Soon!</h1>
+  <p>Our interactive lab simulations are currently under development. Check out our other amazing projects in the meantime.</p>
+  <span class="btn" onclick="location.href='projects.html'">Checkout Projects →</span>
+  <br>
+  <span class="back-link" onclick="location.href='index.html'">← Back to Home</span>
+</div>
+
+<script>
+window.addEventListener('load', () => {
+  setTimeout(() => document.body.classList.add('loaded'), 100);
+});
+
+const particles = ['0', '1', '{', '}', '<', '>', '/', '*', '#', '$', '&', '@', '%', '[', ']', '(', ')'];
+for(let i = 0; i < 50; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.textContent = particles[Math.floor(Math.random() * particles.length)];
+  p.style.left = Math.random() * 100 + '%';
+  p.style.fontSize = (Math.random() * 10 + 10) + 'px';
+  p.style.animationDuration = (Math.random() * 5 + 3) + 's';
+  p.style.animationDelay = Math.random() * 8 + 's';
+  p.style.opacity = Math.random() * 0.3 + 0.1;
+  document.body.appendChild(p);
+}
+
+const icon = document.querySelector('.icon');
+const h1 = document.querySelector('h1');
+const p = document.querySelector('p');
+
+document.addEventListener('mousemove', (e) => {
+  if(gravityActive) return;
+  const x = (e.clientX / window.innerWidth - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+  icon.style.transform = `translate(${x * 1.5}px, ${y * 1.5}px)`;
+  h1.style.transform = `translate(${x * 0.5}px, ${y * 0.5}px)`;
+  p.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+});
+
+let gravityActive = false, blackholeActive = false;
+const elements = [];
+let blackholeX = window.innerWidth / 2, blackholeY = window.innerHeight / 2;
+let absorbedCount = 0;
+
+function toggleMenu() {
+  document.getElementById('playMenu').classList.toggle('show');
+}
+
+function toggleBlackhole() {
+  blackholeActive = !blackholeActive;
+  const bh = document.getElementById('blackhole');
+  const reloadBtn = document.getElementById('reloadBtn');
+  if(blackholeActive) {
+    absorbedCount = 0;
+    document.getElementById('blackOverlay').style.opacity = '0';
+    bh.classList.add('active');
+    reloadBtn.classList.add('show');
+    bh.style.left = (blackholeX - 40) + 'px';
+    bh.style.top = (blackholeY - 40) + 'px';
+    document.querySelectorAll('.icon, h1, p, .btn, .back-link').forEach(el => {
+      if(!elements.find(item => item.el === el)) {
+        const rect = el.getBoundingClientRect();
+        elements.push({el, x: rect.left, y: rect.top, vx: 0, vy: 0, w: rect.width, h: rect.height, absorbed: false});
+        el.style.position = 'fixed';
+        el.style.left = rect.left + 'px';
+        el.style.top = rect.top + 'px';
+        el.style.margin = '0';
+        el.style.animation = 'none';
+      }
+    });
+    if(!gravityActive) animate();
+  } else {
+    bh.classList.remove('active');
+    reloadBtn.classList.remove('show');
+    document.getElementById('blackOverlay').style.opacity = '0';
+  }
+}
+
+document.addEventListener('mousemove', (e) => {
+  if(blackholeActive) {
+    blackholeX = e.clientX;
+    blackholeY = e.clientY;
+    document.getElementById('blackhole').style.left = (blackholeX - 40) + 'px';
+    document.getElementById('blackhole').style.top = (blackholeY - 40) + 'px';
+  }
+});
+
+function toggleGravity() {
+  gravityActive = !gravityActive;
+  if(gravityActive) {
+    document.querySelector('.play-menu').style.display = 'none';
+    document.querySelectorAll('.icon, h1, p, .btn, .back-link').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      elements.push({el, x: rect.left, y: rect.top, vx: 0, vy: 0, w: rect.width, h: rect.height});
+      el.style.position = 'fixed';
+      el.style.left = rect.left + 'px';
+      el.style.top = rect.top + 'px';
+      el.style.margin = '0';
+      el.style.animation = 'none';
+      el.classList.add('physics-active');
+      el.onmousedown = el.ontouchstart = (e) => dragStart(e, el);
+    });
+    animate();
+  }
+}
+
+let dragEl = null, dragOffsetX = 0, dragOffsetY = 0, lastX = 0, lastY = 0, lastTime = 0;
+
+function dragStart(e, el) {
+  e.preventDefault();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  dragEl = elements.find(item => item.el === el);
+  dragOffsetX = clientX - dragEl.x;
+  dragOffsetY = clientY - dragEl.y;
+  lastX = clientX;
+  lastY = clientY;
+  lastTime = Date.now();
+  dragEl.vx = 0;
+  dragEl.vy = 0;
+}
+
+document.addEventListener('mousemove', handleMove);
+document.addEventListener('touchmove', handleMove);
+
+function handleMove(e) {
+  if(dragEl) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const now = Date.now();
+    const dt = now - lastTime;
+    if(dt > 0) {
+      dragEl.vx = (clientX - lastX) / dt * 16;
+      dragEl.vy = (clientY - lastY) / dt * 16;
+    }
+    dragEl.x = clientX - dragOffsetX;
+    dragEl.y = clientY - dragOffsetY;
+    lastX = clientX;
+    lastY = clientY;
+    lastTime = now;
+  }
+}
+
+function dragEnd() {
+  if(dragEl) {
+    dragEl.vx *= 0.8;
+    dragEl.vy *= 0.8;
+  }
+  dragEl = null;
+}
+
+document.addEventListener('mouseup', dragEnd);
+document.addEventListener('touchend', dragEnd);
+
+function animate() {
+  if(!gravityActive && !blackholeActive) return;
+  
+  elements.forEach(item => {
+    if(item !== dragEl && !item.absorbed) {
+      if(blackholeActive) {
+        const dx = blackholeX - (item.x + item.w/2);
+        const dy = blackholeY - (item.y + item.h/2);
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        
+        if(dist < 60) {
+          item.absorbed = true;
+          item.el.style.transition = 'opacity 0.5s, transform 0.5s';
+          item.el.style.opacity = '0';
+          item.el.style.transform = 'scale(0)';
+          absorbedCount++;
+          const totalElements = elements.length;
+          const darkness = Math.min(absorbedCount / totalElements, 1);
+          document.getElementById('blackOverlay').style.opacity = darkness;
+          return;
+        }
+        
+        if(dist > 50) {
+          const force = 200 / (dist * dist);
+          item.vx += dx * force;
+          item.vy += dy * force;
+        }
+      }
+      
+      if(gravityActive) {
+        item.vy += 0.5;
+      }
+      
+      item.y += item.vy;
+      item.x += item.vx;
+      
+      if(gravityActive && item.y + item.h >= window.innerHeight) {
+        item.y = window.innerHeight - item.h;
+        if(Math.abs(item.vy) > 2) {
+          item.vy *= -0.6;
+        } else {
+          item.vy = 0;
+        }
+        item.vx *= 0.95;
+      }
+      
+      if(item.x < 0) { item.x = 0; item.vx *= -0.5; }
+      if(item.x + item.w > window.innerWidth) { item.x = window.innerWidth - item.w; item.vx *= -0.5; }
+    }
+    
+    if(!item.absorbed) {
+      item.el.style.left = item.x + 'px';
+      item.el.style.top = item.y + 'px';
+    }
+  });
+  
+  requestAnimationFrame(animate);
+}
+</script>
 </body>
 </html>
