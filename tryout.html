@@ -21,6 +21,18 @@
     position: relative;
   }
 
+  #cameraVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    display: none;
+    filter: brightness(1.1) contrast(1.2) saturate(1.3) blur(0.5px);
+  }
+
   .zip-overlay {
     position: fixed;
     top: 0;
@@ -357,7 +369,7 @@
   <div class="menu-dropdown" id="playMenu">
     <div class="menu-item" onclick="toggleGravity(); toggleMenu();">Gravity</div>
     <div class="menu-item" onclick="toggleBlackhole(); toggleMenu();">Blackhole</div>
-    <div class="menu-item" onclick="toggleBounce(); toggleMenu();">Bounce</div>
+    <div class="menu-item" onclick="toggleCamera(); toggleMenu();">Camera BG</div>
     <div class="menu-item" onclick="toggleExplosion(); toggleMenu();">Explosion</div>
     <div class="menu-item" onclick="toggleOrbit(); toggleMenu();">Orbit</div>
     <div class="menu-item" onclick="toggleMagnet(); toggleMenu();">Magnet</div>
@@ -372,6 +384,7 @@
   </svg>
 </button>
 
+<video id="cameraVideo" autoplay playsinline></video>
 <div class="blackhole" id="blackhole"></div>
 <div class="black-overlay" id="blackOverlay"></div>
 
@@ -444,7 +457,8 @@ document.addEventListener('mousemove', (e) => {
   p.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
 });
 
-let gravityActive = false, blackholeActive = false, bounceActive = false, orbitActive = false, magnetActive = false, chaosActive = false, zeroGActive = false;
+let gravityActive = false, blackholeActive = false, bounceActive = false, orbitActive = false, magnetActive = false, chaosActive = false, zeroGActive = false, cameraActive = false;
+let cameraStream = null;
 const elements = [];
 let blackholeX = window.innerWidth / 2, blackholeY = window.innerHeight / 2;
 let absorbedCount = 0;
@@ -520,18 +534,27 @@ function toggleGravity() {
   }
 }
 
-function toggleBounce() {
-  bounceActive = !bounceActive;
+async function toggleCamera() {
+  cameraActive = !cameraActive;
+  const video = document.getElementById('cameraVideo');
   const reloadBtn = document.getElementById('reloadBtn');
-  if(bounceActive) {
-    document.querySelector('.play-menu').style.display = 'none';
-    reloadBtn.classList.add('show');
-    initPhysics();
-    elements.forEach(item => {
-      item.vx = (Math.random() - 0.5) * 10;
-      item.vy = (Math.random() - 0.5) * 10;
-    });
-    animate();
+  
+  if(cameraActive) {
+    try {
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+      video.srcObject = cameraStream;
+      video.style.display = 'block';
+      document.querySelector('.play-menu').style.display = 'none';
+      reloadBtn.classList.add('show');
+    } catch(err) {
+      alert('Camera access denied or not available');
+      cameraActive = false;
+    }
+  } else {
+    if(cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      video.style.display = 'none';
+    }
   }
 }
 
