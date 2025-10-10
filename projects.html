@@ -12,8 +12,8 @@
     
     body {
       font-family: 'Outfit', sans-serif;
-      background: #f8f9fa;
-      color: #1a1a2e;
+      background: #161a20;
+      color: #bab9b9;
       line-height: 1.6;
       overflow-x: hidden;
     }
@@ -24,70 +24,121 @@
       left: 30px;
       z-index: 100;
       padding: 12px 24px;
-      background: white;
-      color: #667eea;
+      background: linear-gradient(4deg, #975af4, #2f7cf8 40%, #78aafa 65%, #934cff 100%);
+      color: white;
       text-decoration: none;
       font-size: 14px;
       font-weight: 600;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6);
       transition: all 0.3s ease;
     }
     .back-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102,126,234,0.2);
+      transform: scale(1.03);
+      text-shadow: 0 0 8px #fff;
     }
 
     .hero {
       padding: 120px 20px 60px;
       text-align: center;
-      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      background: linear-gradient(to top right, #975af4, #2f7cf8 40%, #78aafa 65%, #934cff 100%);
       color: white;
+      border-radius: 0 0 32px 32px;
+      margin-bottom: 40px;
     }
     .hero h1 {
       font-size: clamp(36px, 6vw, 56px);
       font-weight: 800;
       margin-bottom: 16px;
+      text-shadow: 2px 2px 6px #2975ee;
     }
     .hero p {
       font-size: clamp(16px, 2vw, 20px);
       opacity: 0.95;
       max-width: 600px;
       margin: 0 auto;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
     }
 
     .filters {
       display: flex;
-      gap: 12px;
       justify-content: center;
       padding: 40px 20px;
+    }
+    .filter-container {
+      background: linear-gradient(to top right, #975af4, #2f7cf8 40%, #78aafa 65%, #934cff 100%);
+      padding: 4px;
+      border-radius: 32px;
+      display: inline-block;
+    }
+    .filter-content {
+      background: #161a20;
+      border-radius: 30px;
+      padding: 18px;
+      display: flex;
+      gap: 12px;
       flex-wrap: wrap;
+      justify-content: center;
     }
     .filter-btn {
-      padding: 10px 20px;
-      border: 2px solid #e0e0e0;
-      background: white;
-      border-radius: 24px;
-      font-size: 14px;
-      font-weight: 600;
+      background: linear-gradient(4deg, #975af4, #2f7cf8 40%, #78aafa 65%, #934cff 100%);
+      padding: 10px 24px;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
       cursor: pointer;
       transition: all 0.3s ease;
-      color: #666;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+    .filter-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+    .filter-btn:hover::before {
+      left: 100%;
     }
     .filter-btn:hover {
-      transform: translateY(-2px);
-      border-color: #667eea;
+      transform: scale(1.05);
+      text-shadow: 0 0 8px #fff;
     }
     .filter-btn.active {
-      background: linear-gradient(135deg, #0f2027, #2c5364);
-      color: white;
-      border-color: transparent;
+      background: linear-gradient(4deg, #FA0E0E, #ff6b6b 40%, #ff8787 65%, #FA0E0E 100%);
+      box-shadow: 0 0 20px rgba(250, 14, 14, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+      transform: scale(1.08);
+    }
+    @media (max-width: 768px) {
+      .filter-content {
+        gap: 8px;
+      }
+      .filter-btn {
+        padding: 8px 16px;
+        font-size: 11px;
+      }
     }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
       padding: 0 20px 80px;
+      background: linear-gradient(to top right, #975af4, #2f7cf8 40%, #78aafa 65%, #934cff 100%);
+      border-radius: 32px;
+      padding: 4px;
+    }
+    .container-inner {
+      background: #161a20;
+      border-radius: 30px;
+      padding: 40px 20px;
     }
 
     .grid {
@@ -240,15 +291,20 @@
   </div>
 
   <div class="filters">
-    <button class="filter-btn active" data-filter="all">All Projects</button>
-    <button class="filter-btn" data-filter="security">Security</button>
-    <button class="filter-btn" data-filter="education">Education</button>
-    <button class="filter-btn" data-filter="tools">Tools</button>
-    <button class="filter-btn" data-filter="ai">AI</button>
+    <div class="filter-container">
+      <div class="filter-content">
+        <button class="filter-btn active" data-filter="all">All Projects</button>
+        <button class="filter-btn" data-filter="security">Security</button>
+        <button class="filter-btn" data-filter="education">Education</button>
+        <button class="filter-btn" data-filter="tools">Tools</button>
+        <button class="filter-btn" data-filter="ai">AI</button>
+      </div>
+    </div>
   </div>
 
   <div class="container">
-    <div class="grid">
+    <div class="container-inner">
+      <div class="grid">
 
       <div class="project-card" data-tags="education security">
         <div class="card-border"></div>
@@ -338,6 +394,7 @@
         <a href="https://hacktek90.github.io/visiondraw/" class="card-link">Draw →</a>
       </div>
 
+      </div>
     </div>
   </div>
 
