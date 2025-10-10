@@ -355,8 +355,14 @@
     </svg>
   </button>
   <div class="menu-dropdown" id="playMenu">
-    <div class="menu-item" onclick="toggleGravity(); toggleMenu();">Toggle Gravity</div>
-    <div class="menu-item" onclick="toggleBlackhole(); toggleMenu();">Toggle Blackhole</div>
+    <div class="menu-item" onclick="toggleGravity(); toggleMenu();">Gravity</div>
+    <div class="menu-item" onclick="toggleBlackhole(); toggleMenu();">Blackhole</div>
+    <div class="menu-item" onclick="toggleBounce(); toggleMenu();">Bounce</div>
+    <div class="menu-item" onclick="toggleExplosion(); toggleMenu();">Explosion</div>
+    <div class="menu-item" onclick="toggleOrbit(); toggleMenu();">Orbit</div>
+    <div class="menu-item" onclick="toggleMagnet(); toggleMenu();">Magnet</div>
+    <div class="menu-item" onclick="toggleChaos(); toggleMenu();">Chaos</div>
+    <div class="menu-item" onclick="toggleZeroG(); toggleMenu();">Zero-G</div>
   </div>
 </div>
 
@@ -438,7 +444,7 @@ document.addEventListener('mousemove', (e) => {
   p.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
 });
 
-let gravityActive = false, blackholeActive = false;
+let gravityActive = false, blackholeActive = false, bounceActive = false, orbitActive = false, magnetActive = false, chaosActive = false, zeroGActive = false;
 const elements = [];
 let blackholeX = window.innerWidth / 2, blackholeY = window.innerHeight / 2;
 let absorbedCount = 0;
@@ -472,7 +478,7 @@ function toggleBlackhole() {
     if(!gravityActive) animate();
   } else {
     bh.classList.remove('active');
-    reloadBtn.classList.remove('show');
+    if(!gravityActive) reloadBtn.classList.remove('show');
     document.getElementById('blackOverlay').style.opacity = '0';
   }
 }
@@ -499,12 +505,117 @@ if(window.DeviceOrientationEvent) {
 
 function toggleGravity() {
   gravityActive = !gravityActive;
+  const reloadBtn = document.getElementById('reloadBtn');
   if(gravityActive) {
     if(typeof DeviceOrientationEvent.requestPermission === 'function') {
       DeviceOrientationEvent.requestPermission();
     }
     document.querySelector('.play-menu').style.display = 'none';
-    document.querySelectorAll('.icon, h1, p, .btn, .back-link').forEach(el => {
+    reloadBtn.classList.add('show');
+    initPhysics();
+    animate();
+  } else {
+    gyroX = 0;
+    gyroY = 0;
+  }
+}
+
+function toggleBounce() {
+  bounceActive = !bounceActive;
+  const reloadBtn = document.getElementById('reloadBtn');
+  if(bounceActive) {
+    document.querySelector('.play-menu').style.display = 'none';
+    reloadBtn.classList.add('show');
+    initPhysics();
+    elements.forEach(item => {
+      item.vx = (Math.random() - 0.5) * 10;
+      item.vy = (Math.random() - 0.5) * 10;
+    });
+    animate();
+  }
+}
+
+function toggleExplosion() {
+  const reloadBtn = document.getElementById('reloadBtn');
+  document.querySelector('.play-menu').style.display = 'none';
+  reloadBtn.classList.add('show');
+  initPhysics();
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  elements.forEach(item => {
+    const dx = (item.x + item.w/2) - centerX;
+    const dy = (item.y + item.h/2) - centerY;
+    const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+    item.vx = (dx / dist) * 20;
+    item.vy = (dy / dist) * 20;
+  });
+  bounceActive = true;
+  animate();
+}
+
+function toggleOrbit() {
+  orbitActive = !orbitActive;
+  const reloadBtn = document.getElementById('reloadBtn');
+  if(orbitActive) {
+    document.querySelector('.play-menu').style.display = 'none';
+    reloadBtn.classList.add('show');
+    initPhysics();
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    elements.forEach(item => {
+      const dx = (item.x + item.w/2) - centerX;
+      const dy = (item.y + item.h/2) - centerY;
+      item.vx = -dy * 0.05;
+      item.vy = dx * 0.05;
+    });
+    animate();
+  }
+}
+
+function toggleMagnet() {
+  magnetActive = !magnetActive;
+  const reloadBtn = document.getElementById('reloadBtn');
+  if(magnetActive) {
+    document.querySelector('.play-menu').style.display = 'none';
+    reloadBtn.classList.add('show');
+    initPhysics();
+    animate();
+  }
+}
+
+function toggleChaos() {
+  chaosActive = !chaosActive;
+  const reloadBtn = document.getElementById('reloadBtn');
+  if(chaosActive) {
+    document.querySelector('.play-menu').style.display = 'none';
+    reloadBtn.classList.add('show');
+    initPhysics();
+    elements.forEach(item => {
+      item.vx = (Math.random() - 0.5) * 15;
+      item.vy = (Math.random() - 0.5) * 15;
+    });
+    animate();
+  }
+}
+
+function toggleZeroG() {
+  zeroGActive = !zeroGActive;
+  const reloadBtn = document.getElementById('reloadBtn');
+  if(zeroGActive) {
+    document.querySelector('.play-menu').style.display = 'none';
+    reloadBtn.classList.add('show');
+    initPhysics();
+    elements.forEach(item => {
+      item.vx = (Math.random() - 0.5) * 3;
+      item.vy = (Math.random() - 0.5) * 3;
+    });
+    animate();
+  }
+}
+
+function initPhysics() {
+  document.querySelectorAll('.icon, h1, p, .btn, .back-link').forEach(el => {
+    if(!elements.find(item => item.el === el)) {
       const rect = el.getBoundingClientRect();
       elements.push({el, x: rect.left, y: rect.top, vx: 0, vy: 0, w: rect.width, h: rect.height});
       el.style.position = 'fixed';
@@ -514,12 +625,8 @@ function toggleGravity() {
       el.style.animation = 'none';
       el.classList.add('physics-active');
       el.onmousedown = el.ontouchstart = (e) => dragStart(e, el);
-    });
-    animate();
-  } else {
-    gyroX = 0;
-    gyroY = 0;
-  }
+    }
+  });
 }
 
 let dragEl = null, dragOffsetX = 0, dragOffsetY = 0, lastX = 0, lastY = 0, lastTime = 0;
@@ -571,7 +678,10 @@ document.addEventListener('mouseup', dragEnd);
 document.addEventListener('touchend', dragEnd);
 
 function animate() {
-  if(!gravityActive && !blackholeActive) return;
+  if(!gravityActive && !blackholeActive && !bounceActive && !orbitActive && !magnetActive && !chaosActive && !zeroGActive) return;
+  
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
   
   elements.forEach(item => {
     if(item !== dragEl && !item.absorbed) {
@@ -604,21 +714,52 @@ function animate() {
         item.vy += (gyroY > 0 ? gyroY : 0.5) * 0.8;
       }
       
+      if(orbitActive) {
+        const dx = (item.x + item.w/2) - centerX;
+        const dy = (item.y + item.h/2) - centerY;
+        const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+        item.vx += -dy / dist * 0.3;
+        item.vy += dx / dist * 0.3;
+      }
+      
+      if(magnetActive) {
+        const dx = centerX - (item.x + item.w/2);
+        const dy = centerY - (item.y + item.h/2);
+        const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+        item.vx += dx / dist * 0.5;
+        item.vy += dy / dist * 0.5;
+      }
+      
+      if(chaosActive) {
+        item.vx += (Math.random() - 0.5) * 0.5;
+        item.vy += (Math.random() - 0.5) * 0.5;
+      }
+      
+      if(bounceActive || chaosActive) {
+        item.vx *= 0.99;
+        item.vy *= 0.99;
+      }
+      
+      if(zeroGActive) {
+        item.vx *= 0.995;
+        item.vy *= 0.995;
+      }
+      
       item.y += item.vy;
       item.x += item.vx;
       
-      if(gravityActive && item.y + item.h >= window.innerHeight) {
+      if(item.y + item.h >= window.innerHeight) {
         item.y = window.innerHeight - item.h;
-        if(Math.abs(item.vy) > 2) {
-          item.vy *= -0.6;
-        } else {
-          item.vy = 0;
-        }
+        item.vy *= -0.7;
         item.vx *= 0.95;
       }
+      if(item.y < 0) {
+        item.y = 0;
+        item.vy *= -0.7;
+      }
       
-      if(item.x < 0) { item.x = 0; item.vx *= -0.5; }
-      if(item.x + item.w > window.innerWidth) { item.x = window.innerWidth - item.w; item.vx *= -0.5; }
+      if(item.x < 0) { item.x = 0; item.vx *= -0.7; }
+      if(item.x + item.w > window.innerWidth) { item.x = window.innerWidth - item.w; item.vx *= -0.7; }
     }
     
     if(!item.absorbed) {
