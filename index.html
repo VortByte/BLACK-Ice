@@ -6,6 +6,7 @@
 <title>BlackICE Academy | Ethical Hacking</title>
 <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0iIzBhMGEwYSIvPgo8cGF0aCBkPSJNOCA4SDE2VjE2SDhWOFoiIGZpbGw9IiMwMGZmODgiLz4KPHN0eWxlPi5heyBhbmltYXRpb246IGJsaW5rIDJzIGluZmluaXRlOyB9IEBrZXlmcmFtZXMgYmxpbms7IHsgNTAlIHsgb3BhY2l0eTogMC4zOyB9IH08L3N0eWxlPgo8cGF0aCBkPSJNMjQgOEgyNFYxNkgxNlY4SDI0WiIgZmlsbD0iIzAwZmY4OCIgY2xhc3M9ImEiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMDBmZjg4IiBvcGFjaXR5PSIwLjciLz4KPC9zdmc+Cjwvc3ZnPg==" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{
@@ -53,6 +54,40 @@ font-weight:700;
 transition:transform .2s;
 }
 .btn:hover{transform:scale(1.05)}
+.btn-labs{--duration:7s;--easing:linear;--c-color-1:rgba(255,163,26,.7);--c-color-2:#1a23ff;--c-color-3:#e21bda;--c-color-4:rgba(255,232,26,.7);--c-shadow:rgba(0,0,0,.5);--c-shadow-inset-top:rgba(0,0,0,.9);--c-shadow-inset-bottom:rgba(50,50,50,.8);--c-radial-inner:#1a1a1a;--c-radial-outer:#2a2a2a;--c-color:#fff;-webkit-tap-highlight-color:transparent;-webkit-appearance:none;outline:none;position:relative;cursor:pointer;border:none;display:table;border-radius:24px;padding:0;margin:0;text-align:center;font-weight:600;font-size:16px;letter-spacing:.02em;line-height:1.5;color:var(--c-color);background:radial-gradient(circle,var(--c-radial-inner),var(--c-radial-outer) 80%);box-shadow:0 0 14px var(--c-shadow)}
+.btn-labs:before{content:"";pointer-events:none;position:absolute;z-index:3;left:0;top:0;right:0;bottom:0;border-radius:24px;box-shadow:inset 0 3px 12px var(--c-shadow-inset-top),inset 0 -3px 4px var(--c-shadow-inset-bottom)}
+.btn-labs .wrapper{-webkit-mask-image:-webkit-radial-gradient(white,black);overflow:hidden;border-radius:24px;min-width:132px;padding:12px 0}
+.btn-labs .wrapper span{display:inline-block;position:relative;z-index:1}
+.btn-labs:hover{--duration:1400ms}
+.btn-labs .wrapper .circle{position:absolute;left:0;top:0;width:40px;height:40px;border-radius:50%;filter:blur(var(--blur,8px));background:var(--background,transparent);transform:translate(var(--x,0),var(--y,0)) translateZ(0);animation:var(--animation,none) var(--duration) var(--easing) infinite}
+.btn-labs .wrapper .circle.circle-1,.btn-labs .wrapper .circle.circle-9,.btn-labs .wrapper .circle.circle-10{--background:var(--c-color-4)}
+.btn-labs .wrapper .circle.circle-3,.btn-labs .wrapper .circle.circle-4{--background:var(--c-color-2);--blur:14px}
+.btn-labs .wrapper .circle.circle-5,.btn-labs .wrapper .circle.circle-6{--background:var(--c-color-3);--blur:16px}
+.btn-labs .wrapper .circle.circle-2,.btn-labs .wrapper .circle.circle-7,.btn-labs .wrapper .circle.circle-8,.btn-labs .wrapper .circle.circle-11,.btn-labs .wrapper .circle.circle-12{--background:var(--c-color-1);--blur:12px}
+.btn-labs .wrapper .circle.circle-1{--x:0;--y:-40px;--animation:circle-1}
+.btn-labs .wrapper .circle.circle-2{--x:92px;--y:8px;--animation:circle-2}
+.btn-labs .wrapper .circle.circle-3{--x:-12px;--y:-12px;--animation:circle-3}
+.btn-labs .wrapper .circle.circle-4{--x:80px;--y:-12px;--animation:circle-4}
+.btn-labs .wrapper .circle.circle-5{--x:12px;--y:-4px;--animation:circle-5}
+.btn-labs .wrapper .circle.circle-6{--x:56px;--y:16px;--animation:circle-6}
+.btn-labs .wrapper .circle.circle-7{--x:8px;--y:28px;--animation:circle-7}
+.btn-labs .wrapper .circle.circle-8{--x:28px;--y:-4px;--animation:circle-8}
+.btn-labs .wrapper .circle.circle-9{--x:20px;--y:-12px;--animation:circle-9}
+.btn-labs .wrapper .circle.circle-10{--x:64px;--y:16px;--animation:circle-10}
+.btn-labs .wrapper .circle.circle-11{--x:4px;--y:4px;--animation:circle-11}
+.btn-labs .wrapper .circle.circle-12{--blur:14px;--x:52px;--y:4px;--animation:circle-12}
+@keyframes circle-1{33%{transform:translate(0,16px) translateZ(0)}66%{transform:translate(12px,64px) translateZ(0)}}
+@keyframes circle-2{33%{transform:translate(80px,-10px) translateZ(0)}66%{transform:translate(72px,-48px) translateZ(0)}}
+@keyframes circle-3{33%{transform:translate(20px,12px) translateZ(0)}66%{transform:translate(12px,4px) translateZ(0)}}
+@keyframes circle-4{33%{transform:translate(76px,-12px) translateZ(0)}66%{transform:translate(112px,-8px) translateZ(0)}}
+@keyframes circle-5{33%{transform:translate(84px,28px) translateZ(0)}66%{transform:translate(40px,-32px) translateZ(0)}}
+@keyframes circle-6{33%{transform:translate(28px,-16px) translateZ(0)}66%{transform:translate(76px,-56px) translateZ(0)}}
+@keyframes circle-7{33%{transform:translate(8px,28px) translateZ(0)}66%{transform:translate(20px,-60px) translateZ(0)}}
+@keyframes circle-8{33%{transform:translate(32px,-4px) translateZ(0)}66%{transform:translate(56px,-20px) translateZ(0)}}
+@keyframes circle-9{33%{transform:translate(20px,-12px) translateZ(0)}66%{transform:translate(80px,-8px) translateZ(0)}}
+@keyframes circle-10{33%{transform:translate(68px,20px) translateZ(0)}66%{transform:translate(100px,28px) translateZ(0)}}
+@keyframes circle-11{33%{transform:translate(4px,4px) translateZ(0)}66%{transform:translate(68px,20px) translateZ(0)}}
+@keyframes circle-12{33%{transform:translate(56px,0) translateZ(0)}66%{transform:translate(60px,-32px) translateZ(0)}}
 
 /* HERO */
 .hero{
@@ -78,8 +113,36 @@ justify-content:center;
 flex-wrap:wrap;
 }
 .btn-primary{
-background:linear-gradient(135deg,#667eea,#764ba2);
-color:#fff;
+min-width:120px;
+position:relative;
+padding:14px 28px;
+border:0;
+border-radius:7px;
+box-shadow:inset 0 0 0 1px rgba(255,255,255,0.1);
+background:radial-gradient(ellipse at bottom,rgba(71,81,92,1) 0%,rgba(11,21,30,1) 45%);
+color:rgba(255,255,255,0.66);
+transition:all 1s cubic-bezier(0.15,0.83,0.66,1);
+display:inline-flex;
+align-items:center;
+justify-content:center;
+}
+.btn-primary::before{
+content:'';
+width:70%;
+height:1px;
+position:absolute;
+bottom:0;
+left:15%;
+background:linear-gradient(90deg,rgba(47,2,249,0) 0%,rgba(47,2,249,1) 50%,rgba(47,2,249,0) 100%);
+opacity:0.2;
+transition:all 1s cubic-bezier(0.15,0.83,0.66,1);
+}
+.btn-primary:hover{
+color:rgba(255,255,255,1);
+transform:scale(1.1) translateY(-3px);
+}
+.btn-primary:hover::before{
+opacity:1;
 }
 .btn-secondary{
 background:#fff;
@@ -87,26 +150,47 @@ color:#000;
 border:2px solid #e0e0e0;
 }
 .btn-projects{
-background:linear-gradient(135deg,#f093fb,#f5576c);
+display:flex;
+width:220px;
+height:50px;
+background:#1d2129;
+border-radius:40px;
+box-shadow:0 5px 10px #bebebe;
+justify-content:space-between;
+align-items:center;
+border:none;
+padding:0;
+}
+.btn-projects .text{
+width:calc(220px - 50px);
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
 color:#fff;
-position:relative;
-overflow:hidden;
-animation:pulse 2s infinite;
+font-size:0.95em;
+letter-spacing:1px;
+padding:0 10px;
 }
-.btn-projects::before{
-content:'🚀';
-position:absolute;
-left:12px;
-font-size:20px;
-animation:rocket 1.5s infinite;
+.btn-projects .icon{
+width:45px;
+height:45px;
+background:#f59aff;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+border:3px solid #1d2129;
 }
-@keyframes pulse{
-0%,100%{box-shadow:0 0 0 0 rgba(240,147,251,.7)}
-50%{box-shadow:0 0 0 10px rgba(240,147,251,0)}
+.btn-projects svg{
+transition:1.5s;
 }
-@keyframes rocket{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-3px)}
+.btn-projects:hover svg{
+animation:arrow 1s linear infinite;
+}
+@keyframes arrow{
+0%{opacity:0;margin-left:0}
+100%{opacity:1;margin-left:10px}
 }
 
 /* BENTO GRID */
@@ -130,6 +214,11 @@ box-shadow:0 12px 40px rgba(0,0,0,.12);
 .b1{grid-column:span 8;grid-row:span 2;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
 .b2{grid-column:span 4;background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff}
 .b3{grid-column:span 4;background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff}
+.b4,.b5,.b6,.b9,.b10,.b11{position:relative;background:#262626;color:#f3f4f6;border:1px solid #404040;overflow:hidden}
+.b4::before,.b5::before,.b6::before,.b9::before,.b10::before,.b11::before{content:'';position:absolute;width:48px;height:48px;right:4px;top:4px;z-index:10;background:#a21caf;border-radius:50%;filter:blur(40px);transition:all .5s}
+.b4::after,.b5::after,.b6::after,.b9::after,.b10::after,.b11::after{content:'';position:absolute;width:80px;height:80px;right:32px;top:12px;z-index:10;background:#f472b6;border-radius:50%;filter:blur(40px);transition:all .5s}
+.b4:hover::before,.b5:hover::before,.b6:hover::before,.b9:hover::before,.b10:hover::before,.b11:hover::before{right:48px;bottom:-32px;top:auto;box-shadow:20px 20px 20px 30px #a21caf}
+.b4:hover::after,.b5:hover::after,.b6:hover::after,.b9:hover::after,.b10:hover::after,.b11:hover::after{right:-32px}
 .b4{grid-column:span 4}
 .b5{grid-column:span 4}
 .b6{grid-column:span 4}
@@ -146,21 +235,29 @@ text-transform:uppercase;
 letter-spacing:1.5px;
 opacity:.8;
 margin-bottom:12px;
+position:relative;
+z-index:20;
 }
 .box-title{
 font-size:32px;
 font-weight:800;
 margin-bottom:12px;
+position:relative;
+z-index:20;
 }
 .box-desc{
 font-size:16px;
 opacity:.9;
 line-height:1.6;
+position:relative;
+z-index:20;
 }
 .box-number{
 font-size:64px;
 font-weight:800;
 margin-bottom:8px;
+position:relative;
+z-index:20;
 }
 
 /* CARDS */
@@ -171,13 +268,19 @@ gap:24px;
 margin:60px 0;
 }
 .card{
-background:#fff;
+position:relative;
+background:#222;
 border-radius:20px;
 padding:32px;
-box-shadow:0 4px 20px rgba(0,0,0,.08);
-transition:transform .3s;
+box-shadow:2px 2px 2px red;
+transition:all .3s;
+z-index:1;
+overflow:hidden;
+color:#f0f8ff;
 }
-.card:hover{transform:translateY(-8px)}
+.card::before{content:'';height:10px;width:30px;position:absolute;background-image:linear-gradient(45deg,salmon,red);left:-10px;top:0;z-index:-1;transition:.3s ease-in-out;border-radius:5px}
+.card:hover::before{height:400px;width:400px}
+.card:hover{border-radius:5px}
 .card-icon{
 width:60px;
 height:60px;
@@ -188,15 +291,21 @@ align-items:center;
 justify-content:center;
 font-size:32px;
 margin-bottom:20px;
+position:relative;
+z-index:2;
 }
 .card-title{
 font-size:24px;
 font-weight:800;
 margin-bottom:12px;
+position:relative;
+z-index:2;
 }
 .card-text{
-color:#666;
+color:#f0f8ff;
 line-height:1.6;
+position:relative;
+z-index:2;
 }
 
 /* SECTION */
@@ -269,7 +378,23 @@ h1{font-size:32px}
     <div class="nav-menu">
       <a class="nav-link" href="syllabus.html">Curriculum</a>
       <a class="nav-link" href="projects.html">Projects</a>
-      <a class="btn" href="tryout.html">Try Labs</a>
+      <button class="btn-labs" onclick="location.href='tryout.html'">
+        <div class="wrapper">
+          <span>Try Labs</span>
+          <div class="circle circle-12"></div>
+          <div class="circle circle-11"></div>
+          <div class="circle circle-10"></div>
+          <div class="circle circle-9"></div>
+          <div class="circle circle-8"></div>
+          <div class="circle circle-7"></div>
+          <div class="circle circle-6"></div>
+          <div class="circle circle-5"></div>
+          <div class="circle circle-4"></div>
+          <div class="circle circle-3"></div>
+          <div class="circle circle-2"></div>
+          <div class="circle circle-1"></div>
+        </div>
+      </button>
     </div>
   </nav>
 
@@ -278,7 +403,23 @@ h1{font-size:32px}
     <p class="hero-text">Learn cybersecurity through hands-on labs, real CTF challenges, and mission-based training from beginner to expert.</p>
     <div class="cta-btns">
       <a class="btn btn-primary" href="tryout.html">Start Free</a>
-      <a class="btn btn-projects" href="projects.html" style="padding-left:44px">Explore Projects</a>
+      <a class="btn btn-projects" href="projects.html">
+        <span class="text">Explore Projects</span>
+        <span class="icon">
+          <svg width="16" height="19" viewBox="0 0 16 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="1.61321" cy="1.61321" r="1.5" fill="black"></circle>
+            <circle cx="5.73583" cy="1.61321" r="1.5" fill="black"></circle>
+            <circle cx="5.73583" cy="5.5566" r="1.5" fill="black"></circle>
+            <circle cx="9.85851" cy="5.5566" r="1.5" fill="black"></circle>
+            <circle cx="9.85851" cy="9.5" r="1.5" fill="black"></circle>
+            <circle cx="13.9811" cy="9.5" r="1.5" fill="black"></circle>
+            <circle cx="5.73583" cy="13.4434" r="1.5" fill="black"></circle>
+            <circle cx="9.85851" cy="13.4434" r="1.5" fill="black"></circle>
+            <circle cx="1.61321" cy="17.3868" r="1.5" fill="black"></circle>
+            <circle cx="5.73583" cy="17.3868" r="1.5" fill="black"></circle>
+          </svg>
+        </span>
+      </a>
       <a class="btn btn-secondary" href="syllabus.html">View Curriculum</a>
     </div>
   </div>
