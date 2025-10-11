@@ -68,6 +68,20 @@ h1{font-size:clamp(40px,6vw,64px);font-weight:800;margin-bottom:16px}
 .back-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
 .back-tag{padding:6px 12px;background:#222;border-radius:8px;font-size:12px;font-weight:600;color:#00ff88}
 
+/* AI MATRIX LOADER */
+.ai-matrix-loader{display:flex;gap:8px;justify-content:center;align-items:center;padding:60px 0;position:relative}
+.digit{font-size:32px;font-weight:800;color:#00ff88;animation:flicker 1.5s infinite;font-family:monospace}
+.digit:nth-child(1){animation-delay:0s}
+.digit:nth-child(2){animation-delay:.2s}
+.digit:nth-child(3){animation-delay:.4s}
+.digit:nth-child(4){animation-delay:.6s}
+.digit:nth-child(5){animation-delay:.8s}
+.digit:nth-child(6){animation-delay:1s}
+.digit:nth-child(7){animation-delay:1.2s}
+.digit:nth-child(8){animation-delay:1.4s}
+.glow{position:absolute;width:200px;height:100px;background:radial-gradient(circle,rgba(0,255,136,.3),transparent);filter:blur(20px);z-index:-1}
+@keyframes flicker{0%,100%{opacity:1;text-shadow:0 0 10px #00ff88,0 0 20px #00ff88}50%{opacity:.3;text-shadow:none}}
+
 /* RESPONSIVE */
 @media(max-width:1024px){
 .stats{grid-template-columns:repeat(2,1fr)}
@@ -424,11 +438,26 @@ nav{flex-direction:column;gap:20px}
       </div>
     </div>
   </div>
+
+  <div class="ai-matrix-loader">
+    <div class="digit">0</div>
+    <div class="digit">1</div>
+    <div class="digit">0</div>
+    <div class="digit">1</div>
+    <div class="digit">1</div>
+    <div class="digit">0</div>
+    <div class="digit">0</div>
+    <div class="digit">1</div>
+    <div class="glow"></div>
+  </div>
 </div>
 
 <script>
 document.querySelectorAll('.card-wrapper').forEach(wrapper=>{
   wrapper.addEventListener('click',()=>wrapper.classList.toggle('flipped'));
+});
+document.querySelectorAll('.digit').forEach(digit=>{
+  setInterval(()=>digit.textContent=Math.round(Math.random()),150);
 });
 </script>
 </body>

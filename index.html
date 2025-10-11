@@ -205,10 +205,10 @@ background:#fff;
 border-radius:24px;
 padding:32px;
 box-shadow:0 4px 20px rgba(0,0,0,.08);
-transition:transform .3s,box-shadow .3s;
+transition:transform .1s ease-out,box-shadow .3s;
+transform-style:preserve-3d;
 }
 .box:hover{
-transform:translateY(-4px);
 box-shadow:0 12px 40px rgba(0,0,0,.12);
 }
 .b1{grid-column:span 8;grid-row:span 2;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
@@ -237,6 +237,8 @@ opacity:.8;
 margin-bottom:12px;
 position:relative;
 z-index:20;
+transform:translateZ(40px);
+transition:transform .1s ease-out;
 }
 .box-title{
 font-size:32px;
@@ -244,6 +246,8 @@ font-weight:800;
 margin-bottom:12px;
 position:relative;
 z-index:20;
+transform:translateZ(80px);
+transition:transform .1s ease-out;
 }
 .box-desc{
 font-size:16px;
@@ -251,6 +255,8 @@ opacity:.9;
 line-height:1.6;
 position:relative;
 z-index:20;
+transform:translateZ(60px);
+transition:transform .1s ease-out;
 }
 .box-number{
 font-size:64px;
@@ -258,6 +264,8 @@ font-weight:800;
 margin-bottom:8px;
 position:relative;
 z-index:20;
+transform:translateZ(100px);
+transition:transform .1s ease-out;
 }
 
 /* CARDS */
@@ -273,10 +281,11 @@ background:#222;
 border-radius:20px;
 padding:32px;
 box-shadow:2px 2px 2px red;
-transition:all .3s;
+transition:transform .1s ease-out,all .3s;
 z-index:1;
 overflow:hidden;
 color:#f0f8ff;
+transform-style:preserve-3d;
 }
 .card::before{content:'';height:10px;width:30px;position:absolute;background-image:linear-gradient(45deg,salmon,red);left:-10px;top:0;z-index:-1;transition:.3s ease-in-out;border-radius:5px}
 .card:hover::before{height:400px;width:400px}
@@ -293,6 +302,8 @@ font-size:32px;
 margin-bottom:20px;
 position:relative;
 z-index:2;
+transform:translateZ(60px);
+transition:transform .1s ease-out;
 }
 .card-title{
 font-size:24px;
@@ -300,12 +311,16 @@ font-weight:800;
 margin-bottom:12px;
 position:relative;
 z-index:2;
+transform:translateZ(80px);
+transition:transform .1s ease-out;
 }
 .card-text{
 color:#f0f8ff;
 line-height:1.6;
 position:relative;
 z-index:2;
+transform:translateZ(50px);
+transition:transform .1s ease-out;
 }
 
 /* SECTION */
@@ -368,6 +383,30 @@ h1{font-size:32px}
 .card-icon{width:48px;height:48px;font-size:24px}
 .card-title{font-size:20px}
 }
+
+/* MADE BY BUTTON */
+.footer-btn{text-align:center;padding:60px 0;background-image:url('https://png.pngtree.com/thumb_back/fw800/background/20230705/pngtree-retro-digital-cyber-landscape-an-abstract-wireframe-perspective-grid-on-blue-image_3733748.jpg');background-size:cover;background-position:center;background-attachment:fixed;border-radius:50px 50px 0 0;margin-top:60px}
+.btn-container{--btn-color:#01DAEF;--corner-color:#0002;--corner-dist:24px;--corner-multiplier:1.5;--timing-function:cubic-bezier(0,0,0,2.5);--duration:250ms;position:relative;display:inline-flex;align-items:center;justify-content:center}
+.btn-container .btn{position:relative;min-width:160px;min-height:calc(var(--corner-dist)*2);border-radius:12px;border:1px solid rgba(209,213,219,.3);padding:.25em 1em;backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);background-color:rgba(25,254,239,.75);box-shadow:1px 1px 2px -1px #fff inset,0 2px 1px #00000010,0 4px 2px #00000010,0 8px 4px #00000010,0 16px 8px #00000010,0 32px 16px #00000010;transition:transform var(--duration) var(--timing-function),filter var(--duration) var(--timing-function);cursor:pointer}
+.btn-drawer{position:absolute;display:flex;justify-content:center;min-height:32px;border-radius:12px;border:1px solid rgba(209,213,219,.3);padding:.25em 1em;font-size:.8em;font-weight:600;color:#000;backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);background-color:rgba(25,254,239,.75);opacity:0;transition:transform calc(.5*var(--duration)) ease,filter var(--duration) var(--timing-function),opacity calc(.5*var(--duration)) ease;filter:blur(2px)}
+.transition-top{top:0;left:0;border-radius:12px 12px 0 0;align-items:start}
+.transition-bottom{bottom:0;right:0;border-radius:0 0 12px 12px;align-items:end}
+.btn-text{display:inline-block;font-size:1.25em;font-weight:600;color:#5550;background-image:linear-gradient(#444,#000a);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 1px 0 #fff6) drop-shadow(0 -1px 0 #0006);transition:transform var(--duration) var(--timing-function),filter var(--duration) var(--timing-function),color var(--duration) var(--timing-function)}
+.btn-corner{position:absolute;width:32px;fill:none;stroke:var(--corner-color);transition:transform var(--duration) var(--timing-function),filter var(--duration) var(--timing-function)}
+.btn-corner:nth-of-type(1){top:0;left:0;transform:translate(calc(-1*var(--corner-dist)),calc(-1*var(--corner-dist))) rotate(90deg)}
+.btn-corner:nth-of-type(2){top:0;right:0;transform:translate(var(--corner-dist),calc(-1*var(--corner-dist))) rotate(180deg)}
+.btn-corner:nth-of-type(3){bottom:0;right:0;transform:translate(var(--corner-dist),var(--corner-dist)) rotate(-90deg)}
+.btn-corner:nth-of-type(4){bottom:0;left:0;transform:translate(calc(-1*var(--corner-dist)),var(--corner-dist)) rotate(0deg)}
+.btn-container:has(.btn:hover) .btn,.btn-container:has(.btn:focus-visible) .btn{transform:scale(1.05);filter:drop-shadow(0 16px 16px #0002)}
+.btn-container:has(.btn:hover) .transition-top,.btn-container:has(.btn:focus-visible) .transition-top{transform:translateY(-24px) rotateZ(4deg);filter:blur(0);animation:hue-anim 3s infinite linear;opacity:1}
+.btn-container:has(.btn:hover) .transition-bottom,.btn-container:has(.btn:focus-visible) .transition-bottom{transform:translateY(24px) rotateZ(4deg);filter:blur(0);animation:hue-anim 3s infinite linear;opacity:1}
+.btn-container:has(.btn:hover) .btn-text,.btn-container:has(.btn:focus-visible) .btn-text{filter:drop-shadow(0 1px 0 #fff6) drop-shadow(0 -1px 0 #0006) drop-shadow(0 6px 2px #0003);transform:scale(1.05);color:#0008}
+.btn-container:has(.btn:hover),.btn-container:has(.btn:focus-visible){--corner-color:#0004}
+.btn-container:has(.btn:hover) .btn-corner:first-of-type,.btn-container:has(.btn:focus-visible) .btn-corner:first-of-type{transform:translate(calc(-1*var(--corner-multiplier)*var(--corner-dist)),calc(-1*var(--corner-multiplier)*var(--corner-dist))) rotate(90deg);filter:drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color))}
+.btn-container:has(.btn:hover) .btn-corner:nth-of-type(2),.btn-container:has(.btn:focus-visible) .btn-corner:nth-of-type(2){transform:translate(calc(var(--corner-multiplier)*var(--corner-dist)),calc(-1*var(--corner-multiplier)*var(--corner-dist))) rotate(180deg);filter:drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color))}
+.btn-container:has(.btn:hover) .btn-corner:nth-of-type(3),.btn-container:has(.btn:focus-visible) .btn-corner:nth-of-type(3){transform:translate(calc(var(--corner-multiplier)*var(--corner-dist)),calc(var(--corner-multiplier)*var(--corner-dist))) rotate(-90deg);filter:drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color))}
+.btn-container:has(.btn:hover) .btn-corner:nth-of-type(4),.btn-container:has(.btn:focus-visible) .btn-corner:nth-of-type(4){transform:translate(calc(-1*var(--corner-multiplier)*var(--corner-dist)),calc(var(--corner-multiplier)*var(--corner-dist))) rotate(0deg);filter:drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color))}
+@keyframes hue-anim{0%,100%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(-70deg)}}
 </style>
 </head>
 <body>
@@ -497,7 +536,62 @@ h1{font-size:32px}
       </div>
     </div>
   </div>
+
+  <div class="footer-btn">
+    <div class="btn-container">
+      <div class="btn-drawer transition-top">Crafted by</div>
+      <div class="btn-drawer transition-bottom">Subho</div>
+      <button class="btn">
+        <span class="btn-text">Crafted by</span>
+      </button>
+      <svg class="btn-corner" xmlns="http://www.w3.org/2000/svg" viewBox="-1 1 32 32">
+        <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z"></path>
+      </svg>
+      <svg class="btn-corner" xmlns="http://www.w3.org/2000/svg" viewBox="-1 1 32 32">
+        <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z"></path>
+      </svg>
+      <svg class="btn-corner" xmlns="http://www.w3.org/2000/svg" viewBox="-1 1 32 32">
+        <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z"></path>
+      </svg>
+      <svg class="btn-corner" xmlns="http://www.w3.org/2000/svg" viewBox="-1 1 32 32">
+        <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z"></path>
+      </svg>
+    </div>
+  </div>
 </div>
 
+<script>
+document.querySelectorAll('.box').forEach(box=>{
+  const divisor=box.classList.contains('b1')?25:10;
+  box.addEventListener('mousemove',e=>{
+    const rect=box.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    const centerX=rect.width/2;
+    const centerY=rect.height/2;
+    const rotateX=(y-centerY)/divisor;
+    const rotateY=(centerX-x)/divisor;
+    box.style.transform=`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`;
+  });
+  box.addEventListener('mouseleave',()=>{
+    box.style.transform='perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+  });
+});
+document.querySelectorAll('.card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const rect=card.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    const centerX=rect.width/2;
+    const centerY=rect.height/2;
+    const rotateX=(y-centerY)/10;
+    const rotateY=(centerX-x)/10;
+    card.style.transform=`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+  });
+});
+</script>
 </body>
 </html>
