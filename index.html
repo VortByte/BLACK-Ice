@@ -145,52 +145,99 @@ transform:scale(1.1) translateY(-3px);
 opacity:1;
 }
 .btn-secondary{
-background:#fff;
+cursor:pointer;
+font-size:1.4rem;
+border-radius:16px;
+border:none;
+padding:2px;
+background:radial-gradient(circle 80px at 80% -10%,#ffffff,#e0e0e0);
+position:relative;
+text-decoration:none;
+display:inline-block;
+}
+.btn-secondary::after{
+content:"";
+position:absolute;
+width:65%;
+height:60%;
+border-radius:120px;
+top:0;
+right:0;
+box-shadow:0 0 20px #00000015;
+z-index:-1;
+}
+.btn-secondary .inner{
+padding:14px 25px;
+border-radius:14px;
 color:#000;
-border:2px solid #e0e0e0;
+z-index:3;
+position:relative;
+background:#fff;
+font-weight:600;
 }
 .btn-projects{
-display:flex;
-width:220px;
-height:50px;
-background:#1d2129;
-border-radius:40px;
-box-shadow:0 5px 10px #bebebe;
-justify-content:space-between;
-align-items:center;
+cursor:pointer;
+font-size:1.4rem;
+border-radius:16px;
 border:none;
-padding:0;
+padding:2px;
+background:radial-gradient(circle 80px at 80% -10%,#ffffff,#181b1b);
+position:relative;
+text-decoration:none;
+display:inline-block;
 }
-.btn-projects .text{
-width:calc(220px - 50px);
+.btn-projects::after{
+content:"";
+position:absolute;
+width:65%;
+height:60%;
+border-radius:120px;
+top:0;
+right:0;
+box-shadow:0 0 20px #ffffff38;
+z-index:-1;
+}
+.btn-projects .blob1{
+position:absolute;
+width:70px;
 height:100%;
-display:flex;
-align-items:center;
-justify-content:center;
+border-radius:16px;
+bottom:0;
+left:0;
+background:radial-gradient(circle 60px at 0% 100%,#3fe9ff,#0000ff80,transparent);
+box-shadow:-10px 10px 30px #0051ff2d;
+}
+.btn-projects .inner{
+padding:14px 25px;
+border-radius:14px;
 color:#fff;
-font-size:0.95em;
-letter-spacing:1px;
-padding:0 10px;
+z-index:3;
+position:relative;
+background:radial-gradient(circle 80px at 80% -50%,#777777,#0f1111);
 }
-.btn-projects .icon{
-width:45px;
-height:45px;
-background:#f59aff;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:50%;
-border:3px solid #1d2129;
+.btn-projects .inner::before{
+content:"";
+width:100%;
+height:100%;
+left:0;
+top:0;
+border-radius:14px;
+background:radial-gradient(circle 60px at 0% 100%,#00e1ff1a,#0000ff11,transparent);
+position:absolute;
 }
-.btn-projects svg{
-transition:1.5s;
+.btn-projects:hover{
+transform:translateY(-3px);
+transition:transform .3s;
 }
-.btn-projects:hover svg{
-animation:arrow 1s linear infinite;
+.btn-projects:hover .blob1{
+animation:blobPulse 1s ease-in-out infinite;
 }
-@keyframes arrow{
-0%{opacity:0;margin-left:0}
-100%{opacity:1;margin-left:10px}
+.btn-projects:hover .inner{
+box-shadow:0 0 30px #3fe9ff80;
+}
+@keyframes blobPulse{
+0%,100%{opacity:1;transform:scale(1)}
+50%{opacity:.8;transform:scale(1.1)}
 }
 
 /* BENTO GRID */
@@ -442,24 +489,17 @@ h1{font-size:32px}
     <p class="hero-text">Learn cybersecurity through hands-on labs, real CTF challenges, and mission-based training from beginner to expert.</p>
     <div class="cta-btns">
       <a class="btn btn-primary" href="tryout.html">Start Free</a>
-      <a class="btn btn-projects" href="projects.html">
-        <span class="text">Explore Projects</span>
-        <span class="icon">
-          <svg width="16" height="19" viewBox="0 0 16 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="1.61321" cy="1.61321" r="1.5" fill="black"></circle>
-            <circle cx="5.73583" cy="1.61321" r="1.5" fill="black"></circle>
-            <circle cx="5.73583" cy="5.5566" r="1.5" fill="black"></circle>
-            <circle cx="9.85851" cy="5.5566" r="1.5" fill="black"></circle>
-            <circle cx="9.85851" cy="9.5" r="1.5" fill="black"></circle>
-            <circle cx="13.9811" cy="9.5" r="1.5" fill="black"></circle>
-            <circle cx="5.73583" cy="13.4434" r="1.5" fill="black"></circle>
-            <circle cx="9.85851" cy="13.4434" r="1.5" fill="black"></circle>
-            <circle cx="1.61321" cy="17.3868" r="1.5" fill="black"></circle>
-            <circle cx="5.73583" cy="17.3868" r="1.5" fill="black"></circle>
-          </svg>
-        </span>
+      <a class="btn-projects" href="projects.html">
+        <div class="blob1"></div>
+        <div class="inner">Explore Projects</div>
       </a>
-      <a class="btn btn-secondary" href="syllabus.html">View Curriculum</a>
+      <a class="btn-projects" href="https://bicochat.onrender.com/" target="_blank">
+        <div class="blob1"></div>
+        <div class="inner">BICOChat AI</div>
+      </a>
+      <a class="btn-secondary" href="syllabus.html">
+        <div class="inner">View Curriculum</div>
+      </a>
     </div>
   </div>
 
