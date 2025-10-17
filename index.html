@@ -475,7 +475,8 @@ h1{font-size:32px}
 .btn-container:has(.btn:hover) .btn-corner:nth-of-type(3),.btn-container:has(.btn:focus-visible) .btn-corner:nth-of-type(3){transform:translate(calc(var(--corner-multiplier)*var(--corner-dist)),calc(var(--corner-multiplier)*var(--corner-dist))) rotate(-90deg);filter:drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color))}
 .btn-container:has(.btn:hover) .btn-corner:nth-of-type(4),.btn-container:has(.btn:focus-visible) .btn-corner:nth-of-type(4){transform:translate(calc(-1*var(--corner-multiplier)*var(--corner-dist)),calc(var(--corner-multiplier)*var(--corner-dist))) rotate(0deg);filter:drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color))}
 @keyframes hue-anim{0%,100%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(-70deg)}}
- .circle-btn-wrap {
+/* === CIRCLE BUTTON === */
+  .circle-btn-wrap {
     position: fixed;
     bottom: 18px;
     left: 50%;
@@ -484,24 +485,62 @@ h1{font-size:32px}
     cursor: pointer;
   }
 
-  .circle-btn {
-    display: block;
-    transition: transform 0.3s ease;
-  }
-
-  .circle-btn:hover {
-    transform: scale(1.08);
-  }
+  .circle-btn { transition: transform 0.3s ease; }
+  .circle-btn:hover { transform: scale(1.08); }
 
   .circle-ring {
     stroke-dasharray: 314;
     stroke-dashoffset: 314;
     transition: stroke-dashoffset 0.8s ease;
   }
+  .circle-btn:hover .circle-ring { stroke-dashoffset: 0; }
 
-  .circle-btn:hover .circle-ring {
-    stroke-dashoffset: 0;
+  /* === INFO PANEL === */
+  #infoPanel {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: rgba(25, 25, 25, 0.95);
+    color: #fff;
+    text-align: center;
+    padding: 25px 20px 60px;
+    border-top: 2px solid #00e0ff;
+    box-shadow: 0 -4px 25px rgba(0, 0, 0, 0.4);
+    transition: transform 0.5s ease;
+    transform: translateY(100%);
+    z-index: 999;
   }
+  #infoPanel.open {
+    transform: translateY(0);
+  }
+
+  #infoPanel p {
+    max-width: 800px;
+    margin: 10px auto;
+    line-height: 1.5;
+  }
+
+  /* === CAUTION MESSAGE === */
+  .caution {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffcc00;
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+    display: none;
+    z-index: 1200;
+  }
+  .caution.show {
+    display: block;
+  }
+ 
+  
 </style>
 </head>
 <body>
@@ -647,6 +686,42 @@ h1{font-size:32px}
     </div>
   </div>
 </div>
+
+
+<script>
+document.querySelectorAll('.box').forEach(box=>{
+  const divisor=box.classList.contains('b1')?25:10;
+  box.addEventListener('mousemove',e=>{
+    const rect=box.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    const centerX=rect.width/2;
+    const centerY=rect.height/2;
+    const rotateX=(y-centerY)/divisor;
+    const rotateY=(centerX-x)/divisor;
+    box.style.transform=`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`;
+  });
+  box.addEventListener('mouseleave',()=>{
+    box.style.transform='perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+  });
+});
+document.querySelectorAll('.card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const rect=card.getBoundingClientRect();
+    const x=e.clientX-rect.left;
+    const y=e.clientY-rect.top;
+    const centerX=rect.width/2;
+    const centerY=rect.height/2;
+    const rotateX=(y-centerY)/10;
+    const rotateY=(centerX-x)/10;
+    card.style.transform=`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+  });
+});
+</script>
+
 <!-- SVG Circle Button -->
 <div class="circle-btn-wrap">
   <svg class="circle-btn" id="circleBtn" width="64" height="64" viewBox="0 0 64 64"
@@ -665,51 +740,18 @@ h1{font-size:32px}
       </filter>
     </defs>
 
-    <!-- Outer animated ring -->
     <circle class="circle-ring" cx="32" cy="32" r="30"
             stroke="url(#grad)" stroke-width="3" fill="none"
             stroke-linecap="round" filter="url(#glow)" />
 
-    <!-- Inner soft fill -->
-    <circle cx="32" cy="32" r="26" fill="rgba(255,255,255,0.02)" />
+    <circle cx="32" cy="32" r="26" fill="rgba(255,255,255,0.04)" />
   </svg>
 </div>
 
-<!-- Hidden info panel for example -->
-<div id="infoPanel" style="
-  position:fixed;bottom:-200px;left:0;width:100%;
-  background:rgba(25,25,25,0.95);color:#fff;
-  text-align:center;padding:20px;transition:bottom .4s ease;">
-  <p>Web and app security
-OWASP Top 10, application security, web application security, application security testing, SAST, DAST, RASP, secure coding practices, threat modeling tools.​
-
-SQL injection and cross-site scripting (XSS) remain common technique queries for practice, labs, and mitigations.​
-
-API penetration testing, mobile application security, application penetration testing, and secure SDLC are trending implementation searches.​
-
-Recon and OSINT
-Google dorking, Google Hacking Database (GHDB), and operators like site:, intitle:, inurl:, and filetype: are widely searched for footprinting and exposure discovery.​
-
-GitHub topics around “google-hacking” and curated dork lists support ongoing interest in automated recon and search-based enumeration.​
-
-Pen testing and tools
-Penetration testing services, vulnerability assessment, red teaming, purple teaming, vulnerability scanning, and penetration testing report are high-intent service keywords.​
-
-Core tools: Metasploit, Burp Suite, and Nmap consistently feature in 2025 tool roundups and student learning paths.​
-
-Practice platforms like Hack The Box and TryHackMe are commonly searched by learners to build hands-on skills.​
-
-Identity and access
-Identity and Access Management (IAM), Multi-Factor Authentication (MFA), Single Sign-On (SSO), Privileged Access Management (PAM), Identity Governance, Role-Based Access Control (RBAC), least privilege, adaptive authentication, and ITDR (Identity Threat Detection and Response) see sustained search demand.​
-
-Zero Trust access and continuous authentication related keywords reflect the pivot from perimeter models to identity-first defense.​
-
-Cloud and container security
-Cloud Security Posture Management (CSPM), Cloud Workload Protection, CASB, container security, serverless security, cloud IAM, and cloud security assessment dominate cloud-focused searches.​
-
-SentinelOne notes container/microservices misconfigurations and supply chain risk as key trend drivers, reinforcing demand for “shift-left” security and pipeline controls.​
-
-SOC, detection, and response
+<!-- Info Panel -->
+<div id="infoPanel">
+  <p>
+   SOC, detection, and response
 SIEM, SOAR, XDR, threat hunting, endpoint detection and response (EDR), managed detection and response (MDR), and ransomware protection map to SOC modernization and automation searches.​
 
 Splashtop and SentinelOne emphasize AI-driven detection and the increasing urgency of vulnerability management and automated responses, pushing interest in these tool categories.​
@@ -759,56 +801,33 @@ Organizations search for automation, behavioral analytics, and anomaly detection
 Recon, footprinting, and exposure search
 Google dorking tutorials, GHDB query examples, and best-practice guides for safe reconnaissance are frequent searches for ethical, permissioned testing.​
 
-Common operators and dork patterns continue to be studied for identifying misconfigurations and exposed assets before adversaries do.​</p>
+Common operators and dork patterns continue to be studied for identifying misconfigurations and exposed assets before adversaries do.​
+  </p>
 </div>
 
+<!-- Caution Message -->
+<div class="caution" id="cautionMsg">⚠️ Caution: This is not for viewing purpose ( You can close it) .</div>
+
 <script>
-const circleBtn = document.getElementById('circleBtn');
-const infoPanel = document.getElementById('infoPanel');
+const btn = document.getElementById('circleBtn');
+const panel = document.getElementById('infoPanel');
+const caution = document.getElementById('cautionMsg');
 
 function togglePanel() {
-  const open = infoPanel.style.bottom === '70px';
-  infoPanel.style.bottom = open ? '-200px' : '70px';
+  const isOpen = panel.classList.toggle('open');
+  // Show or hide caution message
+  caution.classList.toggle('show', isOpen);
 }
 
-circleBtn.addEventListener('click', togglePanel);
-circleBtn.addEventListener('keydown', (e)=>{
-  if(e.key==='Enter' || e.key===' '){ e.preventDefault(); togglePanel(); }
+btn.addEventListener('click', togglePanel);
+btn.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    togglePanel();
+  }
 });
 </script>
 
-<script>
-document.querySelectorAll('.box').forEach(box=>{
-  const divisor=box.classList.contains('b1')?25:10;
-  box.addEventListener('mousemove',e=>{
-    const rect=box.getBoundingClientRect();
-    const x=e.clientX-rect.left;
-    const y=e.clientY-rect.top;
-    const centerX=rect.width/2;
-    const centerY=rect.height/2;
-    const rotateX=(y-centerY)/divisor;
-    const rotateY=(centerX-x)/divisor;
-    box.style.transform=`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`;
-  });
-  box.addEventListener('mouseleave',()=>{
-    box.style.transform='perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
-  });
-});
-document.querySelectorAll('.card').forEach(card=>{
-  card.addEventListener('mousemove',e=>{
-    const rect=card.getBoundingClientRect();
-    const x=e.clientX-rect.left;
-    const y=e.clientY-rect.top;
-    const centerX=rect.width/2;
-    const centerY=rect.height/2;
-    const rotateX=(y-centerY)/10;
-    const rotateY=(centerX-x)/10;
-    card.style.transform=`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`;
-  });
-  card.addEventListener('mouseleave',()=>{
-    card.style.transform='perspective(1000px) rotateX(0) rotateY(0) scale3d(1,1,1)';
-  });
-});
-</script>
+
 </body>
 </html>
