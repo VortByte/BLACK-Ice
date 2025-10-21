@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -548,10 +549,47 @@ h1{font-size:32px}
     display: block;
   }
  
-  
+ 
+.custombg {
+  width: 100%;
+  height: 100%;
+ 
+ background: hsla(230, 100%, 50%, 1);
+
+background: linear-gradient(360deg, hsla(230, 100%, 50%, 1) 0%, hsla(0, 0%, 100%, 1) 51%);
+
+background: -moz-linear-gradient(360deg, hsla(230, 100%, 50%, 1) 0%, hsla(0, 0%, 100%, 1) 51%);
+
+background: -webkit-linear-gradient(360deg, hsla(230, 100%, 50%, 1) 0%, hsla(0, 0%, 100%, 1) 51%);
+
+filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#002BFF", endColorstr="#FFFFFF", GradientType=1 );
+  position: relative;
+  overflow: hidden;
+}
+
+.custombg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(90deg, #ccc 1px, transparent 1px);
+  background-size: 50px 100%;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
+}
+
 </style>
 </head>
 <body>
+    <div class="custombg">
 
 <div class="container">
   <nav>
@@ -836,6 +874,6 @@ btn.addEventListener('keydown', (e) => {
 });
 </script>
 
-
+</div>
 </body>
 </html>
