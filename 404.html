@@ -1,236 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>404 • Page Not Found</title>
-  <meta name="description" content="The page you're looking for doesn't exist." />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>404 — System Not Found</title>
+<style>
+  /* ====== Tokens ====== */
+  :root{
+    --bg:#06070a;
+    --fg:#dff3ff;
+    --neon-cyan:#00e5ff;
+    --neon-mag:#ff2bd6;
+    --neon-yellow:#ffee00;
+    --grid:#0b0f1a;
+    --btn:#101420;
+    --border:rgba(255,255,255,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background: var(--bg);
+    color: var(--fg);
+    font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    display:grid; place-items:center; padding:24px;
+    overflow:hidden; position:relative;
+  }
 
-  <style>
-    /* Reset & Base Styles */
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  /* ====== Hex/tech background ====== */
+  .bg{
+    position:fixed; inset:0; pointer-events:none;
+    background:
+      radial-gradient(1200px 600px at 70% 10%, rgba(0,229,255,.12), transparent 55%),
+      radial-gradient(900px 700px at 20% 85%, rgba(255,43,214,.10), transparent 60%),
+      linear-gradient(transparent 0 0),
+      var(--bg);
+  }
+  .bg::before{
+    content:""; position:absolute; inset:-200px; opacity:.08;
+    background:
+      radial-gradient(circle at 50% 50%, transparent 30%, rgba(255,255,255,.04) 31% 32%, transparent 33%) 0 0/32px 32px,
+      linear-gradient(0deg, rgba(255,255,255,.04) 1px, transparent 1px) 0 0/100% 18px;
+    filter: contrast(140%) saturate(130%);
+    animation: drift 24s linear infinite;
+  }
+  @keyframes drift{
+    0%{ transform: translate3d(0,0,0) rotate(0deg) }
+    100%{ transform: translate3d(-40px,-20px,0) rotate(1deg) }
+  }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(-45deg, #0f172a, #1e293b, #0f172a, #334155);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      overflow: hidden;
-      cursor: default;
-    }
+  /* ====== CRT and scanlines ====== */
+  .scan{
+    position:fixed; inset:0; pointer-events:none; mix-blend-mode:overlay;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 2px, transparent 2px 4px);
+  }
+  .vignette{
+    position:fixed; inset:0; pointer-events:none;
+    box-shadow: inset 0 0 120px 60px rgba(0,0,0,.7), inset 0 0 300px rgba(0,0,0,.6);
+  }
 
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
+  /* ====== Wrap ====== */
+  .wrap{
+    width:min(92vw, 920px); text-align:center; position:relative; z-index:1;
+  }
 
-    /* Main Container */
-    .error-container {
-      position: relative;
-      width: 90%;
-      max-width: 700px;
-      text-align: center;
-      padding: 60px 30px;
-      backdrop-filter: blur(12px);
-      background: rgba(15, 23, 42, 0.35);
-      border-radius: 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3),
-                  0 1px 8px rgba(255, 255, 255, 0.1) inset;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      transform: translateY(0);
-      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.7, 1.2);
-      z-index: 10;
-    }
+  /* ====== RGB glitch 404 ====== */
+  .title{
+    font-size:clamp(56px, 12vw, 160px);
+    line-height:.8; letter-spacing:2px; margin-bottom:8px;
+    position:relative; font-weight:900;
+    text-transform:uppercase;
+    color:var(--fg);
+    text-shadow:
+      0 0 14px rgba(0,229,255,.45),
+      0 0 26px rgba(255,43,214,.35),
+      0 0 36px rgba(0,229,255,.25);
+  }
+  .title span{ position:relative; display:inline-block; }
+  .title .layer{
+    position:absolute; inset:0; pointer-events:none; content:attr(data-text);
+  }
+  .title .r{ color:var(--neon-cyan); transform: translate(2px,0); mix-blend-mode:screen; filter: blur(.15px); }
+  .title .b{ color:var(--neon-mag); transform: translate(-2px,0); mix-blend-mode:screen; filter: blur(.15px); }
+  .title .y{ color:var(--neon-yellow); transform: translate(0,1px); mix-blend-mode:screen; opacity:.75; }
 
-    /* 404 Number */
-    .error-code {
-      font-size: 140px;
-      font-weight: 800;
-      background: linear-gradient(to right, #e0e7ff, #ffffff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      line-height: 1;
-      letter-spacing: -4px;
-      margin-bottom: 16px;
-      opacity: 0;
-      animation: fadeInUp 0.8s ease forwards 0.2s;
-    }
+  /* glitch slice mask */
+  .slice{
+    position:absolute; left:50%; translate:-50% 0;
+    width:100%; max-width:920px; height:8px; opacity:.85;
+    background: linear-gradient(90deg, rgba(0,229,255,.0), rgba(0,229,255,.35), rgba(255,43,214,.35), rgba(0,229,255,.0));
+    filter: blur(.6px);
+    animation: slice 2.4s ease-in-out infinite;
+  }
+  .slice:nth-child(1){ top:18%; animation-delay: .1s }
+  .slice:nth-child(2){ top:28%; animation-delay: .6s }
+  .slice:nth-child(3){ top:38%; animation-delay: 1.1s }
+  .slice:nth-child(4){ top:48%; animation-delay: 1.6s }
+  .slice:nth-child(5){ top:58%; animation-delay: 2.1s }
+  @keyframes slice{
+    0%,100%{ transform: scaleX(.2) }
+    50%{ transform: scaleX(1) }
+  }
 
-    /* Message Text */
-    .error-message {
-      font-size: 24px;
-      font-weight: 600;
-      color: #e2e8f0;
-      margin-bottom: 16px;
-      opacity: 0;
-      animation: fadeInUp 0.8s ease forwards 0.5s;
-    }
+  .subtitle{
+    margin-top:6px; margin-bottom:22px;
+    color:#b9c3ff; font-size:clamp(14px, 2.4vw, 18px);
+    text-shadow: 0 0 10px rgba(185,195,255,.35);
+  }
 
-    .error-description {
-      font-size: 17px;
-      color: #cbd5e1;
-      line-height: 1.7;
-      max-width: 500px;
-      margin: 0 auto 40px;
-      opacity: 0;
-      animation: fadeInUp 0.8s ease forwards 0.8s;
-    }
+  /* ====== Button styles (glitchy primary) ====== */
+  .actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:8px }
+  .btn{
+    position:relative; border:1px solid var(--border); color:var(--fg);
+    background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(10,14,22,.6));
+    padding:12px 22px; border-radius:12px; text-decoration:none; cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    backdrop-filter: blur(6px);
+  }
+  .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.3) }
+  .btn.primary{
+    border-color:transparent; color:#0b0e15; font-weight:800;
+    background:linear-gradient(135deg, var(--neon-cyan), var(--neon-mag));
+    box-shadow:
+      0 0 18px rgba(0,229,255,.35),
+      0 0 26px rgba(255,43,214,.25);
+    overflow:hidden;
+  }
+  /* cyber glitch sheen */
+  .btn.primary::after{
+    content:""; position:absolute; inset:-2px; pointer-events:none;
+    background:
+      linear-gradient(90deg, transparent 0 45%, rgba(255,255,255,.35) 50%, transparent 55%),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 2px, transparent 2px 4px);
+    mix-blend-mode: overlay; opacity:.35;
+    animation: sweep 2.5s linear infinite;
+  }
+  @keyframes sweep{
+    0%{ transform: translateX(-20%) }
+    100%{ transform: translateX(20%) }
+  }
 
-    /* Go Home Button */
-    .btn-home {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 28px;
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      font-weight: 600;
-      font-size: 16px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      text-decoration: none;
-      backdrop-filter: blur(6px);
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      opacity: 0;
-      animation: fadeInUp 0.8s ease forwards 1.1s;
-    }
+  /* ====== Frame with neon corners ====== */
+  .frame{
+    position:relative; margin-inline:auto; padding:28px 20px 24px;
+    border:1px solid rgba(0,229,255,.15);
+    border-radius:16px;
+    box-shadow:
+      0 0 0 1px rgba(0,229,255,.06) inset,
+      0 20px 40px rgba(0,0,0,.45);
+    background:
+      linear-gradient(180deg, rgba(0,229,255,.04), rgba(10,14,22,.35));
+    backdrop-filter: blur(6px);
+  }
+  .corner{
+    position:absolute; width:18px; height:18px; border:2px solid var(--neon-cyan); filter: drop-shadow(0 0 6px rgba(0,229,255,.6));
+  }
+  .tl{ top:-9px; left:-9px; border-right:none; border-bottom:none }
+  .tr{ top:-9px; right:-9px; border-left:none; border-bottom:none }
+  .bl{ bottom:-9px; left:-9px; border-right:none; border-top:none }
+  .br{ bottom:-9px; right:-9px; border-left:none; border-top:none }
 
-    .btn-home:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateY(-3px);
-      box-shadow: 0 7px 18px rgba(0, 0, 0, 0.2);
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .btn-home:active {
-      transform: translateY(-1px);
-    }
-
-    /* Decorative Orb Elements */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(40px);
-      z-index: -1;
-      opacity: 0.25;
-    }
-
-    .orb-1 {
-      width: 200px;
-      height: 200px;
-      background: #6366f1;
-      top: -100px;
-      right: -100px;
-    }
-
-    .orb-2 {
-      width: 150px;
-      height: 150px;
-      background: #8b5cf6;
-      bottom: -80px;
-      left: 10%;
-      opacity: 0.4;
-    }
-
-    /* Animations */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 768px) {
-      .error-container {
-        padding: 50px 20px;
-        border-radius: 16px;
-        margin: 20px;
-      }
-
-      .error-code {
-        font-size: 96px;
-      }
-
-      .error-message {
-        font-size: 22px;
-      }
-
-      .error-description {
-        font-size: 16px;
-        margin-bottom: 30px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .error-code {
-        font-size: 72px;
-      }
-
-      .error-message {
-        font-size: 20px;
-      }
-
-      .btn-home {
-        padding: 12px 22px;
-        font-size: 15px;
-      }
-    }
-  </style>
+  /* ====== Utility ====== */
+  .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; letter-spacing:.5px }
+</style>
 </head>
 <body>
+  <div class="bg"></div>
+  <div class="scan"></div>
+  <div class="vignette"></div>
 
-  <!-- Decorative Orbs -->
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+  <!-- glitch slice overlays -->
+  <div class="slice"></div>
+  <div class="slice"></div>
+  <div class="slice"></div>
+  <div class="slice"></div>
+  <div class="slice"></div>
 
-  <!-- Main Error Container -->
-  <div class="error-container" id="parallax-container">
-    <div class="error-code">404</div>
-    <h2 class="error-message">Page Not Found</h2>
-    <p class="error-description">
-      The page you're searching for doesn't exist or has been moved. Let's get you back on track.
-    </p>
-    <a href="/" class="btn-home">
-      ← Go Home
-    </a>
-  </div>
+  <main class="wrap">
+    <section class="frame">
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
 
-  <script>
-    // Pro-level parallax effect based on mouse movement
-    const container = document.getElementById('parallax-container');
-    
-    document.addEventListener('mousemove', (e) => {
-      const xAxis = (window.innerWidth / 2 - e.pageX) / 20;
-      const yAxis = (window.innerHeight / 2 - e.pageY) / 20;
-      
-      container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-    });
+      <h1 class="title" aria-label="404">
+        <span>404
+          <span class="layer r" aria-hidden="true">404</span>
+          <span class="layer b" aria-hidden="true">404</span>
+          <span class="layer y" aria-hidden="true">404</span>
+        </span>
+      </h1>
 
-    // Reset transform when mouse leaves
-    document.addEventListener('mouseleave', () => {
-      container.style.transform = 'rotateY(0deg) rotateX(0deg) translateY(0)';
-    });
-  </script>
+      <p class="subtitle mono">Node not found — route may be deprecated, relocated, or classified.</p>
 
-  <!-- Optional: Add Inter font from Google Fonts for even better typography -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+      <div class="actions">
+        <button class="btn primary" onclick="history.back()">Go Back</button>
+        <a class="btn" href="index.html">Go Home</a>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
