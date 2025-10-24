@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic only downloadable PDF Viewer</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #111;
+      color: #fff;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #1a1a1a;
+      padding: 10px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    input[type="text"] {
+      width: 60%;
+      padding: 8px 10px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      background: #222;
+      color: #fff;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input[type="text"]::placeholder {
+      color: #aaa;
+    }
+
+    button {
+      padding: 8px 14px;
+      background: #0078ff;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #339aff;
+    }
+
+    iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <input type="text" id="pdfUrl" placeholder="Enter PDF link here (e.g. https://example.com/file.pdf)" />
+    <button id="loadBtn">Load PDF</button>
+  </header>
+
+  <iframe id="pdfViewer"
+    src="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+    title="PDF.js Viewer">
+  </iframe>
+
+  <script>
+    const input = document.getElementById("pdfUrl");
+    const button = document.getElementById("loadBtn");
+    const viewer = document.getElementById("pdfViewer");
+
+    button.addEventListener("click", () => {
+      const url = input.value.trim();
+      if (url) {
+        const encoded = encodeURIComponent(url);
+        viewer.src = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encoded}`;
+      } else {
+        alert("Please enter a valid PDF URL.");
+      }
+    });
+
+    // Allow pressing Enter to load the PDF
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") button.click();
+    });
+  </script>
+</body>
+</html>
