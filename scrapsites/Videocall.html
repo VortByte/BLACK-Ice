@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Video Call</title>
   <style>
+    
     body {
       margin: 0;
       padding: 16px;
@@ -248,7 +249,7 @@
     <span id="copyFeedback" class="copy-feedback"></span>
   </div>
 
-  <div class="input-group">
+   <div class="input-group">
     <input id="remoteId" placeholder="Remote peer ID" autocomplete="off" />
     <button id="callBtn" class="primary">CallCheck</button>
   </div>
@@ -283,7 +284,36 @@
 
   <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
   <script>
-    // DOM Elements
+    // === HUMAN-READABLE PEER ID GENERATOR ===
+    const words1 = [
+      "aqua","amber","azure","blaze","bold","brisk","bright","calm","clever","crimson",
+      "cosmic","crystal","daring","dark","deep","divine","dream","dusty","electric","ember",
+      "eternal","fast","fierce","frozen","gentle","golden","grand","happy","hollow","icy",
+      "iron","lazy","light","lunar","lucky","magic","mellow","misty","mystic","neon",
+      "noble","ocean","peace","pink","proud","pure","quiet","rapid","red","royal",
+      "shadow","shiny","silent","silver","sky","smart","solar","sonic","spicy","spring",
+      "steady","storm","strong","sunny","swift","tiny","wild","wise","winter","zen"
+    ];
+
+    const words2 = [
+      "ant","bear","bee","bird","breeze","brook","cat","cloud","comet","coyote",
+      "crane","deer","dolphin","dragon","eagle","falcon","firefly","flame","fox","frog",
+      "hawk","jaguar","koala","leaf","lion","lizard","lynx","meteor","moon","moth",
+      "otter","owl","panther","panda","phoenix","raven","river","shell","snake","sparrow",
+      "spirit","star","stone","storm","sun","tiger","tree","viper","wave","wolf"
+    ];
+
+    function generateReadableId() {
+      const w1 = words1[Math.floor(Math.random() * words1.length)];
+      const w2 = words2[Math.floor(Math.random() * words2.length)];
+      const num = Math.floor(Math.random() * 100);
+      return `${w1}-${w2}-${num}`;
+    }
+
+    // Generate a readable ID once on load
+    const customPeerId = generateReadableId();
+
+    // === DOM ELEMENTS ===
     const myIdSpan = document.getElementById('my-id');
     const copyIdBtn = document.getElementById('copyIdBtn');
     const copyFeedback = document.getElementById('copyFeedback');
@@ -298,12 +328,13 @@
     const shareScreenBtn = document.getElementById('shareScreen');
     const stopScreenBtn = document.getElementById('stopScreen');
 
-    // Copy Peer ID
+    // Display the readable ID immediately
+    myIdSpan.textContent = customPeerId;
+
+    // === COPY BUTTON ===
     copyIdBtn.addEventListener('click', async () => {
-      const peerId = myIdSpan.textContent.trim();
-      if (!peerId || peerId === '…') return;
       try {
-        await navigator.clipboard.writeText(peerId);
+        await navigator.clipboard.writeText(customPeerId);
         copyFeedback.textContent = 'Copied!';
         setTimeout(() => copyFeedback.textContent = '', 1500);
       } catch (err) {
@@ -313,7 +344,7 @@
       }
     });
 
-    // Fullscreen toggle
+    // === FULLSCREEN TOGGLE (unchanged) ===
     document.querySelectorAll('.fullscreen-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const video = document.getElementById(e.target.dataset.video);
@@ -335,15 +366,32 @@
     };
     ['fullscreenchange', 'webkitfullscreenchange'].forEach(e => document.addEventListener(e, updateFSBtns));
 
-    // PeerJS logic
+    // === PEERJS WITH CUSTOM ID ===
     let peer, currentCall, localStream, isAudioEnabled = true, isVideoEnabled = true, isScreenSharing = false;
 
-    peer = new Peer({ config: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] } });
+    // Initialize Peer with our readable ID
+    peer = new Peer(customPeerId, {
+      debug: 2,
+      config: {
+        iceServers: [
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' }
+        ]
+      }
+    });
 
-    peer.on('open', id => myIdSpan.textContent = id);
-    peer.on('error', err => updateStatus(`Error: ${err.message}`, true));
+    peer.on('open', (id) => {
+      // Should match customPeerId
+      console.log('Peer ID:', id);
+    });
 
-    peer.on('call', async call => {
+    peer.on('error', (err) => {
+      console.error('PeerJS Error:', err);
+      updateStatus(`Error: ${err.message}`, true);
+    });
+
+    // === REST OF PEERJS LOGIC (UNCHANGED) ===
+    peer.on('call', async (call) => {
       if (currentCall) return call.close();
       try {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -356,18 +404,18 @@
     });
 
     callBtn.onclick = async () => {
-      const id = remoteIdInput.value.trim();
-      if (!id) return alert('Enter a peer ID');
+      const remoteId = remoteIdInput.value.trim();
+      if (!remoteId) return alert('Enter a peer ID');
       try {
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         localVideo.srcObject = localStream;
-        currentCall = peer.call(id, localStream);
+        currentCall = peer.call(remoteId, localStream);
         setupCall(currentCall);
-        updateStatus(`Calling ${id}…`);
+        updateStatus(`Calling ${remoteId}…`);
         callBtn.disabled = true;
         hangupBtn.disabled = false;
       } catch (e) {
-        updateStatus('Call failed', true);
+        updateStatus('Call failed: ' + (e.message || 'unknown'), true);
       }
     };
 
@@ -428,31 +476,49 @@
 
     function setupCall(call) {
       currentCall = call;
-      call.on('stream', stream => remoteVideo.srcObject = stream);
+      call.on('stream', (remoteStream) => {
+        remoteVideo.srcObject = remoteStream;
+        updateStatus('Connected!');
+      });
       call.on('close', endCall);
-      call.on('error', e => { updateStatus('Call error', true); endCall(); });
+      call.on('error', (err) => {
+        console.error('Call error:', err);
+        updateStatus('Call error', true);
+        endCall();
+      });
     }
 
     function endCall() {
-      currentCall?.close();
-      localStream?.getTracks().forEach(t => t.stop());
-      [localVideo, remoteVideo].forEach(v => v.srcObject = null);
-      currentCall = null; localStream = null; isScreenSharing = false;
-      callBtn.disabled = false; hangupBtn.disabled = true;
-      toggleVideoBtn.disabled = false; stopScreenBtn.disabled = true;
+      if (currentCall) {
+        currentCall.close();
+        currentCall = null;
+      }
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+      }
+      localVideo.srcObject = null;
+      remoteVideo.srcObject = null;
+      isScreenSharing = false;
+      isAudioEnabled = true;
+      isVideoEnabled = true;
+      callBtn.disabled = false;
+      hangupBtn.disabled = true;
+      toggleVideoBtn.disabled = false;
+      stopScreenBtn.disabled = true;
       toggleAudioBtn.innerHTML = '🔇 Mute Mic';
       toggleVideoBtn.innerHTML = '📹 Turn Off Camera';
       updateStatus('Call ended');
     }
 
-    function updateStatus(msg, error = false) {
-      statusDiv.textContent = msg;
-      statusDiv.style.color = error ? '#ff3b30' : '#86868b';
+    function updateStatus(message, isError = false) {
+      statusDiv.textContent = message;
+      statusDiv.style.color = isError ? '#ff3b30' : '#86868b';
     }
 
     window.addEventListener('beforeunload', () => {
-      peer?.destroy();
-      localStream?.getTracks().forEach(t => t.stop());
+      if (peer) peer.destroy();
+      if (localStream) localStream.getTracks().forEach(t => t.stop());
     });
   </script>
 </body>
