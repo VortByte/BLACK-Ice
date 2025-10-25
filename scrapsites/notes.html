@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Versatile Notes</title>
-    <!-- STYLE OMITTED for brevity—use your existing CSS block here! -->
     <style>
       /* ... your existing CSS here ... */
       :root {
@@ -31,12 +30,12 @@
         --color-red-500: rgba(192, 21, 47, 1);
         --color-orange-400: rgba(230, 129, 97, 1);
         --color-orange-500: rgba(168, 75, 47, 1);
-      
+
         /* RGB versions for opacity control */
         --color-brown-600-rgb: 94, 82, 64;
         --color-teal-500-rgb: 33, 128, 141;
         --color-slate-900-rgb: 19, 52, 59;
-        
+
         /* Background color tokens (Light Mode) */
         --color-bg-1: rgba(59, 130, 246, 0.08); /* Light blue */
         --color-bg-2: rgba(245, 158, 11, 0.08); /* Light yellow */
@@ -67,7 +66,7 @@
         --space-12: 12px;
         --space-16: 16px;
         --space-24: 24px;
-        
+
         /* Border Radius */
         --radius-sm: 6px;
         --radius-base: 8px;
@@ -76,13 +75,12 @@
         /* Shadows */
         --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
       }
-
       @media (prefers-color-scheme: dark) {
         :root {
           --color-gray-400-rgb: 119, 124, 124;
           --color-teal-300-rgb: 50, 184, 198;
           --color-gray-300-rgb: 167, 169, 169;
-          
+
           /* Background color tokens (Dark Mode) */
           --color-bg-1: rgba(29, 78, 216, 0.15);
           --color-bg-2: rgba(180, 83, 9, 0.15);
@@ -101,7 +99,7 @@
           --color-select-caret: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
         }
       }
-      
+
       @font-face {
         font-family: 'FKGroteskNeue';
         src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
@@ -109,6 +107,7 @@
 
       *, *::before, *::after { box-sizing: border-box; }
 
+      /* --- Mobile-First Layout Adjustments --- */
       body {
         font-family: var(--font-family-base);
         background-color: var(--color-background);
@@ -116,35 +115,47 @@
         margin: 0;
         display: flex;
         height: 100vh;
-        overflow: hidden;
+        overflow-y: auto; /* Allow scrolling on the body for mobile */
+        flex-direction: column;
       }
-      
+
       .app-container {
         display: flex;
         width: 100%;
         height: 100%;
+        flex-direction: column; /* Force stack for mobile */
+        overflow: visible;
+        position: relative; /* Context for absolute positioning of sidebar/main */
       }
-      
+
       .sidebar {
-        width: 320px;
-        min-width: 280px;
-        border-right: 1px solid var(--color-border);
+        width: 100%; /* Full width on mobile */
+        min-width: unset;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border); /* Separator for top bar */
         display: flex;
         flex-direction: column;
         background-color: var(--color-surface);
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        transform: translateX(0);
+        transition: transform 0.3s ease;
       }
 
       .sidebar-header {
         padding: var(--space-16);
         border-bottom: 1px solid var(--color-border);
       }
-      
+
       h1 {
         font-size: 1.25rem;
         margin: 0 0 var(--space-12) 0;
         font-weight: var(--font-weight-semibold);
       }
-      
+
       .new-note-controls {
         display: flex;
         gap: var(--space-8);
@@ -184,7 +195,7 @@
         border: none;
         font-weight: var(--font-weight-medium);
       }
-      
+
       .btn:hover {
         background-color: var(--color-primary-hover);
       }
@@ -204,17 +215,17 @@
         border: 1px solid transparent;
         margin-bottom: var(--space-8);
       }
-      
+
       .note-item:hover {
         background-color: rgba(var(--color-brown-600-rgb), 0.05);
       }
-      
+
       .note-item.active {
         background-color: var(--color-primary);
         color: var(--color-btn-primary-text);
         border-color: var(--color-primary-hover);
       }
-      
+
       .note-item.active .note-item-date,
       .note-item.active .note-item-preview,
       .note-item.active .note-item-type {
@@ -228,7 +239,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      
+
       .note-item-meta {
         display: flex;
         justify-content: space-between;
@@ -236,7 +247,7 @@
         color: var(--color-text-secondary);
         margin-bottom: var(--space-4);
       }
-      
+
       .note-item-preview {
          font-size: var(--font-size-sm);
          color: var(--color-text-secondary);
@@ -246,13 +257,32 @@
       }
 
       .main-content {
+        width: 100%; /* Full width on mobile */
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-        padding: var(--space-24);
+        padding: var(--space-16); /* Adjusted padding for mobile */
         overflow-y: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 20;
+        background-color: var(--color-background);
+        transform: translateX(100%); /* Start off-screen */
+        transition: transform 0.3s ease;
       }
-      
+
+      /* Utility classes to manage mobile view state */
+      .sidebar.hidden-mobile {
+        transform: translateX(-100%);
+        display: flex; /* keep flex to enable transition */
+      }
+
+      .main-content.visible-mobile {
+        transform: translateX(0);
+      }
+
       .editor-placeholder {
           display: flex;
           flex-direction: column;
@@ -262,30 +292,30 @@
           text-align: center;
           color: var(--color-text-secondary);
       }
-      
+
       .editor-placeholder svg {
           width: 60px;
           height: 60px;
           margin-bottom: var(--space-16);
           stroke: var(--color-border);
       }
-      
+
       .editor-header {
         display: flex;
         flex-direction: column;
-        gap: var(--space-12);
-        margin-bottom: var(--space-16);
+        gap: var(--space-8); /* Adjusted gap for mobile */
+        margin-bottom: var(--space-12); /* Adjusted margin for mobile */
       }
-      
+
       #note-title {
-        font-size: 1.75rem;
+        font-size: 1.5rem; /* Adjusted size for mobile */
         font-weight: var(--font-weight-semibold);
         background: transparent;
         border: none;
         padding: 0;
         width: 100%;
       }
-      
+
       #note-title:focus {
         outline: none;
         box-shadow: none;
@@ -298,7 +328,7 @@
         line-height: 1.6;
         resize: none;
       }
-      
+
       /* To-Do List Styles */
       .todo-list-container {
         list-style: none;
@@ -313,44 +343,44 @@
         padding: var(--space-8) 0;
         border-bottom: 1px solid var(--color-border);
       }
-      
+
       .todo-item input[type="checkbox"] {
          width: 18px;
          height: 18px;
          accent-color: var(--color-primary);
       }
-      
+
       .todo-item-text {
         flex-grow: 1;
         border: none;
         background: transparent;
         font-size: 1rem;
       }
-      
+
       .todo-item-text.completed {
         text-decoration: line-through;
         color: var(--color-text-secondary);
       }
-      
+
       .todo-item-text:focus {
         outline: none;
         background: rgba(var(--color-brown-600-rgb), 0.05);
         border-radius: var(--radius-sm);
       }
-      
+
       .add-todo-item-input {
         margin-top: var(--space-12);
         font-style: italic;
       }
-      
+
       /* Idea Board Styles */
       .idea-board-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Adjusted card size for mobile */
         gap: var(--space-16);
         padding: var(--space-8);
       }
-      
+
       .idea-card {
         background-color: var(--color-bg-2);
         border: 1px solid var(--color-border);
@@ -374,11 +404,11 @@
         font-family: var(--font-family-base);
         font-size: var(--font-size-base);
       }
-      
+
       .idea-card-textarea:focus {
         outline: none;
       }
-      
+
       .add-idea-card-button {
           border: 2px dashed var(--color-border);
           background: transparent;
@@ -398,27 +428,127 @@
       #editor-wrapper, .hidden {
         display: none;
       }
-      
+
       #editor-wrapper.visible {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
       }
-      
+
       .delete-note-btn {
         background: var(--color-background);
         color: var(--color-red-500);
         border: 1px solid var(--color-red-500);
       }
-      
+
       .delete-note-btn:hover {
         background: var(--color-red-500);
         color: var(--color-white);
       }
-      
+
       .editor-footer {
         margin-top: auto;
         padding-top: var(--space-16);
+      }
+
+      /* Editor Header: Show mobile controls on small screens */
+      .mobile-editor-controls {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: var(--space-8);
+        border-bottom: 1px solid var(--color-border);
+        margin-bottom: var(--space-12);
+      }
+
+      .back-to-list-btn {
+        background: var(--color-background);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+        padding: var(--space-8) var(--space-12);
+        font-size: var(--font-size-sm);
+        border-radius: var(--radius-base);
+        cursor: pointer;
+        font-weight: var(--font-weight-medium);
+      }
+
+      .back-to-list-btn:hover {
+        background-color: rgba(var(--color-brown-600-rgb), 0.05);
+      }
+
+      /* --- Desktop Layout (Min-width 768px) --- */
+      @media (min-width: 768px) {
+        body {
+          overflow: hidden; /* Restore hidden overflow on desktop */
+        }
+
+        .app-container {
+          flex-direction: row; /* Restore desktop layout */
+          overflow: hidden;
+        }
+
+        .sidebar {
+          position: static;
+          width: 320px;
+          min-width: 280px;
+          border-right: 1px solid var(--color-border);
+          border-bottom: none;
+          transform: none; /* Disable mobile transitions */
+          height: 100%;
+        }
+
+        .main-content {
+          position: static;
+          flex-grow: 1;
+          transform: none; /* Disable mobile transitions */
+          padding: var(--space-24); /* Restore desktop padding */
+          height: 100%;
+        }
+
+        /* Ensure mobile classes are irrelevant on desktop */
+        .sidebar.hidden-mobile,
+        .main-content.visible-mobile {
+          transform: none;
+        }
+
+        /* Hide mobile-specific controls on desktop */
+        .mobile-editor-controls {
+          display: none;
+        }
+
+        /* Hide the mobile delete button in the header on desktop */
+        #delete-note-btn-mobile {
+            display: none;
+        }
+
+        /* Show the desktop delete button in the footer on desktop */
+        #delete-note-btn-desktop {
+            display: block;
+        }
+
+        .editor-header {
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+        }
+
+        #note-title {
+            font-size: 1.75rem;
+        }
+
+        .idea-board-container {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        }
+      }
+
+      /* Force show mobile controls on small screens */
+      @media (max-width: 767px) {
+        .mobile-editor-controls {
+          display: flex;
+        }
+        /* Hide the desktop delete button in the footer on mobile */
+        #delete-note-btn-desktop {
+            display: none;
+        }
       }
     </style>
 </head>
@@ -445,20 +575,21 @@
                  <p>Organize your thoughts, tasks, and ideas with different note types.</p>
             </div>
             <div id="editor-wrapper">
-                <!-- Editor content will be injected here -->
-            </div>
+                </div>
         </main>
     </div>
-    <!-- Templates for different note types -->
     <template id="editor-template">
+        <div class="mobile-editor-controls">
+            <button id="back-to-list-btn" class="back-to-list-btn">← Back to List</button>
+            <button id="delete-note-btn-mobile" class="btn delete-note-btn">Delete</button>
+        </div>
         <div class="editor-header">
             <input type="text" id="note-title" class="form-control" placeholder="Note Title...">
         </div>
         <div id="note-content-container" style="flex-grow: 1; display: flex; flex-direction: column;">
-            <!-- Note content area will be injected here based on type -->
-        </div>
+            </div>
          <div class="editor-footer">
-            <button id="delete-note-btn" class="btn delete-note-btn">Delete Note</button>
+            <button id="delete-note-btn-desktop" class="btn delete-note-btn">Delete Note</button>
         </div>
     </template>
     <template id="standard-note-template">
@@ -467,14 +598,12 @@
     <template id="todo-list-template">
         <div class="todo-list-wrapper">
             <ul id="todo-list-container" class="todo-list-container">
-                <!-- To-do items will be injected here -->
-            </ul>
+                </ul>
             <input type="text" id="add-todo-item-input" class="form-control add-todo-item-input" placeholder="Add a new to-do and press Enter...">
         </div>
     </template>
     <template id="idea-board-template">
         <div id="idea-board-container" class="idea-board-container">
-            <!-- Idea cards will be injected here -->
             <button id="add-idea-card-button" class="add-idea-card-button">+</button>
         </div>
     </template>
@@ -503,6 +632,11 @@
             const newNoteTypeSelect = document.getElementById('new-note-type');
             const editorWrapper = document.getElementById('editor-wrapper');
             const editorPlaceholder = document.getElementById('editor-placeholder');
+
+            // Elements added for mobile responsiveness
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+
             // Templates
             const editorTemplate = document.getElementById('editor-template');
             const standardNoteTemplate = document.getElementById('standard-note-template');
@@ -575,9 +709,19 @@
                     editorWrapper.innerHTML = '';
                     editorWrapper.classList.remove('visible');
                     editorPlaceholder.style.display = 'flex';
+
+                    // --- Mobile: Show list view ---
+                    mainContent.classList.remove('visible-mobile');
+                    sidebar.classList.remove('hidden-mobile');
+
                     renderNoteList();
                     return;
                 }
+
+                // --- Mobile: Show editor view ---
+                sidebar.classList.add('hidden-mobile');
+                mainContent.classList.add('visible-mobile');
+
                 editorPlaceholder.style.display = 'none';
                 editorWrapper.classList.add('visible');
                 // Main editor structure
@@ -585,14 +729,27 @@
                 editorWrapper.appendChild(editorTemplate.content.cloneNode(true));
                 const titleInput = editorWrapper.querySelector('#note-title');
                 const contentContainer = editorWrapper.querySelector('#note-content-container');
-                const deleteBtn = editorWrapper.querySelector('#delete-note-btn');
+
+                const deleteBtnDesktop = editorWrapper.querySelector('#delete-note-btn-desktop');
+                const deleteBtnMobile = editorWrapper.querySelector('#delete-note-btn-mobile');
+                const backBtn = editorWrapper.querySelector('#back-to-list-btn');
+
                 titleInput.value = note.title;
                 titleInput.addEventListener('input', () => {
                     note.title = titleInput.value;
                     renderNoteList();
                     persist();
                 });
-                deleteBtn.addEventListener('click', () => deleteNote(note.id));
+
+                // Event listeners for delete button (both mobile and desktop)
+                const handleDelete = () => deleteNote(note.id);
+                deleteBtnDesktop.addEventListener('click', handleDelete);
+                deleteBtnMobile.addEventListener('click', handleDelete);
+
+                // Event listener for the new mobile back button
+                backBtn.addEventListener('click', () => renderEditor(null));
+
+
                 // Render specific note type content
                 switch (note.type) {
                     case 'standard':
@@ -727,9 +884,15 @@
                     renderEditor(noteId);
                 }
             });
+
             // Initial render
             renderNoteList();
-            // If previous session had an active note, you could add restoration code here if needed
+
+            // Set initial view state for mobile (show sidebar/list)
+            if (window.innerWidth < 768) {
+                mainContent.classList.remove('visible-mobile');
+                sidebar.classList.remove('hidden-mobile');
+            }
         });
     </script>
 </body>
