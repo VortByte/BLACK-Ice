@@ -5,6 +5,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -620,7 +621,7 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#002BFF", en
 
       /* Light */
       --color-background-light: #f8f9fa;
-      --color-surface-light: #ffffff;
+      --color-surface-light: rgba(255, 255, 255, 0.2);
       --color-text-light: #212529;
       --color-text-secondary-light: #6c757d;
       --color-primary-light: #007bff;
@@ -696,7 +697,11 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#002BFF", en
       flex-direction: column;
       gap: 12px;
       z-index: 1000;
-      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+     backdrop-filter: blur(5px);
+     -webkit-backdrop-filter: blur(5px);
+     border: 1px solid rgba(255, 255, 255, 0.3);
+
 
       /* Closed state */
       transform: translateX(100%);
