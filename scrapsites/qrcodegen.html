@@ -156,15 +156,21 @@
 
   <footer class="card">✨ Sleek Dark UI — Offline & Open Source</footer>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 <script>
-  const textEl=document.getElementById('text'),sizeEl=document.getElementById('size'),
-        ecEl=document.getElementById('ec'),fgEl=document.getElementById('fg'),bgEl=document.getElementById('bg'),
-        logoFileEl=document.getElementById('logoFile'),logoSizeEl=document.getElementById('logoSize'),
-        canvas=document.getElementById('qrCanvas'),ctx=canvas.getContext('2d');
+  const textEl=document.getElementById('text'),
+        sizeEl=document.getElementById('size'),
+        ecEl=document.getElementById('ec'),
+        fgEl=document.getElementById('fg'),
+        bgEl=document.getElementById('bg'),
+        logoFileEl=document.getElementById('logoFile'),
+        logoSizeEl=document.getElementById('logoSize'),
+        canvas=document.getElementById('qrCanvas'),
+        ctx=canvas.getContext('2d');
+
   let logoImage=null;
 
+  // --- Logo upload ---
   logoFileEl.addEventListener('change',e=>{
     const f=e.target.files?.[0]; if(!f){logoImage=null;return;}
     const r=new FileReader(); r.onload=ev=>{
@@ -172,24 +178,92 @@
     }; r.readAsDataURL(f);
   });
 
+  // --- Render QR ---
   async function renderQR(){
-    const value=textEl.value,size=Number(sizeEl.value),ec=ecEl.value,fg=fgEl.value,bg=bgEl.value;
+    const value=textEl.value,
+          size=Number(sizeEl.value),
+          ec=ecEl.value,
+          fg=fgEl.value,
+          bg=bgEl.value;
+
     canvas.width=size; canvas.height=size;
     ctx.fillStyle=bg; ctx.fillRect(0,0,size,size);
     if(!value) return;
+
     const opts={errorCorrectionLevel:ec,margin:1,width:size,color:{dark:fg,light:bg}};
     const dataUrl=await QRCode.toDataURL(value,opts);
     const img=new Image(); await new Promise(r=>{img.onload=r;img.src=dataUrl});
     ctx.drawImage(img,0,0,size,size);
+
     if(logoImage){
       const s=Math.max(10,Math.min(50,Number(logoSizeEl.value)))/100;
       const w=size*s,h=size*s,x=(size-w)/2,y=(size-h)/2;
       ctx.drawImage(logoImage,x,y,w,h);
     }
   }
-  document.getElementById('generate').addEventListener('click',renderQR);
-  ['input','change'].forEach(ev=>[textEl,sizeEl,ecEl,fgEl,bgEl,logoSizeEl].forEach(el=>el.addEventListener(ev,()=>setTimeout(renderQR,300))));
-  renderQR();
+
+  // --- Download buttons ---
+  document.getElementById('downloadPng').addEventListener('click',()=>{
+    const link=document.createElement('a');
+    link.download='qrcode.png';
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+  });
+
+  document.getElementById('downloadSvg').addEventListener('click',async()=>{
+    const value=textEl.value,
+          size=Number(sizeEl.value),
+          ec=ecEl.value,
+          fg=fgEl.value,
+          bg=bgEl.value;
+    const svg=await QRCode.toString(value,{type:'svg',errorCorrectionLevel:ec,color:{dark:fg,light:bg}});
+    const blob=new Blob([svg],{type:'image/svg+xml'});
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement('a');
+    link.download='qrcode.svg';
+    link.href=url;
+    link.click();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('copyData').addEventListener('click',()=>{
+    navigator.clipboard.writeText(textEl.value);
+    alert('Text copied!');
+  });
+
+  // --- Auto update on input ---
+  ['input','change'].forEach(ev=>
+    [textEl,sizeEl,ecEl,fgEl,bgEl,logoSizeEl].forEach(el=>
+      el.addEventListener(ev,()=>setTimeout(renderQR,300))
+    )
+  );
+
+  // --- Parameter mode ---
+  function applyParams(){
+    const params=new URLSearchParams(window.location.search);
+    if(params.has('text')){
+      // Fill values
+      textEl.value=params.get('text')||'';
+      if(params.get('size')) sizeEl.value=params.get('size');
+      if(params.get('ec')) ecEl.value=params.get('ec');
+      if(params.get('fg')) fgEl.value=params.get('fg');
+      if(params.get('bg')) bgEl.value=params.get('bg');
+      if(params.get('logoSize')) logoSizeEl.value=params.get('logoSize');
+
+      // Hide UI, show only QR + buttons
+      document.querySelectorAll('.card').forEach((c,i)=>{
+        if(i===1) c.style.display='flex'; else c.style.display='none';
+      });
+      document.querySelector('footer').style.display='none';
+
+      renderQR();
+    } else {
+      renderQR();
+    }
+  }
+
+  applyParams();
 </script>
+
 </body>
 </html>
