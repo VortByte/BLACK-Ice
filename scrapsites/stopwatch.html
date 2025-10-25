@@ -1,310 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persistent Stopwatch</title>
-    <style>
-        :root {
-            /* Primitive Color Tokens */
-            --color-white: rgba(255, 255, 255, 1);
-            --color-black: rgba(0, 0, 0, 1);
-            --color-cream-50: rgba(252, 252, 249, 1);
-            --color-gray-200: rgba(245, 245, 245, 1);
-            --color-slate-500: rgba(98, 108, 113, 1);
-            --color-charcoal-700: rgba(31, 33, 33, 1);
-            --color-charcoal-800: rgba(38, 40, 40, 1);
-            --color-slate-900: rgba(19, 52, 59, 1);
-            --color-teal-300: rgba(50, 184, 198, 1);
-            --color-teal-400: rgba(45, 166, 178, 1);
-            --color-teal-500: rgba(33, 128, 141, 1);
-            --color-teal-600: rgba(29, 116, 128, 1);
-            --color-red-400: rgba(255, 84, 89, 1);
-            --color-red-500: rgba(192, 21, 47, 1);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Persistent Stopwatch</title>
+<style>
+:root {
+  /* Primitive Color Tokens */
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --color-cream-50: rgba(252, 252, 249, 1);
+  --color-gray-200: rgba(245, 245, 245, 1);
+  --color-slate-500: rgba(98, 108, 113, 1);
+  --color-charcoal-700: rgba(31, 33, 33, 1);
+  --color-charcoal-800: rgba(38, 40, 40, 1);
+  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-teal-300: rgba(50, 184, 198, 1);
+  --color-teal-400: rgba(45, 166, 178, 1);
+  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-600: rgba(29, 116, 128, 1);
+  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-500: rgba(192, 21, 47, 1);
+  /* RGB versions for opacity control */
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-teal-300-rgb: 50, 184, 198;
+  --color-red-500-rgb: 192, 21, 47;
+  --color-red-400-rgb: 255, 84, 89;
+  /* Semantic Color Tokens (Light Mode) */
+  --color-background: var(--color-cream-50);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-error: var(--color-red-500);
+  --color-btn-primary-text: var(--color-white);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+  --color-border: rgba(0,0,0,0.1);
+  /* Typography */
+  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-size-base: 16px;
+  --font-weight-normal: 400;
+  --font-weight-bold: 600;
+  /* Spacing */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  /* Border Radius */
+  --radius-base: 8px;
+  --radius-full: 9999px;
+  /* Animation */
+  --duration-fast: 150ms;
+}
 
-            /* RGB versions for opacity control */
-            --color-teal-500-rgb: 33, 128, 141;
-            --color-teal-300-rgb: 50, 184, 198;
-            --color-red-500-rgb: 192, 21, 47;
-            --color-red-400-rgb: 255, 84, 89;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: var(--color-charcoal-700);
+    --color-text: var(--color-gray-200);
+    --color-primary: var(--color-teal-300);
+    --color-primary-hover: var(--color-teal-400);
+    --color-error: var(--color-red-400);
+    --color-btn-primary-text: var(--color-slate-900);
+    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+    --color-border: rgba(255,255,255,0.1);
+  }
+}
 
-            /* Semantic Color Tokens (Light Mode) */
-            --color-background: var(--color-cream-50);
-            --color-text: var(--color-slate-900);
-            --color-text-secondary: var(--color-slate-500);
-            --color-primary: var(--color-teal-500);
-            --color-primary-hover: var(--color-teal-600);
-            --color-error: var(--color-red-500);
-            --color-btn-primary-text: var(--color-white);
-            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
-            --color-border: rgba(0,0,0,0.1);
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+}
 
-            /* Typography */
-            --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            --font-size-base: 16px;
-            --font-weight-normal: 400;
-            --font-weight-bold: 600;
+body {
+  margin: 0;
+  font-family: var(--font-family-base);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: var(--space-16);
+  box-sizing: border-box;
+}
 
-            /* Spacing */
-            --space-8: 8px;
-            --space-16: 16px;
-            --space-24: 24px;
-            --space-32: 32px;
+.stopwatch-container {
+  padding: var(--space-24);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-            /* Border Radius */
-            --radius-base: 8px;
-            --radius-full: 9999px;
+#display {
+  font-family: var(--font-family-mono);
+  font-size: 3.5rem;
+  font-weight: var(--font-weight-normal);
+  margin-bottom: var(--space-24);
+  background: var(--color-background);
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  border: 1px solid var(--color-border);
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-            /* Animation */
-            --duration-fast: 150ms;
-        }
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  width: 100%;
+  max-width: 300px;
+}
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --color-background: var(--color-charcoal-700);
-                --color-text: var(--color-gray-200);
-                --color-primary: var(--color-teal-300);
-                --color-primary-hover: var(--color-teal-400);
-                --color-error: var(--color-red-400);
-                --color-btn-primary-text: var(--color-slate-900);
-                --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
-                 --color-border: rgba(255,255,255,0.1);
-            }
-        }
-        
-        @font-face {
-            font-family: 'FKGroteskNeue';
-            src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
-        }
+.btn {
+  padding: var(--space-16) var(--space-24);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  border: none;
+  border-radius: var(--radius-base);
+  cursor: pointer;
+  transition: background-color var(--duration-fast);
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
 
-               body {
-            margin: 0;
-            font-family: var(--font-family-base);
-            background-color: var(--color-background);
-            color: var(--color-text);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: var(--space-16);
-        }
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
 
-        .description {
-            max-width: 600px;
-            margin-top: var(--space-32);
-            text-align: left;
-            font-size: 0.9rem;
-            color: var(--color-text-secondary);
-        }
+#startStopBtn {
+  background-color: var(--color-primary);
+  color: var(--color-btn-primary-text);
+}
 
-        .description h3 {
-            text-align: center;
-            color: var(--color-text);
-            margin-bottom: var(--space-16);
-            font-size: 1.2rem;
-        }
+#startStopBtn:hover {
+  background-color: var(--color-primary-hover);
+}
 
-        .description ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-8);
-        }
+#startStopBtn.running {
+  background-color: var(--color-error);
+}
 
-        .description li {
-            padding-left: 22px;
-            position: relative;
-            line-height: 1.4;
-        }
-        
-        .description li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            top: 1px;
-            color: var(--color-primary);
-            font-weight: var(--font-weight-bold);
-        }
+#resetBtn {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
 
-        .stopwatch-container {
+#resetBtn:hover {
+  background-color: var(--color-border);
+}
 
-            padding: var(--space-32);
-        }
+.description {
+  max-width: 600px;
+  margin-top: var(--space-32);
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  width: 100%;
+}
 
-        #display {
-            font-family: var(--font-family-mono);
-            font-size: 5rem;
-            font-weight: var(--font-weight-normal);
-            margin-bottom: var(--space-24);
-        }
+.description h3 {
+  text-align: center;
+  color: var(--color-text);
+  margin-bottom: var(--space-16);
+  font-size: 1.2rem;
+}
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: var(--space-16);
-        }
+.description ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
 
-        .btn {
-            padding: var(--space-16) var(--space-32);
-            font-size: var(--font-size-base);
-            font-weight: var(--font-weight-bold);
-            border: none;
-            border-radius: var(--radius-base);
-            cursor: pointer;
-            transition: background-color var(--duration-fast);
-            min-width: 120px;
-        }
-        
-        .btn:focus-visible {
-            outline: none;
-            box-shadow: 0 0 0 3px var(--color-focus-ring);
-        }
+.description li {
+  padding-left: 22px;
+  position: relative;
+  line-height: 1.4;
+}
 
-        #startStopBtn {
-            background-color: var(--color-primary);
-            color: var(--color-btn-primary-text);
-        }
+.description li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 1px;
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+}
 
-        #startStopBtn:hover {
-            background-color: var(--color-primary-hover);
-        }
-        
-        #startStopBtn.running {
-            background-color: var(--color-error);
-        }
+/* Claim Banner */
+.claim-banner {
+  background: linear-gradient(135deg, var(--color-teal-500), var(--color-teal-600));
+  color: white;
+  padding: var(--space-16);
+  border-radius: var(--radius-base);
+  margin: var(--space-16) 0;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  font-weight: var(--font-weight-bold);
+  animation: pulse 2s infinite;
+}
 
-        #resetBtn {
-            background-color: transparent;
-            color: var(--color-text-secondary);
-            border: 1px solid var(--color-border);
-        }
+.claim-banner svg {
+  width: 24px;
+  height: 24px;
+}
 
-        #resetBtn:hover {
-            background-color: var(--color-border);
-        }
-    </style>
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  #display {
+    font-size: 5rem;
+    min-height: 150px;
+  }
+  
+  .buttons {
+    flex-direction: row;
+    max-width: 400px;
+  }
+  
+  .btn {
+    min-width: 120px;
+  }
+  
+  .stopwatch-container {
+    padding: var(--space-32);
+  }
+  
+  .claim-banner {
+    padding: var(--space-16) var(--space-24);
+  }
+}
+
+@media (max-width: 480px) {
+  #display {
+    font-size: 2.5rem;
+  }
+  
+  .btn {
+    padding: var(--space-12) var(--space-16);
+    font-size: 1rem;
+  }
+  
+  .claim-banner {
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(33, 128, 141, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(33, 128, 141, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(33, 128, 141, 0); }
+}
+</style>
 </head>
 <body>
+<div class="claim-banner">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <path d="M12 6v6l4 2"></path>
+  </svg>
+  <span>Works even when you close and reopen the site!</span>
+</div>
 
-    <div class="stopwatch-container">
-        <div id="display">00:00:00.0</div>
-        <div class="buttons">
-            <button id="startStopBtn" class="btn">Start</button>
-            <button id="resetBtn" class="btn">Reset</button>
-           </div>
-    </div>
+<div class="stopwatch-container">
+  <div id="display">00:00:00.0</div>
+  <div class="buttons">
+    <button id="startStopBtn" class="btn">Start</button>
+    <button id="resetBtn" class="btn">Reset</button>
+  </div>
+</div>
+<div class="description">
+  <h3>Page Features</h3>
+  <ul>
+    <li><strong>Minimal UI:</strong> A large, clear display and simple Start/Stop and Reset buttons for straightforward operation.</li>
+    <li><strong>Persistent State:</strong> Remembers the time across browser sessions and even computer restarts using local storage.</li>
+    <li><strong>Accurate Timing:</strong> Calculates elapsed time based on the initial start timestamp, ensuring accuracy even if the page is closed.</li>
+    <li><strong>Start/Stop Toggle:</strong> A single button conveniently toggles the timer's state, changing color to indicate if it's running.</li>
+    <li><strong>Reset Function:</strong> Easily clears the timer and its stored state to begin a new timing session.</li>
+    <li><strong>Adaptive Theme:</strong> Automatically switches between light and dark mode to match your system's preference.</li>
+  </ul>
+</div>
+<script>
+const display = document.getElementById('display');
+const startStopBtn = document.getElementById('startStopBtn');
+const resetBtn = document.getElementById('resetBtn');
+let startTime;
+let elapsedTime = 0;
+let timerInterval;
+let running = false;
 
-    <div class="description">
-        <h3>Page Features</h3>
-        <ul>
-            <li><strong>Minimal UI:</strong> A large, clear display and simple Start/Stop and Reset buttons for straightforward operation.</li>
-            <li><strong>Persistent State:</strong> Remembers the time across browser sessions and even computer restarts using local storage.</li>
-            <li><strong>Accurate Timing:</strong> Calculates elapsed time based on the initial start timestamp, ensuring accuracy even if the page is closed.</li>
-            <li><strong>Start/Stop Toggle:</strong> A single button conveniently toggles the timer's state, changing color to indicate if it's running.</li>
-            <li><strong>Reset Function:</strong> Easily clears the timer and its stored state to begin a new timing session.</li>
-            <li><strong>Adaptive Theme:</strong> Automatically switches between light and dark mode to match your system's preference.</li>
-        </ul>
-    </div>
+function formatTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  const tenths = Math.floor((ms % 1000) / 100);
+  
+  return [
+    hours.toString().padStart(2, '0'),
+    minutes.toString().padStart(2, '0'),
+    seconds.toString().padStart(2, '0')
+  ].join(':') + '.' + tenths;
+}
 
-    <script>
-        const display = document.getElementById('display');
-        const startStopBtn = document.getElementById('startStopBtn');
-        const resetBtn = document.getElementById('resetBtn');
+function updateDisplay() {
+  const currentTime = Date.now();
+  elapsedTime = currentTime - startTime;
+  display.textContent = formatTime(elapsedTime);
+}
 
-        let startTime;
-        let elapsedTime = 0;
-        let timerInterval;
-        let running = false;
+function start() {
+  startTime = Date.now() - elapsedTime;
+  localStorage.setItem('stopwatchStartTime', startTime);
+  localStorage.setItem('stopwatchRunning', 'true');
+  timerInterval = setInterval(updateDisplay, 100);
+  startStopBtn.textContent = 'Stop';
+  startStopBtn.classList.add('running');
+  running = true;
+}
 
-        function formatTime(ms) {
-            const totalSeconds = Math.floor(ms / 1000);
-            const hours = Math.floor(totalSeconds / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = totalSeconds % 60;
-            const tenths = Math.floor((ms % 1000) / 100);
+function stop() {
+  clearInterval(timerInterval);
+  localStorage.removeItem('stopwatchStartTime');
+  localStorage.setItem('stopwatchElapsedTime', elapsedTime);
+  localStorage.setItem('stopwatchRunning', 'false');
+  startStopBtn.textContent = 'Start';
+  startStopBtn.classList.remove('running');
+  running = false;
+}
 
-            return [
-                hours.toString().padStart(2, '0'),
-                minutes.toString().padStart(2, '0'),
-                seconds.toString().padStart(2, '0')
-            ].join(':') + '.' + tenths;
-        }
-        
-        function updateDisplay() {
-            const currentTime = Date.now();
-            elapsedTime = currentTime - startTime;
-            display.textContent = formatTime(elapsedTime);
-        }
+function reset() {
+  clearInterval(timerInterval);
+  localStorage.removeItem('stopwatchStartTime');
+  localStorage.removeItem('stopwatchElapsedTime');
+  localStorage.removeItem('stopwatchRunning');
+  elapsedTime = 0;
+  display.textContent = formatTime(0);
+  startStopBtn.textContent = 'Start';
+  startStopBtn.classList.remove('running');
+  running = false;
+}
 
-        function start() {
-            startTime = Date.now() - elapsedTime;
-            localStorage.setItem('stopwatchStartTime', startTime);
-            localStorage.setItem('stopwatchRunning', 'true');
-            
-            timerInterval = setInterval(updateDisplay, 100);
-            startStopBtn.textContent = 'Stop';
-            startStopBtn.classList.add('running');
-            running = true;
-        }
+function loadState() {
+  const isRunning = localStorage.getItem('stopwatchRunning') === 'true';
+  if (isRunning) {
+    const storedStartTime = parseInt(localStorage.getItem('stopwatchStartTime'), 10);
+    if (!isNaN(storedStartTime)) {
+      elapsedTime = Date.now() - storedStartTime;
+      start();
+    }
+  } else {
+    const storedElapsedTime = parseInt(localStorage.getItem('stopwatchElapsedTime'), 10);
+    if (!isNaN(storedElapsedTime)) {
+      elapsedTime = storedElapsedTime;
+      display.textContent = formatTime(elapsedTime);
+    }
+  }
+}
 
-        function stop() {
-            clearInterval(timerInterval);
-            localStorage.removeItem('stopwatchStartTime');
-            localStorage.setItem('stopwatchElapsedTime', elapsedTime);
-            localStorage.setItem('stopwatchRunning', 'false');
-            
-            startStopBtn.textContent = 'Start';
-            startStopBtn.classList.remove('running');
-            running = false;
-        }
+startStopBtn.addEventListener('click', () => {
+  if (running) {
+    stop();
+  } else {
+    start();
+  }
+});
 
-        function reset() {
-            clearInterval(timerInterval);
-            localStorage.removeItem('stopwatchStartTime');
-            localStorage.removeItem('stopwatchElapsedTime');
-            localStorage.removeItem('stopwatchRunning');
-            
-            elapsedTime = 0;
-            display.textContent = formatTime(0);
-            startStopBtn.textContent = 'Start';
-            startStopBtn.classList.remove('running');
-            running = false;
-        }
+resetBtn.addEventListener('click', reset);
 
-        function loadState() {
-            const isRunning = localStorage.getItem('stopwatchRunning') === 'true';
-            
-            if (isRunning) {
-                const storedStartTime = parseInt(localStorage.getItem('stopwatchStartTime'), 10);
-                if (!isNaN(storedStartTime)) {
-                    elapsedTime = Date.now() - storedStartTime;
-                    start();
-                }
-            } else {
-                const storedElapsedTime = parseInt(localStorage.getItem('stopwatchElapsedTime'), 10);
-                if (!isNaN(storedElapsedTime)) {
-                    elapsedTime = storedElapsedTime;
-                    display.textContent = formatTime(elapsedTime);
-                }
-            }
-        }
-
-        startStopBtn.addEventListener('click', () => {
-            if (running) {
-                stop();
-            } else {
-                start();
-            }
-        });
-
-        resetBtn.addEventListener('click', reset);
-
-        window.addEventListener('load', loadState);
-
-    </script>
+window.addEventListener('load', loadState);
+</script>
 </body>
 </html>
