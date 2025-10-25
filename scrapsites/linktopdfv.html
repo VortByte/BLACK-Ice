@@ -87,28 +87,59 @@
       border: 1px solid #333;
       border-radius: 6px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      min-width: 300px;
+      min-width: 320px;
       max-height: 250px;
       overflow-y: auto;
       z-index: 99;
     }
 
-    .dropdown-content a {
-      display: block;
-      padding: 8px 10px;
-      color: #ddd;
-      text-decoration: none;
-      border-bottom: 1px solid #333;
-      font-size: 13px;
-      word-break: break-all;
-    }
-
-    .dropdown-content a:hover {
-      background-color: #333;
-    }
-
     .dropdown.open .dropdown-content {
       display: block;
+    }
+
+    .no-history {
+      color: #777;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .history-card {
+      background: #222;
+      margin: 6px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s ease;
+      cursor: pointer;
+    }
+
+    .history-card:hover {
+      background: #333;
+    }
+
+    .history-title {
+      flex: 1;
+      color: #ddd;
+      font-size: 13px;
+      margin-right: 6px;
+      overflow-wrap: anywhere;
+    }
+
+    .edit-btn {
+      background: #555;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .edit-btn:hover {
+      background: #777;
     }
 
     .clear-btn {
@@ -128,10 +159,49 @@
       background: #ff5555;
     }
 
-    .no-history {
-      color: #777;
-      padding: 10px;
+    /* Dialog box styling */
+    .dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .dialog-box {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
       text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .dialog-box input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #111;
+      color: #fff;
+    }
+
+    .dialog-buttons {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .dialog-buttons button {
+      padding: 6px 10px;
+      border-radius: 6px;
     }
   </style>
 </head>
@@ -139,7 +209,6 @@
   <header>
     View those PDFs that can be viewed only by downloading –
     <input type="text" id="pdfUrl" placeholder="Enter PDF link here (e.g. https://example.com/file.pdf)" />
-
     <button id="loadBtn">Load PDF</button>
 
     <div class="dropdown" id="historyDropdown">
@@ -150,8 +219,7 @@
 
   <iframe id="pdfViewer"
     src="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-    title="PDF.js Viewer">
-  </iframe>
+    title="PDF.js Viewer"></iframe>
 
   <script>
     const input = document.getElementById("pdfUrl");
@@ -165,10 +233,10 @@
       viewer.src = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encoded}`;
     }
 
-    function saveHistory(url) {
+    function saveHistory(url, title = null) {
       let history = JSON.parse(localStorage.getItem("pdfHistory") || "[]");
-      if (!history.includes(url)) {
-        history.unshift(url);
+      if (!history.some(item => item.url === url)) {
+        history.unshift({ url, title: title || url });
         if (history.length > 10) history.pop();
         localStorage.setItem("pdfHistory", JSON.stringify(history));
       }
@@ -179,6 +247,33 @@
       renderHistory();
     }
 
+    function openTitleDialog(item, index) {
+      const overlay = document.createElement("div");
+      overlay.className = "dialog-overlay";
+      const box = document.createElement("div");
+      box.className = "dialog-box";
+      box.innerHTML = `
+        <h3>📝 Set Title</h3>
+        <input type="text" id="titleInput" value="${item.title || ""}" placeholder="Enter a custom title..." />
+        <div class="dialog-buttons">
+          <button id="saveTitleBtn">Save</button>
+          <button id="cancelBtn">Cancel</button>
+        </div>
+      `;
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+
+      box.querySelector("#saveTitleBtn").onclick = () => {
+        const newTitle = box.querySelector("#titleInput").value.trim() || item.url;
+        let history = JSON.parse(localStorage.getItem("pdfHistory") || "[]");
+        history[index].title = newTitle;
+        localStorage.setItem("pdfHistory", JSON.stringify(history));
+        document.body.removeChild(overlay);
+        renderHistory();
+      };
+      box.querySelector("#cancelBtn").onclick = () => document.body.removeChild(overlay);
+    }
+
     function renderHistory() {
       historyList.innerHTML = "";
       const history = JSON.parse(localStorage.getItem("pdfHistory") || "[]");
@@ -187,19 +282,34 @@
         return;
       }
 
-      history.forEach(url => {
-        const a = document.createElement("a");
-        a.textContent = url;
-        a.href = "#";
-        a.onclick = () => {
-          input.value = url;
-          loadPDF(url);
+      history.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "history-card";
+
+        const title = document.createElement("div");
+        title.className = "history-title";
+        title.textContent = item.title || item.url;
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit Title";
+        editBtn.className = "edit-btn";
+        editBtn.onclick = (e) => {
+          e.stopPropagation();
+          openTitleDialog(item, index);
+        };
+
+        card.appendChild(title);
+        card.appendChild(editBtn);
+
+        card.onclick = () => {
+          input.value = item.url;
+          loadPDF(item.url);
           dropdown.classList.remove("open");
         };
-        historyList.appendChild(a);
+
+        historyList.appendChild(card);
       });
 
-      // Add Clear button
       const clearBtn = document.createElement("button");
       clearBtn.textContent = "🗑️ Clear History";
       clearBtn.className = "clear-btn";
