@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects Showcase - Bold & Responsive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --background-color: #0a0a0a;
+            --card-color: #1a1a1a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a3a3a3;
+            --accent-color: #00ffae;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px; /* Reduced padding for mobile first */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 2.5rem; /* Base size for mobile */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 10px;
+            color: var(--text-primary);
+        }
+
+        header p {
+            font-size: 1rem; /* Base size for mobile */
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-color);
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-color);
+        }
+
+        .card h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.75rem; /* Base size for mobile */
+            text-transform: uppercase;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 14px 28px;
+            background-color: var(--accent-color);
+            color: #000;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .button:hover {
+            background-color: #fff;
+            color: #000;
+            transform: scale(1.05);
+        }
+
+        .card:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Tablet and Desktop Styles */
+        @media (min-width: 768px) {
+            body {
+                padding: 40px; /* Increase padding for larger screens */
+            }
+            
+            header h1 {
+                font-size: 3.5rem; /* Larger font for desktop */
+            }
+
+            header p {
+                font-size: 1.2rem; /* Larger font for desktop */
+            }
+            
+            .card h2 {
+                font-size: 2rem; /* Larger font for desktop */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Our Creations</h1>
+            <p>Innovative Tools for a Digital World.</p>
+        </header>
+        <main>
+            <div class="card">
+                <h2>Vision Drawing</h2>
+                <p>An intuitive digital canvas for bringing your ideas to life with powerful drawing tools, filters, and AI assistance.</p>
+                <a href="https://black-ice-3dbk.onrender.com/drawfolder/draw.html" class="button" target="_blank">Open Canvas</a>
+            </div>
+            <div class="card">
+                <h2>Bicochat AI</h2>
+                <p>A smart, bilingual AI assistant designed for seamless, intelligent, and context-aware conversations.</p>
+                <a href="https://incandescent-gnome-e84ac4.netlify.app/" class="button" target="_blank">Launch Assistant</a>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
