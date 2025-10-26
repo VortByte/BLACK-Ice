@@ -553,12 +553,12 @@
 
         /* ai sidebar*/
         
-    body.sidebar-open {
+    body.siidebar-open {
       overflow: hidden;
     }
 
     /* Sidebar */
-    .sidebar {
+    .siidebar {
       position: fixed;
       top: 0;
       right: -380px;
@@ -575,11 +575,11 @@
       overflow: hidden;
     }
 
-    .sidebar.open {
+    .siidebar.open {
       right: 0;
     }
 
-    .sidebar iframe {
+    .siidebar iframe {
       flex: 1;
       border: none;
       width: 100%;
@@ -727,8 +727,8 @@
   </div>
 
   <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <button class="cross-close-btn" id="closeSidebarBtn" aria-label="Close chat">×</button>
+  <div class="siidebar" id="siidebar">
+    <button class="cross-close-btn" id="closeSiidebarBtn" aria-label="Close chat">×</button>
     <iframe
       src="https://incandescent-gnome-e84ac4.netlify.app/"
       title="Bicochat Sidebar"
@@ -1024,20 +1024,20 @@
     </script>
       <script>
     // DOM Elements
-    const sidebar = document.getElementById("sidebar");
+    const siidebar = document.getElementById("siidebar");
     const draggableBtn = document.getElementById("draggableButton");
-    const closeSidebarBtn = document.getElementById("closeSidebarBtn");
+    const closeSiidebarBtn = document.getElementById("closeSiidebarBtn");
 
     // Update UI based on sidebar state
-    function updateSidebarState() {
+    function updateSiidebarState() {
       if (sidebar.classList.contains("open")) {
-        closeSidebarBtn.style.display = "flex";
+        closeSiidebarBtn.style.display = "flex";
         draggableBtn.style.display = "none";
-        document.body.classList.add("sidebar-open");
+        document.body.classList.add("siidebar-open");
       } else {
-        closeSidebarBtn.style.display = "none";
+        closeSiidebarBtn.style.display = "none";
         draggableBtn.style.display = "flex";
-        document.body.classList.remove("sidebar-open");
+        document.body.classList.remove("siidebar-open");
       }
     }
 
@@ -1045,18 +1045,18 @@
     draggableBtn.addEventListener("click", (e) => {
       // Prevent drag from triggering click if moved
       if (window.hasDragged) return;
-      sidebar.classList.add("open");
-      updateSidebarState();
+      siidebar.classList.add("open");
+      updateSiidebarState();
     });
 
     // Close sidebar
-    closeSidebarBtn.addEventListener("click", () => {
-      sidebar.classList.remove("open");
-      updateSidebarState();
+    closeSiidebarBtn.addEventListener("click", () => {
+      siidebar.classList.remove("open");
+      updateSiidebarState();
     });
 
     // Initialize
-    updateSidebarState();
+    updateSiidebarState();
 
     // === Draggable Logic ===
     let isDragging = false;
