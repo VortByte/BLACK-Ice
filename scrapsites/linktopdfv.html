@@ -1,345 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dynamic only downloadable PDF Viewer</title>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      background-color: #111;
-      color: #fff;
-      font-family: system-ui, sans-serif;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      background: #1a1a1a;
-      padding: 10px;
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      position: relative;
-      z-index: 10;
-    }
-
-    input[type="text"] {
-      width: 55%;
-      padding: 8px 10px;
-      border: 1px solid #333;
-      border-radius: 6px;
-      background: #222;
-      color: #fff;
-      outline: none;
-      font-size: 14px;
-    }
-
-    input[type="text"]::placeholder {
-      color: #aaa;
-    }
-
-    button {
-      padding: 8px 14px;
-      background: #0078ff;
-      border: none;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 14px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    button:hover {
-      background: #339aff;
-    }
-
-    iframe {
-      flex: 1;
-      border: none;
-      width: 100%;
-    }
-
-    /* Dropdown styling */
-    .dropdown {
-      position: relative;
-    }
-
-    .dropdown-btn {
-      background: #444;
-      border: none;
-      padding: 8px 10px;
-      color: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 40px;
-      right: 0;
-      background-color: #1f1f1f;
-      border: 1px solid #333;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-      min-width: 320px;
-      max-height: 250px;
-      overflow-y: auto;
-      z-index: 99;
-    }
-
-    .dropdown.open .dropdown-content {
-      display: block;
-    }
-
-    .no-history {
-      color: #777;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .history-card {
-      background: #222;
-      margin: 6px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: 1px solid #333;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: background 0.2s ease;
-      cursor: pointer;
-    }
-
-    .history-card:hover {
-      background: #333;
-    }
-
-    .history-title {
-      flex: 1;
-      color: #ddd;
-      font-size: 13px;
-      margin-right: 6px;
-      overflow-wrap: anywhere;
-    }
-
-    .edit-btn {
-      background: #555;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 4px 6px;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .edit-btn:hover {
-      background: #777;
-    }
-
-    .clear-btn {
-      display: block;
-      width: 100%;
-      padding: 8px 10px;
-      background: #ff3333;
-      border: none;
-      color: #fff;
-      text-align: center;
-      font-size: 13px;
-      border-radius: 0 0 6px 6px;
-      cursor: pointer;
-    }
-
-    .clear-btn:hover {
-      background: #ff5555;
-    }
-
-    /* Dialog box styling */
-    .dialog-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
-
-    .dialog-box {
-      background: #222;
-      padding: 20px;
-      border-radius: 10px;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
-
-    .dialog-box input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 10px;
-      border-radius: 6px;
-      border: 1px solid #444;
-      background: #111;
-      color: #fff;
-    }
-
-    .dialog-buttons {
-      margin-top: 12px;
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    .dialog-buttons button {
-      padding: 6px 10px;
-      border-radius: 6px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dynamic only downloadable PDF Viewer with Bicochat Sidebar</title>
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  background-color: #111;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+header {
+  background: #1a1a1a;
+  padding: 10px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 20;
+}
+input[type="text"] {
+  width: 55%;
+  padding: 8px 10px;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+  outline: none;
+  font-size: 14px;
+}
+input[type="text"]::placeholder {
+  color: #aaa;
+}
+button {
+  padding: 8px 14px;
+  background: #0078ff;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+button:hover {
+  background: #339aff;
+}
+iframe#pdfViewer {
+  flex: 1;
+  border: none;
+  width: 100%;
+}
+/* Dropdown styling */
+.dropdown {
+  position: relative;
+}
+.dropdown-btn {
+  background: #444;
+  border: none;
+  padding: 8px 10px;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  min-width: 320px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 99;
+}
+.dropdown.open .dropdown-content {
+  display: block;
+}
+.no-history {
+  color: #777;
+  padding: 10px;
+  text-align: center;
+}
+.history-card {
+  background: #222;
+  margin: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+.history-card:hover {
+  background: #333;
+}
+.history-title {
+  flex: 1;
+  color: #ddd;
+  font-size: 13px;
+  margin-right: 6px;
+  overflow-wrap: anywhere;
+}
+.edit-btn {
+  background: #555;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.edit-btn:hover {
+  background: #777;
+}
+.clear-btn {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  background: #ff3333;
+  border: none;
+  color: #fff;
+  text-align: center;
+  font-size: 13px;
+  border-radius: 0 0 6px 6px;
+  cursor: pointer;
+}
+.clear-btn:hover {
+  background: #ff5555;
+}
+/* Dialog box styling */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.dialog-box {
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.dialog-box input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #111;
+  color: #fff;
+}
+.dialog-buttons {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.dialog-buttons button {
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+/* Sidebar styles */
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: -350px;
+  width: 350px;
+  height: 100%;
+  background-color: #222;
+  border-left: 1px solid #333;
+  transition: right 0.3s ease;
+  z-index: 30;
+  box-shadow: -3px 0 8px rgba(0,0,0,0.7);
+  display: flex;
+  flex-direction: column;
+}
+.sidebar.open {
+  right: 0;
+}
+.sidebar iframe {
+  flex: 1;
+  border: none;
+  width: 100%;
+}
+.toggle-sidebar-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 40;
+  background-color: #0078ff;
+  border: none;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+.toggle-sidebar-btn:hover {
+  background-color: #339aff;
+}
+body.sidebar-open {
+  overflow: hidden;
+}
+.cross-close-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+  background-color: #ff3333;
+  border: none;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+  display: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+.cross-close-btn:hover {
+  background-color: #ff5555;
+}
+</style>
 </head>
 <body>
-  <header>
-    View those PDFs that can be viewed only by downloading –
-    <input type="text" id="pdfUrl" placeholder="Enter PDF link here (e.g. https://example.com/file.pdf)" />
-    <button id="loadBtn">Load PDF</button>
+<header>
+  View those PDFs that can be viewed only by downloading –
+  <input type="text" id="pdfUrl" placeholder="Enter PDF link here (e.g. https://example.com/file.pdf)" />
+  <button id="loadBtn">Load PDF</button>
+  <div class="dropdown" id="historyDropdown">
+    <button class="dropdown-btn">▼ History</button>
+    <div class="dropdown-content" id="historyList"></div>
+  </div>
+</header>
+<iframe id="pdfViewer" src="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" title="PDF.js Viewer"></iframe>
 
-    <div class="dropdown" id="historyDropdown">
-      <button class="dropdown-btn">▼ History</button>
-      <div class="dropdown-content" id="historyList"></div>
+<button class="toggle-sidebar-btn" id="toggleSidebarBtn">Chat</button>
+<div class="sidebar" id="sidebar">
+  <iframe src="https://incandescent-gnome-e84ac4.netlify.app/" title="Bicochat Sidebar"></iframe>
+</div>
+
+<button class="cross-close-btn" id="closeSidebarBtn" title="Close Sidebar">×</button>
+
+<script>
+const input = document.getElementById("pdfUrl");
+const button = document.getElementById("loadBtn");
+const viewer = document.getElementById("pdfViewer");
+const dropdown = document.getElementById("historyDropdown");
+const historyList = document.getElementById("historyList");
+const sidebar = document.getElementById("sidebar");
+const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
+const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+function loadPDF(url) {
+  const encoded = encodeURIComponent(url);
+  viewer.src = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encoded}`;
+}
+
+function saveHistory(url, title = null) {
+  let history = JSON.parse(localStorage.getItem("pdfHistory") || "[]");
+  if (!history.some(item => item.url === url)) {
+    history.unshift({ url, title: title || url });
+    if (history.length > 10) history.pop();
+    localStorage.setItem("pdfHistory", JSON.stringify(history));
+  }
+}
+
+function clearHistory() {
+  localStorage.removeItem("pdfHistory");
+  renderHistory();
+}
+
+function openTitleDialog(item, index) {
+  const overlay = document.createElement("div");
+  overlay.className = "dialog-overlay";
+  const box = document.createElement("div");
+  box.className = "dialog-box";
+  box.innerHTML = `
+    <h3>📝 Set Title</h3>
+    <input type="text" id="titleInput" value="${item.title || ""}" placeholder="Enter a custom title..." />
+    <div class="dialog-buttons">
+      <button id="saveTitleBtn">Save</button>
+      <button id="cancelBtn">Cancel</button>
     </div>
-  </header>
+  `;
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
 
-  <iframe id="pdfViewer"
-    src="https://mozilla.github.io/pdf.js/web/viewer.html?file=https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-    title="PDF.js Viewer"></iframe>
+  box.querySelector("#saveTitleBtn").onclick = () => {
+    const newTitle = box.querySelector("#titleInput").value.trim() || item.url;
+    let history = JSON.parse(localStorage.getItem("pdfHistory") || "[]");
+    history[index].title = newTitle;
+    localStorage.setItem("pdfHistory", JSON.stringify(history));
+    document.body.removeChild(overlay);
+    renderHistory();
+  };
+  box.querySelector("#cancelBtn").onclick = () => document.body.removeChild(overlay);
+}
 
-  <script>
-    const input = document.getElementById("pdfUrl");
-    const button = document.getElementById("loadBtn");
-    const viewer = document.getElementById("pdfViewer");
-    const dropdown = document.getElementById("historyDropdown");
-    const historyList = document.getElementById("historyList");
+function renderHistory() {
+  historyList.innerHTML = "";
+  const history = JSON.parse(localStorage.getItem("pdfHistory") || "[]");
+  if (history.length === 0) {
+    historyList.innerHTML = "<div class='no-history'>No history yet</div>";
+    return;
+  }
+  history.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "history-card";
+    const title = document.createElement("div");
+    title.className = "history-title";
+    title.textContent = item.title || item.url;
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit Title";
+    editBtn.className = "edit-btn";
+    editBtn.onclick = (e) => {
+      e.stopPropagation();
+      openTitleDialog(item, index);
+    };
+    card.appendChild(title);
+    card.appendChild(editBtn);
+    card.onclick = () => {
+      input.value = item.url;
+      loadPDF(item.url);
+      dropdown.classList.remove("open");
+    };
+    historyList.appendChild(card);
+  });
+  const clearBtn = document.createElement("button");
+  clearBtn.textContent = "🗑️ Clear History";
+  clearBtn.className = "clear-btn";
+  clearBtn.onclick = clearHistory;
+  historyList.appendChild(clearBtn);
+}
 
-    function loadPDF(url) {
-      const encoded = encodeURIComponent(url);
-      viewer.src = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encoded}`;
-    }
+button.addEventListener("click", () => {
+  const url = input.value.trim();
+  if (url) {
+    loadPDF(url);
+    saveHistory(url);
+    renderHistory();
+  } else {
+    alert("Please enter a valid PDF URL.");
+  }
+});
 
-    function saveHistory(url, title = null) {
-      let history = JSON.parse(localStorage.getItem("pdfHistory") || "[]");
-      if (!history.some(item => item.url === url)) {
-        history.unshift({ url, title: title || url });
-        if (history.length > 10) history.pop();
-        localStorage.setItem("pdfHistory", JSON.stringify(history));
-      }
-    }
+input.addEventListener("keypress", e => {
+  if (e.key === "Enter") button.click();
+});
 
-    function clearHistory() {
-      localStorage.removeItem("pdfHistory");
-      renderHistory();
-    }
+dropdown.querySelector(".dropdown-btn").addEventListener("click", () => {
+  dropdown.classList.toggle("open");
+  renderHistory();
+});
 
-    function openTitleDialog(item, index) {
-      const overlay = document.createElement("div");
-      overlay.className = "dialog-overlay";
-      const box = document.createElement("div");
-      box.className = "dialog-box";
-      box.innerHTML = `
-        <h3>📝 Set Title</h3>
-        <input type="text" id="titleInput" value="${item.title || ""}" placeholder="Enter a custom title..." />
-        <div class="dialog-buttons">
-          <button id="saveTitleBtn">Save</button>
-          <button id="cancelBtn">Cancel</button>
-        </div>
-      `;
-      overlay.appendChild(box);
-      document.body.appendChild(overlay);
+document.addEventListener("click", e => {
+  if (!dropdown.contains(e.target)) dropdown.classList.remove("open");
+});
 
-      box.querySelector("#saveTitleBtn").onclick = () => {
-        const newTitle = box.querySelector("#titleInput").value.trim() || item.url;
-        let history = JSON.parse(localStorage.getItem("pdfHistory") || "[]");
-        history[index].title = newTitle;
-        localStorage.setItem("pdfHistory", JSON.stringify(history));
-        document.body.removeChild(overlay);
-        renderHistory();
-      };
-      box.querySelector("#cancelBtn").onclick = () => document.body.removeChild(overlay);
-    }
+// Sidebar toggle and cross button visibility
+function updateSidebarState() {
+  if (sidebar.classList.contains('open')) {
+    closeSidebarBtn.style.display = 'block';
+    toggleSidebarBtn.style.display = 'none';
+  } else {
+    closeSidebarBtn.style.display = 'none';
+    toggleSidebarBtn.style.display = 'block';
+  }
+}
 
-    function renderHistory() {
-      historyList.innerHTML = "";
-      const history = JSON.parse(localStorage.getItem("pdfHistory") || "[]");
-      if (history.length === 0) {
-        historyList.innerHTML = "<div class='no-history'>No history yet</div>";
-        return;
-      }
+toggleSidebarBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  document.body.classList.toggle('sidebar-open');
+  updateSidebarState();
+});
 
-      history.forEach((item, index) => {
-        const card = document.createElement("div");
-        card.className = "history-card";
+closeSidebarBtn.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  document.body.classList.remove('sidebar-open');
+  updateSidebarState();
+});
 
-        const title = document.createElement("div");
-        title.className = "history-title";
-        title.textContent = item.title || item.url;
-
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "Edit Title";
-        editBtn.className = "edit-btn";
-        editBtn.onclick = (e) => {
-          e.stopPropagation();
-          openTitleDialog(item, index);
-        };
-
-        card.appendChild(title);
-        card.appendChild(editBtn);
-
-        card.onclick = () => {
-          input.value = item.url;
-          loadPDF(item.url);
-          dropdown.classList.remove("open");
-        };
-
-        historyList.appendChild(card);
-      });
-
-      const clearBtn = document.createElement("button");
-      clearBtn.textContent = "🗑️ Clear History";
-      clearBtn.className = "clear-btn";
-      clearBtn.onclick = clearHistory;
-      historyList.appendChild(clearBtn);
-    }
-
-    button.addEventListener("click", () => {
-      const url = input.value.trim();
-      if (url) {
-        loadPDF(url);
-        saveHistory(url);
-        renderHistory();
-      } else {
-        alert("Please enter a valid PDF URL.");
-      }
-    });
-
-    input.addEventListener("keypress", e => {
-      if (e.key === "Enter") button.click();
-    });
-
-    dropdown.querySelector(".dropdown-btn").addEventListener("click", () => {
-      dropdown.classList.toggle("open");
-      renderHistory();
-    });
-
-    document.addEventListener("click", e => {
-      if (!dropdown.contains(e.target)) dropdown.classList.remove("open");
-    });
-  </script>
+// Initialize state
+updateSidebarState();
+</script>
 </body>
 </html>
