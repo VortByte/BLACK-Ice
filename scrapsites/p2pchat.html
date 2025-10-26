@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P2P Chat — Responsive Apple Style</title>
+<style>
+  :root {
+    --blue: #007aff;
+    --gray-bg: #f5f5f7;
+    --gray-border: #d2d2d7;
+    --text-dark: #1c1c1e;
+    --text-light: #6e6e73;
+    --radius: 16px;
+    --shadow: 0 6px 25px rgba(0,0,0,0.12);
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+    background: var(--gray-bg);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .chat-box {
+    background: #fff;
+    border: 1px solid var(--gray-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 400px;
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .header {
+    padding: 16px 20px;
+    font-weight: 600;
+    color: var(--text-dark);
+    border-bottom: 1px solid var(--gray-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+  }
+  .header span {
+    font-family: monospace;
+    color: var(--blue);
+    font-size: 16px;
+  }
+  #chatLog {
+    flex: 1;
+    padding: 14px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #fafafa;
+    min-height: 250px;
+  }
+  .msg {
+    padding: 10px 16px;
+    border-radius: 20px;
+    max-width: 80%;
+    font-size: 16px;
+    line-height: 1.3;
+    word-break: break-word;
+  }
+  .self {
+    align-self: flex-end;
+    background: var(--blue);
+    color: #fff;
+  }
+  .peer {
+    align-self: flex-start;
+    background: #e5e5ea;
+    color: var(--text-dark);
+  }
+  .row {
+    display: flex;
+    border-top: 1px solid var(--gray-border);
+  }
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 14px 12px;
+    font-size: 16px;
+    font-family: inherit;
+  }
+  button {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #005fcc;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 500px) {
+    .chat-box {
+      width: 90%;
+    }
+    .header {
+      font-size: 16px;
+      padding: 12px 14px;
+    }
+    .header span {
+      font-size: 14px;
+    }
+    #chatLog {
+      min-height: 200px;
+      padding: 10px;
+    }
+    .msg {
+      font-size: 14px;
+      padding: 10px 12px;
+    }
+    input {
+      font-size: 14px;
+      padding: 12px 10px;
+    }
+    button {
+      font-size: 14px;
+      padding: 12px 14px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="chat-box">
+  <div class="header">
+    <div>P2P Chat</div>
+    <span id="myId">...</span>
+  </div>
+  <div id="chatLog"></div>
+  <div class="row">
+    <input id="peerInput" placeholder="Connect to peer ID...">
+    <button id="connectBtn">Go</button>
+  </div>
+  <div class="row">
+    <input id="msgInput" placeholder="Type message...">
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
+
+<script>
+// human-readable ID generator
+const words1 = ["swift","golden","silent","happy","blue","bright","tiny","crystal","wild","frosty"];
+const words2 = ["lion","panda","falcon","whale","otter","eagle","moth","wolf","seal","deer"];
+function genID(){return `${words1[Math.floor(Math.random()*words1.length)]}-${words2[Math.floor(Math.random()*words2.length)]}-${Math.floor(Math.random()*999)}`;}
+const myId = genID();
+document.getElementById("myId").textContent = myId;
+
+const chatLog = document.getElementById("chatLog");
+const peerInput = document.getElementById("peerInput");
+const msgInput = document.getElementById("msgInput");
+const connectBtn = document.getElementById("connectBtn");
+const sendBtn = document.getElementById("sendBtn");
+let conn;
+
+function log(text,self=false){
+  const div=document.createElement("div");
+  div.className=`msg ${self?"self":"peer"}`;
+  div.textContent=text;
+  chatLog.appendChild(div);
+  chatLog.scrollTop=chatLog.scrollHeight;
+}
+
+// Load PeerJS dynamically
+(async()=>{
+  if(typeof Peer==="undefined"){
+    await new Promise(res=>{
+      const s=document.createElement("script");
+      s.src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js";
+      s.onload=res;
+      document.head.appendChild(s);
+    });
+  }
+  const peer=new Peer(myId);
+  peer.on("open",id=>log(`Your ID: ${id}`));
+  peer.on("connection",c=>{conn=c; setup();});
+
+  connectBtn.onclick=()=>{const pid=peerInput.value.trim();if(!pid)return; conn=peer.connect(pid); setup();}
+  sendBtn.onclick=send;
+  msgInput.addEventListener("keypress",e=>e.key==="Enter"&&send());
+
+  function setup(){
+    conn.on("open",()=>log("✅ Connected to peer"));
+    conn.on("data",d=>log("Peer: "+d));
+  }
+  function send(){
+    if(!conn||!conn.open)return log("⚠️ Not connected");
+    const text=msgInput.value.trim();
+    if(!text)return;
+    conn.send(text);
+    log("You: "+text,true);
+    msgInput.value="";
+  }
+})();
+</script>
+</body>
+</html>
