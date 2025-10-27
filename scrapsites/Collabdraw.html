@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Collab Draw – Minimal</title>
+<style>
+  :root {
+    --bg:#f5f5f7; --fg:#111; --muted:#666; --panel:#fff; --border:#ddd;
+    --accent:#0b5fff;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+  header {
+    display: grid; grid-template-columns: 1fr auto auto auto; gap: .4rem;
+    align-items: center; background: var(--panel); padding: .5rem .6rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+  header input, header button, header select {
+    font: inherit; padding: .42rem .6rem; border: 1px solid var(--border); border-radius: 8px; background: #fff;
+  }
+  header button { background: #111; color: #fff; cursor: pointer; }
+  #status { color: var(--muted); font-size: .9rem; justify-self: end; }
+  #wrap { position: relative; height: calc(100% - 56px); display: grid; grid-template-columns: 1fr 280px; }
+  #canvasWrap { position: relative; overflow: hidden; background: #fff; }
+  canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+  #toolbar {
+    position: absolute; top: .5rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: .35rem; background: rgba(255,255,255,.95); border: 1px solid var(--border);
+    border-radius: 12px; padding: .35rem; align-items: center; box-shadow: 0 6px 20px rgba(0,0,0,.08);
+  }
+  #toolbar button, #toolbar input, #toolbar select, #toolbar label {
+    font: inherit; border: 1px solid var(--border); background: #fff; border-radius: 8px; padding: .35rem .5rem;
+  }
+  #toolbar button { cursor: pointer; }
+  #toolbar .sep { width: 1px; background: var(--border); height: 28px; margin: 0 .25rem; }
+  .tool-on { outline: 2px solid var(--accent); }
+  #side {
+    border-left: 1px solid var(--border); background: var(--panel); display: grid; grid-template-rows: auto 1fr auto;
+  }
+  #chat { overflow: auto; padding: .5rem; font-size: .95rem; }
+  #chat .msg { margin: .25rem 0; }
+  #chat .msg .who { color: var(--muted); margin-right: .35rem; }
+  #chatForm { display: flex; gap: .3rem; padding: .5rem; border-top: 1px solid var(--border); }
+  #chatForm input { flex: 1; }
+  .cursor {
+    position: absolute; pointer-events: none; font-size: 12px; transform: translate(-50%, -50%);
+    text-shadow: 0 0 3px #fff;
+  }
+  .cursor-dot { width: 8px; height: 8px; border-radius: 50%; border: 1px solid #0002; }
+  .pill { font-size: 12px; background: #fff; border: 1px solid var(--border); padding: .1rem .35rem; border-radius: 999px; margin-top: 2px; }
+  footer { position: absolute; bottom: .5rem; left: .5rem; color: #666; font-size: .85rem; background: #fff; border:1px solid var(--border); border-radius: 8px; padding: .2rem .4rem;}
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex; gap:.4rem; align-items:center;">
+    <input id="username" placeholder="Your name" />
+    <input id="room" placeholder="Room name" />
+    <button id="create">Create</button>
+    <button id="join">Join</button>
+  </div>
+  <div id="status">Idle</div>
+</header>
+<div id="wrap">
+  <div id="canvasWrap">
+    <div id="toolbar" role="toolbar" aria-label="Drawing tools">
+      <button data-tool="pen" title="Pen">✏️</button>
+      <button data-tool="eraser" title="Eraser">🧽</button>
+      <button data-tool="line" title="Line">／</button>
+      <button data-tool="rect" title="Rectangle">▭</button>
+      <button data-tool="ellipse" title="Ellipse">◯</button>
+      <button data-tool="text" title="Text">🅰️</button>
+      <div class="sep"></div>
+      <input type="color" id="color" title="Color" />
+      <label title="Size"><input type="range" id="size" min="1" max="40" value="3" /></label>
+      <div class="sep"></div>
+      <button id="undo" title="Undo">↶</button>
+      <button id="redo" title="Redo">↷</button>
+      <button id="clear" title="Clear">🗑️</button>
+      <div class="sep"></div>
+      <input type="file" id="imageUpload" accept="image/*" style="display:none" />
+      <button id="upload" title="Insert image">🖼️</button>
+      <button id="save" title="Save PNG">💾</button>
+      <button id="export" title="Export JSON">⤴︎</button>
+      <input type="file" id="importJson" accept="application/json" style="display:none" />
+      <button id="import" title="Import JSON">⤵︎</button>
+      <div class="sep"></div>
+      <button id="fit" title="Fit to screen">⤢</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <footer>Space+Drag to pan • Wheel to zoom • Shift to constrain shapes • Ctrl/⌘+Z/Y for undo/redo</footer>
+  </div>
+  <aside id="side">
+    <div style="padding:.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+      <div>Chat</div>
+      <div id="peers" style="font-size:.85rem; color:var(--muted)"></div>
+    </div>
+    <div id="chat" aria-live="polite"></div>
+    <form id="chatForm">
+      <input id="chatInput" placeholder="Message…" autocomplete="off" />
+      <button>Send</button>
+    </form>
+  </aside>
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
+<script>
+(() => {
+  // ----- State -----
+  const el = id => document.getElementById(id);
+  const canvas = el('canvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+  const state = {
+    username: '',
+    room: '',
+    isHost: false,
+    peer: null,
+    conns: new Map(), // id -> DataConnection
+    colors: new Map(), // id -> color
+    tool: 'pen',
+    color: '#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0'),
+    size: 3,
+    view: { x: 0, y: 0, scale: 1 },
+    dragging: false,
+    panning: false,
+    last: null,
+    strokeActive: null,
+    preview: null, // for shape preview
+    ops: [],       // authoritative operation log
+    undone: [],    // redo stack
+    cursors: new Map(), // username/id -> DOM node
+  };
+
+  // ---------- HiDPI sizing ----------
+  function resizeCanvas() {
+    const wrap = document.getElementById('canvasWrap');
+    const rect = wrap.getBoundingClientRect();
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr, dpr);
+    redrawAll();
+  }
+  window.addEventListener('resize', resizeCanvas);
+
+  // ---------- View transform ----------
+  function toCanvas(p) {
+    // logical [0..W],[0..H] coordinates arrive normalized [0..1]: map to current canvas size then apply view transform inverse
+    const W = canvas.clientWidth, H = canvas.clientHeight;
+    const x0 = p.x * W, y0 = p.y * H;
+    const x = (x0 - state.view.x) / state.view.scale;
+    const y = (y0 - state.view.y) / state.view.scale;
+    return { x, y };
+  }
+  function fromCanvas(x, y) {
+    const W = canvas.clientWidth, H = canvas.clientHeight;
+    const lx = (x * state.view.scale + state.view.x) / W;
+    const ly = (y * state.view.scale + state.view.y) / H;
+    return { x: clamp01(lx), y: clamp01(ly) };
+  }
+  function applyView(ctx2d) {
+    ctx2d.setTransform(1,0,0,1,0,0);
+    ctx2d.scale(dpr, dpr);
+    ctx2d.translate(state.view.x, state.view.y);
+    ctx2d.scale(state.view.scale, state.view.scale);
+  }
+  function clamp01(v){ return Math.max(0, Math.min(1, v)); }
+
+  // ---------- Drawing primitives ----------
+  function setStrokeStyle(localCtx, col, size, erase, pressure=1) {
+    localCtx.lineCap = 'round';
+    localCtx.lineJoin = 'round';
+    localCtx.lineWidth = Math.max(0.5, size * (pressure || 1));
+    localCtx.strokeStyle = col;
+    localCtx.fillStyle = col;
+    localCtx.globalCompositeOperation = erase ? 'destination-out' : 'source-over';
+  }
+
+  function drawStroke(localCtx, stroke) {
+    applyView(localCtx);
+    localCtx.save();
+    setStrokeStyle(localCtx, stroke.color, stroke.size, stroke.erase);
+    localCtx.beginPath();
+    for (let i=0;i<stroke.points.length;i++){
+      const p = toCanvas(stroke.points[i]);
+      if(i===0) localCtx.moveTo(p.x, p.y);
+      else localCtx.lineTo(p.x, p.y);
+    }
+    localCtx.stroke();
+    localCtx.restore();
+  }
+
+  function drawShape(localCtx, shape) {
+    applyView(localCtx);
+    localCtx.save();
+    const a = toCanvas(shape.a), b = toCanvas(shape.b);
+    const w = b.x - a.x, h = b.y - a.y;
+    const erase = shape.erase === true;
+    setStrokeStyle(localCtx, shape.color, shape.size, erase);
+    if(shape.kind==='line'){
+      localCtx.beginPath(); localCtx.moveTo(a.x,a.y); localCtx.lineTo(b.x,b.y); localCtx.stroke();
+    } else if(shape.kind==='rect'){
+      localCtx.strokeRect(a.x, a.y, w, h);
+    } else if(shape.kind==='ellipse'){
+      localCtx.beginPath();
+      localCtx.ellipse(a.x + w/2, a.y + h/2, Math.abs(w/2), Math.abs(h/2), 0, 0, Math.PI*2);
+      localCtx.stroke();
+    }
+    localCtx.restore();
+  }
+
+  function drawText(localCtx, t) {
+    applyView(localCtx);
+    localCtx.save();
+    localCtx.globalCompositeOperation = 'source-over';
+    localCtx.fillStyle = t.color;
+    localCtx.font = `${t.size}px system-ui`;
+    const p = toCanvas(t);
+    localCtx.fillText(t.text, p.x, p.y);
+    localCtx.restore();
+  }
+
+  function drawImageOp(localCtx, im) {
+    applyView(localCtx);
+    localCtx.save();
+    const img = new Image();
+    img.onload = ()=>{
+      // cover mode
+      const W = canvas.clientWidth, H = canvas.clientHeight;
+      const scale = Math.max(W/img.width, H/img.height);
+      const w = img.width*scale, h=img.height*scale;
+      localCtx.drawImage(img, 0, 0, w, h);
+    };
+    img.src = im.data;
+    localCtx.restore();
+  }
+
+  function clearCanvas(localCtx) {
+    localCtx.setTransform(1,0,0,1,0,0);
+    localCtx.clearRect(0,0,canvas.width,canvas.height);
+  }
+
+  function redrawAll() {
+    clearCanvas(ctx);
+    for (const op of state.ops) renderOp(ctx, op);
+    if (state.preview) renderOp(ctx, state.preview);
+  }
+
+  function renderOp(localCtx, op) {
+    if(op.type==='stroke') drawStroke(localCtx, op);
+    if(op.type==='shape') drawShape(localCtx, op);
+    if(op.type==='text') drawText(localCtx, op);
+    if(op.type==='image') drawImageOp(localCtx, op);
+    if(op.type==='clear') {/* already cleared by clearCanvas before replay */}
+  }
+
+  // ---------- Operations ----------
+  const newId = () => Math.random().toString(36).slice(2);
+  function pushOp(op, broadcast=true) {
+    state.ops.push(op);
+    state.undone = [];
+    if (broadcast) sendAll({ kind:'op', op });
+    saveLocal();
+  }
+  function applyIncomingOp(op) {
+    state.ops.push(op);
+    redrawAll();
+    saveLocal();
+  }
+
+  function doUndo(broadcast=true) {
+    for (let i=state.ops.length-1; i>=0; i--){
+      const op = state.ops[i];
+      if(op.type==='clear') continue;
+      state.ops.splice(i,1);
+      state.undone.push(op);
+      break;
+    }
+    redrawAll();
+    if (broadcast) sendAll({ kind:'undo' });
+    saveLocal();
+  }
+  function doRedo(broadcast=true) {
+    const op = state.undone.pop();
+    if(op){ state.ops.push(op); redrawAll(); if(broadcast) sendAll({ kind:'redo', op }); saveLocal(); }
+  }
+  function doClear(broadcast=true) {
+    state.ops = [];
+    state.undone = [];
+    clearCanvas(ctx);
+    pushOp({ type:'clear', id:newId(), at: Date.now() }, broadcast);
+    redrawAll();
+  }
+
+  // ---------- Pointer handling ----------
+  canvas.addEventListener('pointerdown', onPointerDown);
+  canvas.addEventListener('pointermove', onPointerMove);
+  canvas.addEventListener('pointerup', onPointerUp);
+  canvas.addEventListener('pointercancel', onPointerUp);
+  canvas.addEventListener('contextmenu', e=>e.preventDefault());
+
+  let spaceDown = false;
+  window.addEventListener('keydown', e=>{ if(e.code==='Space'){ spaceDown = true; } if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){ e.preventDefault(); doUndo(); } if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){ e.preventDefault(); doRedo(); }});
+  window.addEventListener('keyup', e=>{ if(e.code==='Space'){ spaceDown = false; } });
+
+  canvas.addEventListener('wheel', e=>{
+    e.preventDefault();
+    const factor = Math.exp(-e.deltaY * 0.001);
+    const mx = (e.offsetX) / (canvas.clientWidth);
+    const my = (e.offsetY) / (canvas.clientHeight);
+    const vx = state.view.x + mx*canvas.clientWidth*state.view.scale;
+    const vy = state.view.y + my*canvas.clientHeight*state.view.scale;
+    state.view.scale = clamp(0.2, 6, state.view.scale * factor);
+    const nx = vx - mx*canvas.clientWidth*state.view.scale;
+    const ny = vy - my*canvas.clientHeight*state.view.scale;
+    state.view.x = nx; state.view.y = ny;
+    redrawAll();
+  }, { passive:false });
+
+  function clamp(min, max, v){ return Math.max(min, Math.min(max, v)); }
+
+  function onPointerDown(e) {
+    canvas.setPointerCapture(e.pointerId);
+    if (spaceDown || e.button===1){ state.panning = true; state.last = {x:e.offsetX, y:e.offsetY}; return; }
+    if (state.tool==='text'){
+      const txt = prompt('Enter text:');
+      if(!txt) return;
+      const op = { type:'text', id:newId(), text: txt, x: e.offsetX/canvas.clientWidth, y: e.offsetY/canvas.clientHeight, color: state.color, size: Math.round(14 + state.size), at: Date.now() };
+      pushOp(op);
+      redrawAll();
+      return;
+    }
+    state.dragging = true;
+    const p = { x:e.offsetX/canvas.clientWidth, y:e.offsetY/canvas.clientHeight };
+    state.last = { x: e.offsetX, y: e.offsetY };
+    if(state.tool==='pen' || state.tool==='eraser'){
+      state.strokeActive = { type:'stroke', id:newId(), color: state.color, size: state.size, erase: state.tool==='eraser', points:[p], at: Date.now() };
+      // local incremental draw
+      drawStroke(ctx, state.strokeActive);
+      sendAll({ kind:'stroke:start', id: state.strokeActive.id, p, color: state.color, size: state.size, erase: state.tool==='eraser' });
+    } else {
+      state.preview = { type:'shape', id:'preview', color: state.color, size: state.size, erase: false, kind: state.tool, a: p, b: p, at: Date.now() };
+      redrawAll();
+    }
+    sendCursor(e);
+  }
+
+  function onPointerMove(e) {
+    if(state.panning){
+      const dx = e.offsetX - state.last.x;
+      const dy = e.offsetY - state.last.y;
+      state.view.x += dx;
+      state.view.y += dy;
+      state.last = {x:e.offsetX, y:e.offsetY};
+      redrawAll();
+      sendCursor(e);
+      return;
+    }
+    if(!state.dragging){ sendCursor(e); return; }
+    const p = { x:e.offsetX/canvas.clientWidth, y:e.offsetY/canvas.clientHeight };
+    if(state.tool==='pen' || state.tool==='eraser'){
+      const pr = e.pressure || (e.buttons ? 0.5 : 0); // pressure fallback
+      state.strokeActive.points.push(p);
+      // incremental draw segment
+      const seg = { type:'stroke', id: state.strokeActive.id, color: state.strokeActive.color, size: state.strokeActive.size, erase: state.strokeActive.erase, points: [state.strokeActive.points.at(-2), p] };
+      drawStroke(ctx, seg);
+      sendAll({ kind:'stroke:point', id: state.strokeActive.id, p, pressure: pr });
+    } else {
+      const b = p;
+      const a = state.preview.a;
+      if (e.shiftKey) {
+        if(state.tool==='line'){
+          // snap line to 0/45/90
+          const dx = b.x - a.x, dy = b.y - a.y;
+          const ang = Math.atan2(dy, dx);
+          const snap = Math.round(ang/(Math.PI/4))*(Math.PI/4);
+          const len = Math.hypot(dx,dy);
+          b.x = a.x + Math.cos(snap)*len;
+          b.y = a.y + Math.sin(snap)*len;
+        } else {
+          // square/circle
+          const dx = b.x - a.x, dy = b.y - a.y;
+          const m = Math.max(Math.abs(dx), Math.abs(dy)) * Math.sign(dx||1);
+          b.x = a.x + m;
+          b.y = a.y + m * Math.sign(dy||1);
+        }
+      }
+      state.preview.b = b;
+      redrawAll();
+    }
+    sendCursor(e);
+  }
+
+  function onPointerUp(e) {
+    canvas.releasePointerCapture(e.pointerId);
+    if(state.panning){ state.panning = false; return; }
+    if(!state.dragging) return;
+    state.dragging = false;
+    if(state.tool==='pen' || state.tool==='eraser'){
+      pushOp(state.strokeActive);
+      sendAll({ kind:'stroke:end', id: state.strokeActive.id });
+      state.strokeActive = null;
+    } else if(state.preview) {
+      const op = { ...state.preview, id: newId() };
+      state.preview = null;
+      pushOp(op);
+      redrawAll();
+      sendAll({ kind:'op', op });
+    }
+  }
+
+  function sendCursor(e) {
+    sendAll({
+      kind:'cursor',
+      x:e.offsetX/canvas.clientWidth,
+      y:e.offsetY/canvas.clientHeight,
+      color: state.color,
+      who: state.username
+    });
+  }
+
+  // ---------- Toolbar ----------
+  const toolBtns = [...document.querySelectorAll('#toolbar [data-tool]')];
+  function setTool(t){
+    state.tool = t;
+    toolBtns.forEach(b => b.classList.toggle('tool-on', b.dataset.tool===t));
+  }
+  toolBtns.forEach(b => b.addEventListener('click', ()=> setTool(b.dataset.tool)));
+  setTool('pen');
+
+  el('color').value = state.color;
+  el('color').addEventListener('input', e=> state.color = e.target.value);
+  el('size').addEventListener('input', e=> state.size = +e.target.value);
+  el('undo').addEventListener('click', ()=> doUndo());
+  el('redo').addEventListener('click', ()=> doRedo());
+  el('clear').addEventListener('click', ()=>{
+    if(confirm('Clear the board for everyone?')) doClear();
+  });
+  el('upload').addEventListener('click', ()=> el('imageUpload').click());
+  el('imageUpload').addEventListener('change', evt=>{
+    const file = evt.target.files?.[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const op = { type:'image', id:newId(), data: reader.result, at: Date.now() };
+      pushOp(op);
+      redrawAll();
+    };
+    reader.readAsDataURL(file);
+    evt.target.value = '';
+  });
+  el('save').addEventListener('click', ()=>{
+    canvas.toBlob(blob=>{
+      const a = document.createElement('a');
+      a.download = 'drawing.png';
+      a.href = URL.createObjectURL(blob);
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+  });
+  el('export').addEventListener('click', ()=>{
+    const data = JSON.stringify({ ops: state.ops }, null, 2);
+    const blob = new Blob([data], { type:'application/json' });
+    const a = document.createElement('a');
+    a.download = 'board.json';
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  el('import').addEventListener('click', ()=> el('importJson').click());
+  el('importJson').addEventListener('change', evt=>{
+    const f = evt.target.files?.[0]; if(!f) return;
+    f.text().then(txt=>{
+      const jf = JSON.parse(txt);
+      if(Array.isArray(jf.ops)){
+        state.ops = jf.ops;
+        state.undone = [];
+        redrawAll();
+        sendAll({ kind:'sync:replace', ops: state.ops });
+        saveLocal();
+      }
+    });
+    evt.target.value = '';
+  });
+  el('fit').addEventListener('click', ()=>{
+    state.view = { x:0, y:0, scale:1 };
+    redrawAll();
+  });
+
+  // ---------- Presence cursors ----------
+  function drawCursor(id, x, y, col, name){
+    let c = state.cursors.get(id);
+    if(!c){
+      c = document.createElement('div');
+      c.className = 'cursor';
+      c.innerHTML = `<div class="cursor-dot" style="background:${col}"></div><div class="pill">${escapeHtml(name||id)}</div>`;
+      document.getElementById('canvasWrap').appendChild(c);
+      state.cursors.set(id, c);
+    }
+    const wrapRect = document.getElementById('canvasWrap').getBoundingClientRect();
+    c.style.left = (x*wrapRect.width)+'px';
+    c.style.top = (y*wrapRect.height)+'px';
+  }
+  function removeCursor(id){
+    const c = state.cursors.get(id);
+    if(c){ c.remove(); state.cursors.delete(id); }
+  }
+  function escapeHtml(s){ return (s??'').toString().replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+  // ---------- Chat ----------
+  function addChat(who, text){
+    const line = document.createElement('div');
+    line.className = 'msg';
+    line.innerHTML = `<span class="who">[${escapeHtml(who)}]</span>${escapeHtml(text)}`;
+    el('chat').appendChild(line);
+    el('chat').scrollTop = el('chat').scrollHeight;
+  }
+  el('chatForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const m = el('chatInput').value.trim();
+    if(!m) return;
+    addChat(state.username, m);
+    sendAll({ kind:'chat', text: m, who: state.username });
+    el('chatInput').value = '';
+  });
+
+  // ---------- Persistence ----------
+  const LS_KEY = 'collabdraw.autosave';
+  function saveLocal(){
+    try { localStorage.setItem(LS_KEY, JSON.stringify({ ops: state.ops })); } catch {}
+  }
+  function loadLocal(){
+    try { const d=localStorage.getItem(LS_KEY); if(d){ const j=JSON.parse(d); if(Array.isArray(j.ops)){ state.ops = j.ops; } } } catch {}
+  }
+
+  // ---------- PeerJS networking ----------
+  const status = t => el('status').textContent = t;
+
+  function setPeersCount(){
+    el('peers').textContent = `${state.conns.size} peer(s)`;
+  }
+
+  function asHost(room){
+    state.isHost = true;
+    state.peer = new Peer(room, {
+      host: '0.peerjs.com',
+      port: 443,
+      secure: true,
+      // Optional: specify TURN/STUN for reliability
+      // config: { iceServers: [{ urls:'stun:stun.l.google.com:19302' }] }
+    });
+    state.peer.on('open', id => { status('Host: '+id); setPeersCount(); });
+    state.peer.on('connection', c => {
+      state.conns.set(c.peer, c);
+      setPeersCount();
+      bindConn(c);
+      // Send full sync
+      c.on('open', ()=>{
+        safeSend(c, { kind:'sync:full', ops: state.ops });
+      });
+      c.on('close', ()=>{ state.conns.delete(c.peer); removeCursor(c.peer); setPeersCount(); });
+      c.on('error', ()=>{ state.conns.delete(c.peer); removeCursor(c.peer); setPeersCount(); });
+    });
+    setCommonPeerHandlers();
+  }
+
+  function asClient(room){
+    state.isHost = false;
+    state.peer = new Peer();
+    state.peer.on('open', ()=>{
+      const c = state.peer.connect(room);
+      bindConn(c);
+      c.on('open', ()=>{ status('Connected'); });
+    });
+    setCommonPeerHandlers();
+  }
+
+  function setCommonPeerHandlers(){
+    state.peer.on('disconnected', ()=>{
+      status('Disconnected; reconnecting…');
+      try { state.peer.reconnect(); } catch {}
+    });
+    state.peer.on('error', (err)=>{ status('Error: '+(err?.type||'unknown')); });
+    window.addEventListener('beforeunload', ()=> {
+      try { state.peer.destroy(); } catch {}
+    });
+  }
+
+  function bindConn(c){
+    c.on('data', msg => handleMessage(c, msg));
+  }
+
+  function sendAll(msg){
+    // host broadcasts to all; clients send to host
+    if(state.isHost){
+      for(const c of state.conns.values()){
+        safeSend(c, msg);
+      }
+      // Host applies some messages locally like op
+      if(msg.kind==='op' && msg.op) applyIncomingOp(msg.op);
+      if(msg.kind==='undo') doUndo(false);
+      if(msg.kind==='redo' && msg.op){ state.ops.push(msg.op); redrawAll(); saveLocal(); }
+      if(msg.kind==='sync:replace' && Array.isArray(msg.ops)){ state.ops = msg.ops; state.undone=[]; redrawAll(); saveLocal(); }
+    } else {
+      const conns = state.peer.connections[state.room] || [];
+      for(const c of conns){ if(c.open) safeSend(c, msg); }
+      // Apply optimistic local rendering for ops
+      if(msg.kind==='op' && msg.op) applyIncomingOp(msg.op);
+      if(msg.kind==='undo') doUndo(false);
+      if(msg.kind==='redo' && msg.op){ state.ops.push(msg.op); redrawAll(); saveLocal(); }
+      if(msg.kind==='stroke:start' || msg.kind==='stroke:point' || msg.kind==='stroke:end'){
+        // Client draws optimistically already in pointer handlers
+      }
+    }
+  }
+
+  function safeSend(c, msg){
+    try { if(c.open) c.send(msg); } catch {}
+  }
+
+  function handleMessage(conn, msg){
+    if(msg.kind==='chat'){ addChat(msg.who||'?', msg.text||''); return; }
+    if(msg.kind==='cursor'){ drawCursor(conn.peer, msg.x, msg.y, msg.color, msg.who||conn.peer); return; }
+    if(msg.kind==='sync:full'){ if(Array.isArray(msg.ops)){ state.ops = msg.ops; redrawAll(); saveLocal(); } return; }
+    if(msg.kind==='sync:replace'){ if(Array.isArray(msg.ops)){ state.ops = msg.ops; state.undone=[]; redrawAll(); saveLocal(); } return; }
+
+    if(msg.kind==='op' && msg.op){ applyIncomingOp(msg.op); return; }
+    if(msg.kind==='undo'){ doUndo(false); return; }
+    if(msg.kind==='redo' && msg.op){ state.ops.push(msg.op); redrawAll(); saveLocal(); return; }
+
+    if(msg.kind==='stroke:start'){
+      const st = { type:'stroke', id: msg.id, color: msg.color, size: msg.size, erase: msg.erase, points:[{x:msg.p.x,y:msg.p.y}] };
+      drawStroke(ctx, st);
+      // keep a temp lookup
+      tempStrokes[msg.id] = st;
+      return;
+    }
+    if(msg.kind==='stroke:point'){
+      const st = tempStrokes[msg.id];
+      if(st){
+        st.points.push({x:msg.p.x,y:msg.p.y});
+        const seg = { type:'stroke', id: st.id, color: st.color, size: st.size, erase: st.erase, points:[st.points.at(-2), st.points.at(-1)] };
+        drawStroke(ctx, seg);
+      }
+      return;
+    }
+    if(msg.kind==='stroke:end'){
+      const st = tempStrokes[msg.id];
+      if(st){ state.ops.push(st); saveLocal(); delete tempStrokes[msg.id]; }
+      return;
+    }
+  }
+  const tempStrokes = {};
+
+  // ---------- UI wiring ----------
+  el('create').addEventListener('click', ()=>{
+    state.username = el('username').value.trim();
+    state.room = el('room').value.trim();
+    if(!state.username) return alert('Enter your name');
+    if(!state.room) return alert('Enter a room name');
+    loadLocal();
+    resizeCanvas();
+    asHost(state.room);
+    status('Creating room…');
+  });
+  el('join').addEventListener('click', ()=>{
+    state.username = el('username').value.trim();
+    state.room = el('room').value.trim();
+    if(!state.username) return alert('Enter your name');
+    if(!state.room) return alert('Enter a room name');
+    loadLocal();
+    resizeCanvas();
+    asClient(state.room);
+    status('Joining…');
+  });
+
+  // Initial
+  resizeCanvas();
+})();
+</script>
+</body>
+</html>
