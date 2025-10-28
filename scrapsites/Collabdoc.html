@@ -18,6 +18,7 @@ header{
 header button{
   border:none;background:var(--accent);color:white;padding:6px 10px;
   border-radius:8px;cursor:pointer;font-weight:500;
+  margin-left: 5px;
 }
 #toolbar{display:flex;gap:8px;background:var(--panel);border-bottom:1px solid var(--border);padding:6px;}
 #toolbar select,#toolbar button{
@@ -46,6 +47,7 @@ video{width:100%;border-radius:8px;background:#000;}
   </div>
   <div>
     <button id="createRoom">Create Room</button>
+    <button id="copyRoomId">Copy Room ID</button>
     <button id="joinRoom">Join Room</button>
     <button id="toggleLinkPane">🔗 Links</button>
     <button id="toggleCallPane">📞 Call</button>
@@ -112,6 +114,35 @@ function updateStatus(state){
   statusEl.className="status "+(state?"connected":"disconnected");
 }
 
+function initPeerListeners() {
+  if (!peer) return;
+  
+  // Handle incoming connections for data sharing
+  peer.on("connection", c => {
+    conn = c;
+    conn.on("data", d => editor.innerHTML = d);
+    conn.on("open", () => updateStatus(true));
+    conn.on("close", () => updateStatus(false));
+  });
+  
+  // Handle incoming calls
+  peer.on("call", incoming => {
+    if (!myStream) {
+      initCamera().then(() => {
+        incoming.answer(myStream);
+        incoming.on("stream", s => {
+          document.getElementById("peerVideo").srcObject = s;
+        });
+      });
+    } else {
+      incoming.answer(myStream);
+      incoming.on("stream", s => {
+        document.getElementById("peerVideo").srcObject = s;
+      });
+    }
+  });
+}
+
 document.getElementById("createRoom").onclick=()=>{
   const roomCode=randomCode();
   peer=new Peer(roomCode,{debug:2});
@@ -119,14 +150,59 @@ document.getElementById("createRoom").onclick=()=>{
   peer.on("open",id=>{
     alert(`Room Created: ${roomCode}`);
     updateStatus(true);
+    initPeerListeners();
   });
-  peer.on("connection",c=>{
-    conn=c;
-    conn.on("data",d=>editor.innerHTML=d);
-    conn.on("open",()=>updateStatus(true));
-    conn.on("close",()=>updateStatus(false));
+  peer.on("error", err => {
+    console.error("Peer error:", err);
+    alert("Error creating room: " + err.message);
   });
 };
+
+// Copy Room ID functionality
+document.getElementById("copyRoomId").onclick=()=>{
+  if (!currentRoom) {
+    alert("No active room. Please create or join a room first.");
+    return;
+  }
+  
+  // Use the Clipboard API if available
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(currentRoom)
+      .then(() => {
+        alert("Room ID copied to clipboard: " + currentRoom);
+      })
+      .catch(err => {
+        console.error("Failed to copy: ", err);
+        fallbackCopyToClipboard(currentRoom);
+      });
+  } else {
+    fallbackCopyToClipboard(currentRoom);
+  }
+};
+
+// Fallback method for copying to clipboard
+function fallbackCopyToClipboard(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.opacity = 0;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  
+  try {
+    const successful = document.execCommand('copy');
+    document.body.removeChild(textArea);
+    if (successful) {
+      alert("Room ID copied to clipboard: " + text);
+    } else {
+      alert("Failed to copy room ID. Please copy manually: " + text);
+    }
+  } catch (err) {
+    document.body.removeChild(textArea);
+    alert("Failed to copy room ID. Please copy manually: " + text);
+  }
+}
 
 document.getElementById("joinRoom").onclick=()=>{
   const roomCode=prompt("Enter Room Code (e.g. bright-otter-42):");
@@ -136,10 +212,16 @@ document.getElementById("joinRoom").onclick=()=>{
     conn=peer.connect(roomCode);
     conn.on("open",()=>{
       updateStatus(true);
+      currentRoom = roomCode;
       alert("Connected to room " + roomCode);
     });
     conn.on("data",d=>editor.innerHTML=d);
     conn.on("close",()=>updateStatus(false));
+    initPeerListeners();
+  });
+  peer.on("error", err => {
+    console.error("Peer error:", err);
+    alert("Error joining room: " + err.message);
   });
 };
 
@@ -191,21 +273,19 @@ function stopCamera(){
   }
 }
 document.getElementById("callBtn").onclick=()=>{
-  const pid=prompt("Enter Peer ID to Call:");
+  const pid=prompt("Enter Room ID to Call:");
   if(!pid||!peer||!myStream)return alert("Peer not ready or camera off");
   callObj=peer.call(pid,myStream);
   callObj.on("stream",s=>document.getElementById("peerVideo").srcObject=s);
+  callObj.on("error", err => {
+    console.error("Call error:", err);
+    alert("Call failed: " + err.message);
+  });
 };
 document.getElementById("hangBtn").onclick=()=>{
   if(callObj)callObj.close();
   document.getElementById("peerVideo").srcObject=null;
 };
-peer?.on?.("call",incoming=>{
-  if(!myStream)initCamera().then(()=>{
-    incoming.answer(myStream);
-    incoming.on("stream",s=>document.getElementById("peerVideo").srcObject=s);
-  });
-});
 </script>
 </body>
 </html>
