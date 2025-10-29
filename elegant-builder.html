@@ -1,413 +1,220 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Elegant Site Store</title>
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij4KICA8dGl0bGU+RWxlZ2FudCBTaXRlIFN0b3JlPC90aXRsZT4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMDA3YWZmIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwNTZjYyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9InVybCgjZ3JhZCkiLz4KICA8Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSI4IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjkiLz4KICA8Y2lyY2xlIGN4PSI0NCIgY3k9IjIwIiByPSI4IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjkiLz4KICA8Y2lyY2xlIGN4PSIyMCIgY3k9IjQ0IiByPSI4IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjkiLz4KICA8Y2lyY2xlIGN4PSI0NCIgY3k9IjQ0IiByPSI4IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIwLjkiLz4KICA8cGF0aCBkPSJNMzIgMTYgTDM0IDI0IEw0MiAyNiBMMzQgMjggTDMyIDM2IEwzMCAyOCBMMjIgMjYgTDMwIDI0IFoiIGZpbGw9IiNmYWNjMTUiLz4KPC9zdmc+" type="image/svg+xml">
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Project Discontinued </title>
   <style>
-    .serif { font-family: 'Playfair Display', serif; }
-    .sans { font-family: 'Inter', sans-serif; }
-    .elegant-shadow { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05); }
-    .elegant-border { border: 1px solid rgba(229, 231, 235, 0.2); }
-    .elegant-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .elegant-hover:hover { transform: translateY(-2px); box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.35); }
-
-    .elite-btn {
-      position: relative; padding: 14px 24px; text-decoration: none;
-      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 10px; color: #f8fafc;
-      font-family: 'Inter', sans-serif; font-weight: 500; font-size: 14px;
-      backdrop-filter: blur(8px); overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      cursor: pointer; border: none;
-      min-width: 120px;
-      text-align: center;
-    }
-    .elite-btn:hover {
-      transform: translateY(-1px); border-color: rgba(203, 213, 225, 0.4);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    :root{
+      /* Bold, high-contrast neubrutalist palette */
+      --bg: #F5F242;          /* punchy yellow surface */
+      --ink: #111111;         /* near-black text/lines */
+      --paper: #FFFFFF;       /* card base */
+      --accent: #00E07B;      /* neon green CTA */
+      --accent-ink: #111111;  /* black on neon for contrast */
+      --muted: #FF6B6B;       /* accent chip */
+      --radius: 16px;
+      --stroke: 4px;          /* thick outlines */
+      --shadow-offset: 10px;  /* hard, offset shadow */
+      --space-1: 8px;
+      --space-2: 12px;
+      --space-3: 16px;
+      --space-4: 24px;
+      --space-5: 32px;
+      --space-6: 40px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, Helvetica, Arial;
     }
 
-    .site-card {
-      padding: 20px; transition: all 0.2s ease;
-      min-width: 0;
-      word-break: break-word;
-      border-radius: 18px;
-      background: #fff;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-      margin-bottom: 12px;
-    }
-    .site-card:hover {
-      transform: translateY(-2px);
-    }
-    .app-icon {
-      width: 80px; height: 80px; border-radius: 18px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      object-fit: cover; margin: 20px auto 16px;
-      display: block;
-    }
-    .app-title {
-      font-size: 18px; font-weight: 600; color: #1d1d1f;
-      margin-bottom: 4px; text-align: center;
-      word-break: break-word;
-    }
-    .app-desc {
-      font-size: 13px; color: #86868b; line-height: 1.4;
-      margin-bottom: 16px; text-align: center;
-      display: -webkit-box; -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical; overflow: hidden;
-      word-break: break-word;
-    }
-    .get-btn {
-      background: #007aff; color: white; border: none;
-      border-radius: 20px; padding: 8px 20px; font-size: 15px;
-      font-weight: 600; cursor: pointer; transition: all 0.2s;
-      display: block; margin: 0 auto;
-      width: 100%;
-      max-width: 220px;
-      box-sizing: border-box;
-    }
-    .get-btn:hover { background: #0056cc; }
-    .delete-btn {
-      position: absolute; top: 12px; right: 12px;
-      width: 24px; height: 24px; border-radius: 12px;
-      background: rgba(255,59,48,0.9); color: white;
-      border: none; font-size: 14px; cursor: pointer;
+    @media (prefers-color-scheme: dark){
+      :root{
+        /* Dark variant keeps bold contrast */
+        --bg: #121212;
+        --ink: #FFFFFF;
+        --paper: #0A0A0A;
+        --accent: #19FF8A;
+        --accent-ink: #0A0A0A;
+        --muted: #FF8A8A;
+      }
     }
 
-    .footer-warning {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
-      background: #fef2f2; border-top: 1px solid #fecaca;
-      padding: 8px 16px; font-size: 11px; color: #991b1b;
-      text-align: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font);
+      color:var(--ink);
+      background:
+        linear-gradient(135deg, var(--bg) 0%, #FAD961 50%, var(--bg) 100%);
+      min-height:100svh;
     }
-    body { padding-bottom: 50px; }
-    @media (max-width: 1024px) {
-      .max-w-7xl { max-width: 100vw; }
-      .site-card { margin-bottom: 16px; }
+
+    .wrap{
+      min-height:100svh;
+      display:grid;
+      place-items:center;
+      padding:clamp(20px, 6vw, 64px);
     }
-    @media (max-width: 768px) {
-      .grid, #sites-grid { grid-template-columns: 1fr !important; }
-      .flex { flex-direction: column; gap: 0.75rem; }
-      .footer-warning { font-size: 10px; padding: 6px 12px; }
-      .site-card { padding: 14px; margin-bottom: 10px; }
-      .app-icon { width: 64px; height: 64px; margin: 12px auto 10px; }
-      .app-title { font-size: 16px; }
-      .app-desc { font-size: 12px; margin-bottom: 10px; }
-      .elite-btn { padding: 12px 10px; font-size: 13px; min-width: 90px; }
-      header .flex { flex-direction: column; gap: 10px; align-items: flex-start; }
-      header .flex > div { width: 100%; }
-      header .flex .elite-btn { width: 100%; margin-bottom: 6px; }
+
+    .card{
+      width:100%;
+      max-width:780px;
+      background:var(--paper);
+      border:var(--stroke) solid var(--ink);
+      border-radius:var(--radius);
+      padding:clamp(20px, 4vw, 36px);
+      position:relative;
+      /* hard, rectangular neubrutalist shadow */
+      box-shadow: var(--shadow-offset) var(--shadow-offset) 0 0 var(--ink);
     }
-    @media (max-width: 480px) {
-      .min-h-screen, body { padding: 0 !important; }
-      .max-w-7xl { padding: 0 2px; }
-      .site-card { padding: 8px; margin-bottom: 8px; }
-      .app-icon { width: 48px; height: 48px; margin: 8px auto 6px; }
-      .app-title { font-size: 14px; }
-      .app-desc { font-size: 11px; margin-bottom: 6px; }
-      .elite-btn { padding: 8px 4px; font-size: 12px; min-width: 70px; }
-      header .flex { gap: 6px; }
-      .footer-warning { font-size: 9px; padding: 4px 6px; }
+
+    /* Decorative corner sticker */
+    .sticker{
+      position:absolute;
+      top:-18px; right:-18px;
+      background:var(--muted);
+      color:var(--ink);
+      border:var(--stroke) solid var(--ink);
+      padding:6px 12px;
+      transform: rotate(6deg);
+      font-weight:800;
+      letter-spacing:.5px;
+    }
+
+    .title{
+      margin:0 0 var(--space-2) 0;
+      font-weight:900;
+      line-height:1.1;
+      font-size:clamp(32px, 5.4vw, 56px);
+      text-transform:uppercase;
+    }
+
+    .subtitle{
+      margin:0;
+      font-size:clamp(16px, 2.2vw, 20px);
+      line-height:1.6;
+      max-width:62ch;
+    }
+
+    .band{
+      margin-top:var(--space-4);
+      display:flex;
+      flex-wrap:wrap;
+      gap:var(--space-2);
+    }
+
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      background:var(--bg);
+      border:var(--stroke) dashed var(--ink);
+      padding:10px 14px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.3px;
+    }
+    .chip .dot{
+      width:12px; height:12px; background:var(--muted);
+      border:var(--stroke) solid var(--ink);
+      box-shadow: 4px 4px 0 0 var(--ink);
+    }
+
+    .panel{
+      margin-top:var(--space-5);
+      border:var(--stroke) solid var(--ink);
+      border-radius:12px;
+      padding:var(--space-4);
+      background:#fff8;
+      backdrop-filter: saturate(110%); /* subtle, no blur—neubrutalist prefers crisp shapes */
+    }
+
+    .list{
+      margin:0; padding-left:1.2em;
+    }
+    .list li{
+      margin:8px 0;
+    }
+
+    .actions{
+      margin-top:var(--space-5);
+      display:flex;
+      gap:var(--space-3);
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none;
+      display:inline-block;
+      background:var(--accent);
+      color:var(--accent-ink);
+      border:var(--stroke) solid var(--ink);
+      border-radius:999px;
+      padding:14px 22px;
+      font-weight:900;
+      text-decoration:none;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      position:relative;
+      box-shadow: 6px 6px 0 0 var(--ink);
+      transition: transform .06s ease;
+    }
+    .btn:focus-visible{
+      outline:none;
+      box-shadow:
+        6px 6px 0 0 var(--ink),
+        0 0 0 4px var(--ink) inset;
+    }
+    .btn:hover{
+      transform: translate(1px,1px);
+      box-shadow: 5px 5px 0 0 var(--ink);
+    }
+    .btn:active{
+      transform: translate(3px,3px);
+      box-shadow: 3px 3px 0 0 var(--ink);
+    }
+
+    .helper{
+      margin-top:var(--space-3);
+      font-size:15px;
+      max-width:62ch;
+    }
+
+    /* Motion safety */
+    @media (prefers-reduced-motion: reduce){
+      .btn{ transition:none }
     }
   </style>
 </head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-labelledby="t" aria-describedby="s">
+      <div class="sticker" aria-hidden="true">Archived</div>
 
-<body class="min-h-screen bg-gray-50 sans">
-  
-  <div class="min-h-screen p-4 md:p-8">
-    <div class="max-w-7xl mx-auto">
+      <h1 id="t" class="title">Project discontinued</h1>
+      <p id="s" class="subtitle">
+        This project is no longer maintained and will not receive further updates; content remains available in archive for reference and compliance needs.
+      </p>
+
+      <div class="band" role="status" aria-live="polite">
+        <span class="chip"><span class="dot" aria-hidden="true"></span> Discontinued</span>
+        <span class="chip">Last update: Aug 12, 2025</span>
+        <span class="chip">Status: Read‑only</span>
+      </div>
+
+      <div class="panel" role="note" aria-label="What this means">
+        <ul class="list">
+          <li>No new releases, security patches, or feature work will be provided.</li>
+          <li>Docs and legacy builds remain accessible for migration planning.</li>
+          <li>For continuity, use the return action below to continue on the project site.</li>
+        </ul>
+      </div>
+
+      <div class="actions" role="group" aria-label="Primary action">
+        <a class="btn" href="projects.html">Return to project site</a>
+      </div>
+
       
-      <!-- Header -->
-      <header class="mb-12">
-        <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl p-8 elegant-shadow">
-          <div class="flex items-center justify-between">
-            <div>
-              <h1 class="text-4xl serif font-medium text-gray-900 mb-2">🏪 Elegant Site Store</h1>
-              <p class="text-gray-600">Discover and share beautiful websites</p>
-            </div>
-            <div class="flex gap-4">
-              <a href="elegant-builder.html" class="elite-btn">+ Submit Site</a>
-              <a href="projects.html" class="elite-btn">← Back</a>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <!-- Submit Form -->
-      <section id="submit-form" class="mb-12 hidden">
-        <div class="bg-white/80 backdrop-blur-sm elegant-border rounded-2xl p-8 elegant-shadow">
-          <h2 class="text-2xl serif font-medium text-gray-900 mb-4">Submit Your Site</h2>
-          <div class="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
-            <p class="text-amber-800 text-sm font-medium">
-              ⚠️ One-time submission only. No changes can be made after submission. Please review carefully.
-            </p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-gray-700 font-medium mb-2">Site Title</label>
-              <input id="site-title" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="My Awesome Site">
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium mb-2">Site URL</label>
-              <input id="site-url" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://mysite.puter.site">
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium mb-2">Image URL</label>
-              <input id="site-image" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://example.com/screenshot.png">
-            </div>
-            <div>
-              <label class="block text-gray-700 font-medium mb-2">Description</label>
-              <textarea id="site-description" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" placeholder="Describe your site..."></textarea>
-            </div>
-          </div>
-          <div class="flex gap-4 mt-6">
-            <button id="submit-site" class="elite-btn">Submit Site</button>
-            <a href="elegant-builder.html" class="px-6 py-3 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors text-decoration-none">
-Launch with Builder for free domain
-            </a>
-            <button id="cancel-submit" class="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50">Cancel</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Sites Grid -->
-      <section>
-        <div id="sites-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          <div class="text-center py-12 text-gray-500">Loading sites...</div>
-        </div>
-        
-
-      </section>
-    </div>
-  </div>
-
-  <!-- Fixed Footer Warning -->
-  <div class="footer-warning">
-    ⚠️ Do not submit inappropriate content. Violations will result in device details being shared with law enforcement.
-  </div>
-
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getDatabase, ref, push, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAp9kCBsDLnQEmR7wWHXwt3FB2T1zDtiqU",
-      authDomain: "h-90-8a7c5.firebaseapp.com",
-      databaseURL: "https://h-90-8a7c5-default-rtdb.firebaseio.com",
-      projectId: "h-90-8a7c5",
-      storageBucket: "h-90-8a7c5.firebasestorage.app",
-      messagingSenderId: "367196609301",
-      appId: "1:367196609301:web:156e24c1b4532c26af671c"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    const $ = s => document.querySelector(s);
-    const submitForm = $('#submit-form');
-    const sitesGrid = $('#sites-grid');
-
-    // Show/hide submit form
-    $('a[href="elegant-builder.html"]').onclick = (e) => {
-      e.preventDefault();
-      submitForm.classList.toggle('hidden');
-    };
-    $('#cancel-submit').onclick = () => submitForm.classList.add('hidden');
-
-    // Submit site
-    $('#submit-site').onclick = async () => {
-      const title = $('#site-title').value.trim();
-      const url = $('#site-url').value.trim();
-      const image = $('#site-image').value.trim();
-      const description = $('#site-description').value.trim();
-
-      if (!title || !url || !description) {
-        alert('Please fill in all required fields');
-        return;
-      }
-
-      try {
-        await push(ref(db, 'sites'), {
-          title, url, image, description,
-          timestamp: Date.now()
-        });
-        
-        $('#site-title').value = '';
-        $('#site-url').value = '';
-        $('#site-image').value = '';
-        $('#site-description').value = '';
-        submitForm.classList.add('hidden');
-        
-        alert('Site submitted successfully!');
-      } catch (error) {
-        alert('Error submitting site: ' + error.message);
-      }
-    };
-
-    // Load and display sites
-    onValue(ref(db, 'sites'), (snapshot) => {
-      const sites = snapshot.val();
-      if (!sites) {
-        sitesGrid.innerHTML = '<div class="text-center py-12 text-gray-500 col-span-full">No sites yet. Be the first to submit!</div>';
-        return;
-      }
-
-      const sitesArray = Object.entries(sites).map(([id, site]) => ({ id, ...site }));
-      sitesArray.sort((a, b) => b.timestamp - a.timestamp);
-
-      const isAdmin = window.adminMode;
-      sitesGrid.innerHTML = sitesArray.map(site => `
-        <div class="site-card relative">
-          ${isAdmin ? `<button onclick="deleteSite('${site.id}')" class="delete-btn">×</button>` : ''}
-          ${site.image ? `<img src="${site.image}" alt="${site.title}" class="app-icon">` : 
-            '<div class="app-icon bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">${site.title.charAt(0)}</div>'}
-          <div class="px-4 pb-4">
-            <h3 class="app-title">${site.title}</h3>
-            <p class="app-desc">${site.description}</p>
-            <button onclick="window.location.href='${site.url}'" class="get-btn">VISIT</button>
-          </div>
-        </div>
-      `).join('');
-    });
-
-    // Secret admin access
-    window.deleteSite = async (siteId) => {
-      if (confirm('Delete this site?')) {
-        try {
-          await remove(ref(db, `sites/${siteId}`));
-        } catch (error) {
-          alert('Error deleting site: ' + error.message);
-        }
-      }
-    };
-
-    // Secret admin access via URL: ?admin=elite
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('admin') === 'elite') {
-      window.adminMode = true;
-      document.body.style.border = '3px solid #ef4444';
-      document.title = '🔴 ADMIN MODE - ' + document.title;
-    }
-  </script><script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getDatabase, ref, push, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAp9kCBsDLnQEmR7wWHXwt3FB2T1zDtiqU",
-      authDomain: "h-90-8a7c5.firebaseapp.com",
-      databaseURL: "https://h-90-8a7c5-default-rtdb.firebaseio.com",
-      projectId: "h-90-8a7c5",
-      storageBucket: "h-90-8a7c5.firebasestorage.app",
-      messagingSenderId: "367196609301",
-      appId: "1:367196609301:web:156e24c1b4532c26af671c"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    const $ = s => document.querySelector(s);
-    const submitForm = $('#submit-form');
-    const sitesGrid = $('#sites-grid');
-
-    // Show/hide submit form
-    // Note: The original logic uses a.href="elegant-builder.html" for toggling, 
-    // but the actual submission button is inside the form, so this is kept.
-    $('a[href="elegant-builder.html"]').onclick = (e) => {
-      e.preventDefault();
-      submitForm.classList.toggle('hidden');
-    };
-    $('#cancel-submit').onclick = () => submitForm.classList.add('hidden');
-
-    // Submit site
-    $('#submit-site').onclick = async () => {
-      const title = $('#site-title').value.trim();
-      const url = $('#site-url').value.trim();
-      const image = $('#site-image').value.trim();
-      const description = $('#site-description').value.trim();
-
-      if (!title || !url || !description) {
-        alert('Please fill in all required fields');
-        return;
-      }
-
-      try {
-        await push(ref(db, 'sites'), {
-          title, url, image, description,
-          timestamp: Date.now()
-        });
-                
-        $('#site-title').value = '';
-        $('#site-url').value = '';
-        $('#site-image').value = '';
-        $('#site-description').value = '';
-        submitForm.classList.add('hidden');
-                
-        alert('Site submitted successfully!');
-      } catch (error) {
-        alert('Error submitting site: ' + error.message);
-      }
-    };
-
-    // Load and display sites
-    onValue(ref(db, 'sites'), (snapshot) => {
-      const sites = snapshot.val();
-      if (!sites) {
-        sitesGrid.innerHTML = '<div class="text-center py-12 text-gray-500 col-span-full">No sites yet. Be the first to submit!</div>';
-        return;
-      }
-
-      const sitesArray = Object.entries(sites).map(([id, site]) => ({ id, ...site }));
-      sitesArray.sort((a, b) => b.timestamp - a.timestamp);
-
-      const isAdmin = window.adminMode;
-      sitesGrid.innerHTML = sitesArray.map(site => {
-        // Corrected placeholder logic: use .toUpperCase() for a better initial
-        const placeholder = site.title.charAt(0).toUpperCase() || '?';
-        const iconHtml = site.image 
-          ? `<img src="${site.image}" alt="${site.title}" class="app-icon">` 
-          : `<div class="app-icon bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">${placeholder}</div>`;
-          
-        return `
-          <div class="site-card relative">
-            ${isAdmin ? `<button onclick="deleteSite('${site.id}')" class="delete-btn">×</button>` : ''}
-            ${iconHtml}
-            <div class="px-4 pb-4">
-              <h3 class="app-title">${site.title}</h3>
-              <p class="app-desc">${site.description}</p>
-              <button onclick="window.open('${site.url}', '_blank')" class="get-btn">VISIT</button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    });
-
-    // Secret admin access
-    window.deleteSite = async (siteId) => {
-      if (confirm('Delete this site?')) {
-        try {
-          await remove(ref(db, `sites/${siteId}`));
-        } catch (error) {
-          alert('Error deleting site: ' + error.message);
-        }
-      }
-    };
-
-    // Secret admin access via URL: ?admin=elite
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('admin') === 'elite') {
-      window.adminMode = true;
-      document.body.style.border = '3px solid #ef4444';
-      document.title = '🔴 ADMIN MODE - ' + document.title;
-    }
-  </script>
+    </section>
+  </main>
 </body>
 </html>
